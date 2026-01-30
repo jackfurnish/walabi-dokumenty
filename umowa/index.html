@@ -175,6 +175,55 @@
         }
         .btn-danger:hover { background: #FEF2F2; }
 
+        /* Historia */
+        .history-list {
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 8px 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--color-border);
+            transition: background .15s;
+        }
+
+        .history-item:last-child { border-bottom: none; }
+        .history-item:hover { background: var(--color-highlight); }
+
+        .history-item .hi-number {
+            font-weight: var(--font-weight-data);
+            font-size: var(--font-size-data);
+            color: var(--color-data);
+        }
+        .history-item .hi-client {
+            color: var(--color-label);
+            font-size: var(--font-size-label);
+            margin-top: 1px;
+        }
+        .history-item .hi-delete {
+            color: var(--color-secondary);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 3px;
+            border: none;
+            background: none;
+            opacity: 0.5;
+            transition: opacity .15s;
+        }
+        .history-item .hi-delete:hover { opacity: 1; color: #9A3412; }
+
+        .history-empty {
+            color: var(--color-secondary);
+            font-style: italic;
+            padding: 12px;
+            text-align: center;
+            font-size: var(--font-size-label);
+        }
+
         /* ===== DOCUMENT ===== */
         .page-container {
             flex: 1;
@@ -184,7 +233,7 @@
         .document {
             width: 210mm;
             min-height: 297mm;
-            padding: 12mm 14mm;
+            padding: 18mm 14mm;
             background: var(--color-white);
             box-shadow: 0 4px 24px rgba(0,0,0,.08);
             position: relative;
@@ -470,7 +519,7 @@
 
             .document {
                 box-shadow: none;
-                padding: 10mm 12mm;
+                padding: 15mm 12mm;
                 width: 210mm;
                 min-height: 296mm;
             }
@@ -487,7 +536,7 @@
 
             @page {
                 size: A4;
-                margin: 6mm;
+                margin: 8mm;
             }
         }
 
@@ -556,7 +605,24 @@
             <button class="btn btn-secondary" onclick="exportDOCX()">📄 Pobierz DOCX</button>
             <button class="btn btn-secondary" onclick="sendEmail()">✉ Wyślij mailem</button>
             <button class="btn btn-secondary" onclick="sendWhatsApp()">💬 Wyślij WhatsApp</button>
+            <button class="btn btn-secondary" onclick="saveDocument()">Zapisz dokument</button>
+            <button class="btn btn-secondary" onclick="newDocument()">Nowy dokument</button>
             <button class="btn btn-danger" onclick="clearForm()">Wyczyść formularz</button>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Specyfikacja mebli</h3>
+            <div style="display:flex;gap:6px;">
+                <button class="btn btn-secondary" onclick="addSpecRow()" style="flex:1;text-align:center;">+ Dodaj wiersz</button>
+                <button class="btn btn-secondary" onclick="removeSpecRow()" style="flex:1;text-align:center;">− Usuń wiersz</button>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Historia dokumentów</h3>
+            <div id="historyList" class="history-list">
+                <div class="history-empty">Brak zapisanych dokumentów</div>
+            </div>
         </div>
     </aside>
 
@@ -717,34 +783,111 @@
                 </div>
             </div>
 
-            <!-- §6. GWARANCJA I RĘKOJMIA -->
+            <!-- §6. ODBIÓR PRZEDMIOTU UMOWY -->
             <div class="paragraph-section">
-                <div class="paragraph-title">§6. Gwarancja i Rękojmia</div>
+                <div class="paragraph-title">§6. Odbiór Przedmiotu Umowy</div>
                 <div class="paragraph-content">
                     <ol>
-                        <li>Wykonawca udziela <input type="text" id="warrantyYears" class="w-60" placeholder="[Liczba]">-letniej gwarancji na wykonane Meble, liczonej od daty odbioru końcowego.</li>
-                        <li>Gwarancja obejmuje wady materiałowe i wykonawcze.</li>
-                        <li>Gwarancja nie obejmuje uszkodzeń mechanicznych powstałych z winy użytkownika oraz normalnego zużycia eksploatacyjnego.</li>
-                        <li>Zgłoszenia gwarancyjne należy kierować na adres e-mail: poczta@walabi.pl</li>
+                        <li>Po zakończeniu montażu Strony dokonają odbioru końcowego, z którego zostanie sporządzony protokół odbioru.</li>
+                        <li>Zamawiający zobowiązany jest do zgłoszenia wszelkich uwag i zastrzeżeń podczas odbioru.</li>
+                        <li>Brak zgłoszenia uwag podczas odbioru oznacza akceptację wykonanych prac.</li>
+                        <li>W przypadku stwierdzenia wad, Wykonawca zobowiązuje się do ich usunięcia w terminie uzgodnionym przez Strony.</li>
                     </ol>
                 </div>
             </div>
 
-            <!-- §7. POSTANOWIENIA KOŃCOWE -->
+            <!-- §7. GWARANCJA -->
             <div class="paragraph-section">
-                <div class="paragraph-title">§7. Postanowienia Końcowe</div>
+                <div class="paragraph-title">§7. Gwarancja</div>
                 <div class="paragraph-content">
                     <ol>
-                        <li>Wszelkie zmiany niniejszej Umowy wymagają formy pisemnej pod rygorem nieważności.</li>
-                        <li>W sprawach nieuregulowanych niniejszą Umową mają zastosowanie przepisy Kodeksu cywilnego.</li>
-                        <li>Ewentualne spory będą rozstrzygane przez sąd właściwy dla siedziby Wykonawcy.</li>
+                        <li>Wykonawca udziela <input type="text" id="warrantyMonths" class="w-60" value="60">-miesięcznej gwarancji na wykonane Meble, liczonej od daty podpisania protokołu odbioru.</li>
+                        <li>Szczegółowe warunki gwarancji określa Załącznik nr 3 – „Zalecenia i warunki gwarancji".</li>
+                        <li>Gwarancja nie obejmuje:
+                            <ol>
+                                <li>Uszkodzeń mechanicznych powstałych z winy użytkownika,</li>
+                                <li>Uszkodzeń wynikających z nieprawidłowej eksploatacji, niezgodnej z zaleceniami Wykonawcy,</li>
+                                <li>Naturalnego zużycia materiałów w wyniku normalnego użytkowania,</li>
+                                <li>Uszkodzeń powstałych w wyniku działania czynników zewnętrznych, na które Wykonawca nie miał wpływu.</li>
+                            </ol>
+                        </li>
+                        <li>Zamawiający traci uprawnienia z tytułu gwarancji w przypadku:
+                            <ol>
+                                <li>Dokonania napraw lub modyfikacji Mebli przez osoby nieupoważnione przez Wykonawcę,</li>
+                                <li>Niewłaściwego użytkowania Mebli,</li>
+                                <li>Nieprzestrzegania zaleceń zawartych w instrukcji użytkowania.</li>
+                            </ol>
+                        </li>
+                        <li>Zgłoszenia reklamacyjne należy kierować na adres e-mail: poczta@walabi.pl lub telefonicznie pod numerem: 501 260 990.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- §8. ODSTĄPIENIE OD UMOWY -->
+            <div class="paragraph-section">
+                <div class="paragraph-title">§8. Odstąpienie od Umowy</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>Zamawiający może odstąpić od umowy w przypadku:
+                            <ol>
+                                <li>Opóźnienia w realizacji przedmiotu umowy przekraczającego 30 dni z przyczyn leżących wyłącznie po stronie Wykonawcy,</li>
+                            </ol>
+                        </li>
+                        <li>Rażącego naruszenia przez Wykonawcę postanowień niniejszej umowy.</li>
+                        <li>Wykonawca może odstąpić od umowy w przypadku:
+                            <ol>
+                                <li>Opóźnienia w płatnościach przekraczającego 14 dni,</li>
+                                <li>Niemożności wykonania pomiarów z przyczyn leżących po stronie Zamawiającego,</li>
+                                <li>Braku współdziałania ze strony Zamawiającego uniemożliwiającego realizację umowy.</li>
+                            </ol>
+                        </li>
+                        <li>Odstąpienie od umowy wymaga formy pisemnej pod rygorem nieważności.</li>
+                        <li>W przypadku odstąpienia od umowy przez Zamawiającego z przyczyn leżących po jego stronie, Wykonawca zachowuje prawo do otrzymanej zaliczki, która stanowi odszkodowanie za poniesione koszty i utracone korzyści. W przypadku poniesienia dodatkowych, udokumentowanych kosztów (w tym zakupu materiałów, zarezerwowania zasobów lub logistyki), Wykonawca ma prawo dochodzić ich zwrotu w całości.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- §9. OCHRONA DANYCH OSOBOWYCH -->
+            <div class="paragraph-section">
+                <div class="paragraph-title">§9. Ochrona Danych Osobowych</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>Zamawiający wyraża zgodę na przetwarzanie jego danych osobowych przez Wykonawcę w zakresie niezbędnym do realizacji niniejszej umowy, zgodnie z Rozporządzeniem Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. (RODO).</li>
+                        <li>Administratorem danych osobowych jest WALABI Sp. z o.o. Sp.k. z siedzibą w Toruniu.</li>
+                        <li>Dane osobowe będą przetwarzane wyłącznie w celu realizacji niniejszej umowy oraz wykonania obowiązków wynikających z przepisów prawa.</li>
+                        <li>Zamawiający ma prawo dostępu do treści swoich danych, ich sprostowania, usunięcia lub ograniczenia przetwarzania oraz prawo do wniesienia sprzeciwu wobec przetwarzania.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- §10. POSTANOWIENIA KOŃCOWE -->
+            <div class="paragraph-section">
+                <div class="paragraph-title">§10. Postanowienia Końcowe</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>W sprawach nieuregulowanych niniejszą umową mają zastosowanie przepisy Kodeksu cywilnego.</li>
+                        <li>Wszelkie zmiany i uzupełnienia niniejszej umowy wymagają formy pisemnej pod rygorem nieważności.</li>
+                        <li>Strony zobowiązują się dążyć do polubownego rozwiązywania sporów wynikających z niniejszej umowy, w szczególności poprzez mediację prowadzoną przez Centrum Mediacji przy Krajowej Izbie Gospodarczej. W przypadku niemożności osiągnięcia porozumienia, spory będą rozstrzygane przez sąd właściwy dla siedziby Wykonawcy.</li>
                         <li>Umowę sporządzono w dwóch jednobrzmiących egzemplarzach, po jednym dla każdej ze Stron.</li>
-                        <li>Integralną część Umowy stanowią:
+                        <li>Strony dopuszczają możliwość podpisania umowy w formie elektronicznej, poprzez wymianę skanów podpisanych dokumentów w formacie PDF.</li>
+                        <li>Integralną część umowy stanowią załączniki:
                             <ol>
                                 <li>Załącznik nr 1 – Specyfikacja mebli wraz z wyceną</li>
                                 <li>Załącznik nr 2 – Projekt wykonawczy/Koncepcja</li>
+                                <li>Załącznik nr 3 – Zalecenia i warunki gwarancji</li>
                             </ol>
                         </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- §11. WALORYZACJA -->
+            <div class="paragraph-section">
+                <div class="paragraph-title">§11. Waloryzacja</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>W przypadku wzrostu cen materiałów budowlanych lub komponentów meblowych przekraczającego 10% w stosunku do daty podpisania umowy, Strony zobowiązują się do renegocjacji wynagrodzenia. Podstawą do waloryzacji będą ogólnodostępne dane rynkowe lub zestawienia z dostawców.</li>
+                        <li>W przypadku braku porozumienia co do nowej ceny w terminie 14 dni od wezwania do renegocjacji, Wykonawca ma prawo zawiesić realizację zamówienia do czasu osiągnięcia porozumienia lub rozwiązać umowę z zachowaniem prawa do rozliczenia prac wykonanych dotychczas.</li>
                     </ol>
                 </div>
             </div>
@@ -752,12 +895,196 @@
             <!-- Signatures -->
             <div class="signatures-section">
                 <div class="signature-box">
-                    <div class="signature-title">Wykonawca</div>
-                    <div class="signature-line">podpis i pieczęć</div>
+                    <div class="signature-title">Wykonawca:</div>
+                    <div class="signature-line">........................................</div>
                 </div>
                 <div class="signature-box">
-                    <div class="signature-title">Zamawiający</div>
-                    <div class="signature-line">podpis i pieczęć</div>
+                    <div class="signature-title">Zamawiający:</div>
+                    <div class="signature-line">........................................</div>
+                </div>
+            </div>
+
+            <!-- Page Break for Załącznik 1 -->
+            <div style="page-break-before: always;"></div>
+
+            <!-- ZAŁĄCZNIK NR 1 -->
+            <div class="paragraph-section" style="margin-top: 20mm;">
+                <div class="doc-title" style="font-size: var(--font-size-lg);">ZAŁĄCZNIK NR 1 DO UMOWY NR <span id="attachDocNum1">P-XXX-26</span></div>
+                <div class="paragraph-title" style="margin-top: var(--spacing-lg);">Specyfikacja mebli wraz z wyceną</div>
+                <div class="paragraph-content">
+                    <table style="width:100%; border-collapse: collapse; margin: var(--spacing-md) 0; font-size: var(--font-size-base);">
+                        <thead>
+                            <tr style="background: var(--color-highlight);">
+                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; width: 30px;">L.P.</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: left;">Opis mebla</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; width: 80px;">Wymiary (cm)</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; width: 40px;">Ilość</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; width: 35px;">J.m.</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right; width: 90px;">Cena netto (zł)</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right; width: 100px;">Wartość netto (zł)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="specTableBody">
+                            <!-- Wiersze generowane dynamicznie przez JavaScript -->
+                        </tbody>
+                    </table>
+
+                    <p style="margin-top: var(--spacing-lg); font-weight: 600;">Podsumowanie kosztów</p>
+                    <table style="width:100%; border-collapse: collapse; margin: var(--spacing-sm) 0; font-size: var(--font-size-base);">
+                        <tr>
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px;">Wartość mebli – pozycje podstawowe</td>
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right; width: 120px;" id="sumMebli">0,00</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px;">Pozycje dodatkowe</td>
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;"><input type="text" id="sumDodatkowe" value="0,00" style="border:none;text-align:right;width:100%;"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px;">Transport</td>
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;"><input type="text" id="sumTransport" value="0,00" style="border:none;text-align:right;width:100%;"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px;">Montaż</td>
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;"><input type="text" id="sumMontaz" value="0,00" style="border:none;text-align:right;width:100%;"></td>
+                        </tr>
+                        <tr style="font-weight: 600;">
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px;">Razem netto</td>
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;" id="sumNettoSpec">0,00</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px;">VAT 23 %</td>
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;" id="sumVatSpec">0,00</td>
+                        </tr>
+                        <tr style="font-weight: 600;">
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px;">Razem brutto</td>
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;" id="sumBruttoSpec">0,00</td>
+                        </tr>
+                    </table>
+
+                    <p style="margin-top: var(--spacing-lg); font-weight: 600;">Harmonogram płatności</p>
+                    <table style="width:100%; border-collapse: collapse; margin: var(--spacing-sm) 0; font-size: var(--font-size-base);">
+                        <thead>
+                            <tr style="background: var(--color-highlight);">
+                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; width: 80px;">Transza</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;">Termin płatności</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right; width: 120px;">Kwota brutto (zł)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;">1. <span id="harmPercent1">50</span> %</td>
+                                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;">3 dni po podpisaniu umowy</td>
+                                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;" id="harmAmount1">0,00</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;">2. <span id="harmPercent2">45</span> %</td>
+                                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;">przed dostawą</td>
+                                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;" id="harmAmount2">0,00</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;">3. <span id="harmPercent3">5</span> %</td>
+                                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;">w 3 dni od montażu i protokołu odbioru</td>
+                                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;" id="harmAmount3">0,00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p style="margin-top: var(--spacing-lg);">Specyfikacja stanowi integralną część Umowy nr <span id="attachDocNum1b">P-XXX-26</span>.</p>
+                    <p style="margin-top: var(--spacing-sm);">Oferta nie obejmuje:</p>
+                    <textarea id="ofertaWylaczenia" rows="3" style="width:100%; border: 0.5pt solid var(--color-border); padding: 6px; font-family: var(--font-primary); font-size: var(--font-size-base);" placeholder="np. - Łóżko: tkaniny obiciowej - do ustalenia,&#10;- szafka podumywalkowa: zakupu umywalki i armatury oraz blatów FLORIM TUNDRA (spiek kwarcowy)."></textarea>
+                </div>
+            </div>
+
+            <!-- Page Break for Załącznik 3 -->
+            <div style="page-break-before: always;"></div>
+
+            <!-- ZAŁĄCZNIK NR 3 -->
+            <div class="paragraph-section" style="margin-top: 20mm;">
+                <div class="doc-title" style="font-size: var(--font-size-lg);">ZAŁĄCZNIK NR 3 DO UMOWY NR <span id="attachDocNum3">P-XXX-26</span></div>
+
+                <div class="paragraph-title" style="margin-top: var(--spacing-lg);">Zalecenia i warunki gwarancji meble „twarde" – Zalecenia użytkowania</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>Meble należy użytkować zgodnie z ich konstrukcją i przeznaczeniem.</li>
+                        <li>Meble należy użytkować w pomieszczeniach suchych, zamkniętych i zabezpieczonych przed szkodliwymi warunkami atmosferycznymi oraz bezpośrednim działaniem promieni słonecznych.</li>
+                        <li>Normalne warunki klimatyczne użytkowania mebli:
+                            <ul style="list-style-type: circle; margin-left: 20px;">
+                                <li>wilgotność względna powietrza 40-70%</li>
+                                <li>temperatura 15-30°C</li>
+                            </ul>
+                        </li>
+                        <li>Mebli nie należy ustawiać w odległości mniejszej niż 1m od czynnych grzejników.</li>
+                        <li>Polakierowane powierzchnie mebli należy chronić przed zarysowaniem i obiciem.</li>
+                        <li>Należy unikać długotrwałego kontaktu polakierowanych powierzchni z wysokimi temperaturami i rozpuszczalnikami. Czynniki te mogą również wpłynąć na uszkodzenie powłoki lakierowanej objawiające się w postaci odbarwień i zmatowień.</li>
+                        <li>Do czyszczenia elementów drewnianych nie zalecamy środków PRONTO!</li>
+                    </ol>
+                </div>
+
+                <div class="paragraph-title" style="margin-top: var(--spacing-md);">Wyłączenia z gwarancji</div>
+                <div class="paragraph-content">
+                    <p>Utrata uprawnień gwarancyjnych następuje w przypadkach:</p>
+                    <ol>
+                        <li>Użytkowania mebla w zakresie temperatur poniżej 15°C lub powyżej 30°C.</li>
+                        <li>Użytkowania mebla w zakresie wilgotności powietrza poniżej 40% lub powyżej 70%.</li>
+                        <li>Zalania mebla wodą lub inną cieczą.</li>
+                        <li>Użytkowania mebla niezgodnie z przeznaczeniem.</li>
+                        <li>Zabrudzeń wyrobów.</li>
+                        <li>Stwierdzenia niewłaściwego wykonania zabiegów czyszczenia i konserwacji.</li>
+                        <li>Stwierdzenia prób wykonania naprawy lub poprawek przez osoby nieuprawnione.</li>
+                        <li>Szkód i usterek spowodowanych przez zwierzęta.</li>
+                        <li>Szkód powstałych w wyniku niewłaściwego przewożenia mebli przez Klientów, np. podczas przeprowadzki. Przez niewłaściwe przewożenie należy rozumieć nie zachowanie należytej staranności w zabezpieczeniu przewożonych elementów.</li>
+                        <li>Uszkodzeń mechanicznych.</li>
+                    </ol>
+                    <p style="margin-top: var(--spacing-sm);">Gwarancja nie obowiązuje, gdy towar został uszkodzony mechanicznie wskutek nieprawidłowego używania.</p>
+                </div>
+
+                <div class="paragraph-title" style="margin-top: var(--spacing-md);">Meble tapicerowane – Zasady użytkowania i konserwacji</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>Meble tapicerowane powinny być użytkowane zgodnie z ich przeznaczeniem. Siadanie lub stawanie na płytę zagłówka, na boczkach, podłokietnikach, krawędziach oparć i siedzisk może doprowadzić do nieodwracalnych zmian w meblu.</li>
+                        <li>Przy rozpakowaniu nie należy używać ostrych narzędzi, gdyż może to spowodować uszkodzenie obicia mebla.</li>
+                        <li>Podczas przestawiania meble należy przenosić, chwytając je od spodu za sztywne części konstrukcji nośnej. Nie należy trzymać za obicie lub jego luźne elementy.</li>
+                        <li>Mebli tapicerowanych nie należy stawiać w odległości mniejszej niż 1 m od czynnych źródeł ciepła takich jak grzejniki, kuchenki, piece.</li>
+                        <li>Meble należy chronić przed szkodliwym wpływem warunków atmosferycznych oraz bezpośrednim działaniem promieni słonecznych.</li>
+                        <li>Materiał pokryciowy należy utrzymywać w czystości. Tkaniny szczotkować od czasu do czasu miękką szczotką z naturalnego włosia bądź odkurzać przy użyciu nasadki czyszczącej do tapicerki.</li>
+                        <li>Zabrudzenia czyścić miękką, bawełnianą ściereczką delikatnie nasączoną roztworem szarego mydła i wody. Należy unikać przemoczenia materiału pokryciowego.</li>
+                        <li>Nie należy stosować chemicznych środków czyszczących zawierających w składzie naftę, alkohol lub inne rozpuszczalniki.</li>
+                        <li>Płynne zbrudzenia usuwać natychmiast poprzez osuszenie dobrze wchłaniającą ściereczką.</li>
+                    </ol>
+                </div>
+
+                <div class="paragraph-title" style="margin-top: var(--spacing-md);">Warunki gwarancji</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>Gwarant zapewnia należytą jakość mebli przy zachowaniu zasad ich użytkowania zgodnie z przeznaczeniem w okresie 24 miesięcy od daty ich sprzedaży.</li>
+                        <li>Reklamacje na wady objęte gwarancją Kupujący składa w formie pisemnej w terminie nie dłuższym niż 14 dni od daty ujawnienia wady.</li>
+                        <li>Rozpatrzenie reklamacji nastąpi w terminie do 14 dni od daty zgłoszenia reklamacji Gwarantowi.</li>
+                        <li>Realizacja reklamacji w drodze nieodpłatnej naprawy nastąpi do 30 dni od daty jej rozpatrzenia.</li>
+                        <li>O przyjęciu reklamacji do realizacji w drodze naprawy lub o uznaniu reklamacji za nieuzasadnioną Kupujący zostanie powiadomiony niezwłocznie.</li>
+                        <li>W przypadku gdy wada jest usuwalna, reklamacja będzie załatwiona w drodze naprawy u Kupującego lub w zakładzie Gwaranta.</li>
+                        <li>W przypadku gdy wada jest nieusuwalna, reklamacja będzie załatwiana w drodze obniżenia ceny mebla lub wymiany mebla na nowy, wolny od wad.</li>
+                    </ol>
+                </div>
+
+                <div class="paragraph-title" style="margin-top: var(--spacing-md);">Gwarancją nie są objęte</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>Zabrudzenia, efekty niewłaściwych prób czyszczenia, jak również szkody spowodowane przez zwierzęta domowe.</li>
+                        <li>Uszkodzenia mechaniczne powstałe w wyniku niewłaściwego użytkowania.</li>
+                        <li>Zmiany wynikające z napraw lub przeróbek mebli wykonanych przez lub na zlecenie Kupującego.</li>
+                        <li>Uszkodzenia powstałe w wyniku niewłaściwego bądź nieostrożnego przewozu, przenoszenia mebli.</li>
+                        <li>Wady i uszkodzenia, w wyniku których obniżono cenę wyrobu.</li>
+                        <li>Zmiany zachodzące naturalnie w wyniku eksploatacji mebla.</li>
+                        <li>Zróżnicowane zużycie spowodowane nierównomierną eksploatacją poszczególnych powierzchni.</li>
+                        <li>Różnice w twardości i wysokości pojedynczych elementów i podzespołów.</li>
+                        <li>Pofałdowania i różnorodności powierzchni mebla wynikające z zaprojektowanych cech wzoru.</li>
+                    </ol>
+                </div>
+
+                <div class="paragraph-title" style="margin-top: var(--spacing-md);">Uwaga:</div>
+                <div class="paragraph-content">
+                    <p>W przypadku nieuzasadnionej reklamacji, w szczególności w przypadku stwierdzenia braku wady lub w przypadku uszkodzenia lub pogorszenia stanu towaru z przyczyn, za które Wykonawca nie ponosi odpowiedzialności, Klient może zostać obciążony kosztami.</p>
+                    <p style="margin-top: var(--spacing-md);">Dokument jest załącznikiem do Umowy nr <span id="attachDocNum3b">P-XXX-26</span> z dnia <span id="attachDate3">__________</span> r.</p>
                 </div>
             </div>
 
@@ -782,6 +1109,10 @@
 <script src="https://unpkg.com/docx@8.2.2/build/index.umd.js"></script>
 
 <script>
+    // ===== STORAGE KEYS =====
+    const STORAGE_KEY = 'walabi_umowy';
+    const CURRENT_KEY = 'walabi_umowa_current';
+
     // ===== FLATPICKR INIT =====
     flatpickr.localize(flatpickr.l10ns.pl);
 
@@ -1159,7 +1490,34 @@
                 document.getElementById('payment3Percent').value = payment3Percent;
                 document.getElementById('payment3Amount').value = formatCurrency(payment3Amount);
             }
+
+            // Aktualizuj załącznik nr 1 - podsumowanie kosztów
+            document.getElementById('sumMebli').textContent = formatCurrency(netto);
+            document.getElementById('sumNettoSpec').textContent = formatCurrency(netto);
+            document.getElementById('sumVatSpec').textContent = formatCurrency(netto * 0.23);
+            document.getElementById('sumBruttoSpec').textContent = formatCurrency(brutto);
+
+            // Aktualizuj harmonogram płatności w załączniku
+            document.getElementById('harmPercent1').textContent = payment1Percent || '0';
+            document.getElementById('harmPercent2').textContent = payment2Percent || '0';
+            document.getElementById('harmPercent3').textContent = payment3Percent || '0';
+            document.getElementById('harmAmount1').textContent = formatCurrency(payment1Amount);
+            document.getElementById('harmAmount2').textContent = formatCurrency(payment2Amount);
+            document.getElementById('harmAmount3').textContent = formatCurrency(payment3Amount);
         }
+    }
+
+    // ===== SYNCHRONIZACJA NUMERÓW DOKUMENTU =====
+    function syncDocNumbers() {
+        const docNum = document.getElementById('docNumber').value || 'P-XXX-26';
+        const date = document.getElementById('contractDate').value || '';
+
+        // Aktualizuj numery w załącznikach
+        document.getElementById('attachDocNum1').textContent = docNum;
+        document.getElementById('attachDocNum1b').textContent = docNum;
+        document.getElementById('attachDocNum3').textContent = docNum;
+        document.getElementById('attachDocNum3b').textContent = docNum;
+        document.getElementById('attachDate3').textContent = date;
     }
 
     // ===== SET DEFAULT DATE =====
@@ -1187,6 +1545,273 @@
         const installationAddressEl = document.getElementById('installationAddress');
         installationAddressEl.addEventListener('input', function() {
             autoResizeInput(this);
+        });
+
+        // Synchronizacja numerów dokumentu
+        document.getElementById('docNumber').addEventListener('input', syncDocNumbers);
+        document.getElementById('contractDate').addEventListener('change', syncDocNumbers);
+
+        // Synchronizuj specyfikację z furnitureType
+        document.getElementById('furnitureType').addEventListener('input', function() {
+            document.getElementById('spec1Desc').value = this.value;
+        });
+
+        // Wczytaj historię przy starcie
+        renderHistory();
+        syncDocNumbers();
+    });
+
+    // ===== SERIALIZATION =====
+    function collectFormData() {
+        const data = { fields: {}, specRowCount: specRowCount };
+        document.querySelectorAll('.document input, .document textarea').forEach(el => {
+            if (!el.id) return;
+            data.fields[el.id] = el.value;
+        });
+        return data;
+    }
+
+    function restoreFormData(data) {
+        // Odtwórz wiersze specyfikacji
+        if (data.specRowCount) {
+            specRowCount = data.specRowCount;
+            buildSpecRows(specRowCount);
+        }
+
+        // Przywróć wartości pól
+        Object.keys(data.fields).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = data.fields[id];
+        });
+
+        // Przelicz ceny i dopasuj szerokości pól
+        calculateSpecTotals();
+        calculatePrices();
+        syncDocNumbers();
+        autoResizeInput(document.getElementById('furnitureType'));
+        autoResizeInput(document.getElementById('installationAddress'));
+        autoResizeInput(document.getElementById('priceNettoWords'));
+        autoResizeInput(document.getElementById('priceBruttoWords'));
+    }
+
+    // ===== STORAGE =====
+    function loadAllDocs() {
+        try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        } catch { return []; }
+    }
+
+    function saveAllDocs(docs) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(docs));
+    }
+
+    window.saveDocument = function() {
+        const data = collectFormData();
+        const docNum = document.getElementById('docNumber').value || 'P-XXX-26';
+        const client = document.getElementById('clientName').value || 'Brak klienta';
+        const date = document.getElementById('contractDate').value || '';
+        const total = document.getElementById('priceBrutto').value || '';
+
+        const doc = {
+            id: Date.now(),
+            number: docNum,
+            client: client,
+            date: date,
+            total: total,
+            data: data
+        };
+
+        const docs = loadAllDocs();
+        const currentId = parseInt(localStorage.getItem(CURRENT_KEY));
+        const existingIdx = docs.findIndex(d => d.id === currentId);
+
+        if (existingIdx >= 0) {
+            docs[existingIdx] = { ...docs[existingIdx], number: doc.number, client: doc.client, date: doc.date, total: doc.total, data: doc.data };
+        } else {
+            docs.push(doc);
+            localStorage.setItem(CURRENT_KEY, doc.id);
+        }
+
+        saveAllDocs(docs);
+        renderHistory();
+        toast('Dokument zapisany', 'success');
+    };
+
+    window.loadDocument = function(id) {
+        const docs = loadAllDocs();
+        const doc = docs.find(d => d.id === id);
+        if (!doc) return;
+        restoreFormData(doc.data);
+        localStorage.setItem(CURRENT_KEY, id);
+        toast('Wczytano: ' + doc.number);
+    };
+
+    window.deleteDocument = function(id, e) {
+        e.stopPropagation();
+        if (!confirm('Usunąć ten dokument z historii?')) return;
+        let docs = loadAllDocs();
+        docs = docs.filter(d => d.id !== id);
+        saveAllDocs(docs);
+        renderHistory();
+        toast('Dokument usunięty');
+    };
+
+    // ===== HISTORY =====
+    function renderHistory() {
+        const docs = loadAllDocs();
+        const container = document.getElementById('historyList');
+
+        if (!docs.length) {
+            container.innerHTML = '<div class="history-empty">Brak zapisanych dokumentów</div>';
+            return;
+        }
+
+        container.innerHTML = docs.map(doc => `
+            <div class="history-item" onclick="loadDocument(${doc.id})">
+                <div>
+                    <div class="hi-number">${doc.number}</div>
+                    <div class="hi-client">${doc.client} | ${doc.total} PLN</div>
+                </div>
+                <button class="hi-delete" onclick="deleteDocument(${doc.id}, event)" title="Usuń">&times;</button>
+            </div>
+        `).reverse().join('');
+    }
+
+    // ===== NEW DOCUMENT =====
+    window.newDocument = function() {
+        if (!confirm('Rozpocząć nowy dokument? Niezapisane dane zostaną utracone.')) return;
+        document.querySelectorAll('.document input, .document textarea').forEach(el => {
+            if (el.id !== 'contractPlace') {
+                el.value = '';
+            }
+        });
+        document.getElementById('docNumber').value = 'P-XXX-26';
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        document.getElementById('contractDate').value = formattedDate;
+        // Reset specyfikacji do 1 wiersza
+        specRowCount = 1;
+        buildSpecRows(1);
+        localStorage.removeItem(CURRENT_KEY);
+        syncDocNumbers();
+        toast('Nowy dokument');
+    };
+
+    // ===== SPECYFIKACJA MEBLI - WIERSZE =====
+    let specRowCount = 1;
+
+    function buildSpecRows(count) {
+        const tbody = document.getElementById('specTableBody');
+        tbody.innerHTML = '';
+        for (let i = 1; i <= count; i++) {
+            tbody.innerHTML += createSpecRow(i);
+        }
+        // Dodaj event listenery do nowych pól
+        attachSpecRowListeners();
+    }
+
+    function createSpecRow(num) {
+        return `
+            <tr data-row="${num}">
+                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;">${num}</td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 6px;"><input type="text" id="spec${num}Desc" placeholder="Opis mebla" style="border:none;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;"><input type="text" id="spec${num}Dim" placeholder="-" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;"><input type="text" id="spec${num}Qty" value="1" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;"><input type="text" id="spec${num}Unit" value="kpl" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;"><input type="text" id="spec${num}Price" placeholder="0,00" style="border:none;text-align:right;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);" onchange="calculateSpecRow(${num})"></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;"><input type="text" id="spec${num}Total" placeholder="0,00" style="border:none;text-align:right;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);" readonly></td>
+            </tr>
+        `;
+    }
+
+    function attachSpecRowListeners() {
+        for (let i = 1; i <= specRowCount; i++) {
+            const qtyEl = document.getElementById(`spec${i}Qty`);
+            const priceEl = document.getElementById(`spec${i}Price`);
+            if (qtyEl) {
+                qtyEl.addEventListener('input', () => calculateSpecRow(i));
+            }
+            if (priceEl) {
+                priceEl.addEventListener('input', () => calculateSpecRow(i));
+            }
+        }
+    }
+
+    function calculateSpecRow(num) {
+        const qty = parseNumber(document.getElementById(`spec${num}Qty`).value) || 1;
+        const price = parseNumber(document.getElementById(`spec${num}Price`).value) || 0;
+        const total = qty * price;
+        document.getElementById(`spec${num}Total`).value = formatCurrency(total);
+        calculateSpecTotals();
+    }
+
+    function calculateSpecTotals() {
+        let sumMebli = 0;
+        for (let i = 1; i <= specRowCount; i++) {
+            const totalEl = document.getElementById(`spec${i}Total`);
+            if (totalEl) {
+                sumMebli += parseNumber(totalEl.value) || 0;
+            }
+        }
+
+        const dodatkowe = parseNumber(document.getElementById('sumDodatkowe').value) || 0;
+        const transport = parseNumber(document.getElementById('sumTransport').value) || 0;
+        const montaz = parseNumber(document.getElementById('sumMontaz').value) || 0;
+
+        const netto = sumMebli + dodatkowe + transport + montaz;
+        const vat = netto * 0.23;
+        const brutto = netto + vat;
+
+        document.getElementById('sumMebli').textContent = formatCurrency(sumMebli);
+        document.getElementById('sumNettoSpec').textContent = formatCurrency(netto);
+        document.getElementById('sumVatSpec').textContent = formatCurrency(vat);
+        document.getElementById('sumBruttoSpec').textContent = formatCurrency(brutto);
+
+        // Aktualizuj główne pole priceNetto jeśli puste lub zsynchronizowane
+        const priceNettoEl = document.getElementById('priceNetto');
+        if (!priceNettoEl.value || priceNettoEl.dataset.synced === 'true') {
+            priceNettoEl.value = formatCurrency(netto);
+            priceNettoEl.dataset.synced = 'true';
+            calculatePrices();
+        }
+    }
+
+    window.addSpecRow = function() {
+        specRowCount++;
+        const tbody = document.getElementById('specTableBody');
+        tbody.innerHTML += createSpecRow(specRowCount);
+        attachSpecRowListeners();
+        toast('Dodano wiersz ' + specRowCount);
+    };
+
+    window.removeSpecRow = function() {
+        if (specRowCount <= 1) {
+            toast('Musi pozostać minimum 1 wiersz', 'error');
+            return;
+        }
+        const tbody = document.getElementById('specTableBody');
+        const lastRow = tbody.querySelector(`tr[data-row="${specRowCount}"]`);
+        if (lastRow) {
+            lastRow.remove();
+            specRowCount--;
+            calculateSpecTotals();
+            toast('Usunięto wiersz');
+        }
+    };
+
+    // Inicjalizacja tabeli specyfikacji przy starcie
+    document.addEventListener('DOMContentLoaded', function() {
+        // Buduj tabelę specyfikacji
+        buildSpecRows(1);
+
+        // Event listenery dla pól kosztów dodatkowych
+        document.getElementById('sumDodatkowe').addEventListener('input', calculateSpecTotals);
+        document.getElementById('sumTransport').addEventListener('input', calculateSpecTotals);
+        document.getElementById('sumMontaz').addEventListener('input', calculateSpecTotals);
+
+        // Odznacz synchronizację gdy użytkownik ręcznie zmieni priceNetto
+        document.getElementById('priceNetto').addEventListener('focus', function() {
+            this.dataset.synced = 'false';
         });
     });
 </script>
