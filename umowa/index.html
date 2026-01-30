@@ -626,7 +626,7 @@
                 <div class="paragraph-title">§1. Przedmiot Umowy</div>
                 <div class="paragraph-content">
                     <ol>
-                        <li>Zamawiający zleca, a Wykonawca przyjmuje do realizacji zamówienie obejmujące produkcję, dostawę i montaż <input type="text" id="furnitureType" class="w-200" placeholder="[Opis Rodzaju Mebli/Zestawu Meblowego]"> (zwanych dalej "Meblami") według specyfikacji stanowiącej Załącznik nr 1 do niniejszej Umowy oraz projektu/koncepcji stanowiącego Załącznik nr 2.</li>
+                        <li>Zamawiający zleca, a Wykonawca przyjmuje do realizacji zamówienie obejmujące produkcję, dostawę i montaż <input type="text" id="furnitureType" class="w-auto" placeholder="[Opis Rodzaju Mebli/Zestawu Meblowego]"> (zwanych dalej "Meblami") według specyfikacji stanowiącej Załącznik nr 1 do niniejszej Umowy oraz projektu/koncepcji stanowiącego Załącznik nr 2.</li>
                         <li>Meble zostaną wykonane i zamontowane w lokalizacji: <input type="text" id="installationAddress" class="w-full" placeholder="[Lokalizacja Montażu: Pełny Adres]"></li>
                         <li>Podstawę realizacji zamówienia stanowią:
                             <ol>
@@ -1177,6 +1177,12 @@
 
         document.getElementById('payment1Percent').addEventListener('input', calculatePrices);
         document.getElementById('payment2Percent').addEventListener('input', calculatePrices);
+
+        // Auto-resize dla pola opisu mebli
+        const furnitureTypeEl = document.getElementById('furnitureType');
+        furnitureTypeEl.addEventListener('input', function() {
+            autoResizeInput(this);
+        });
     });
 </script>
 
