@@ -1164,181 +1164,183 @@
     }
 
     // ===== EXPORT DOCX =====
-    async function exportDOCX() {
-        toast('Generowanie DOCX...');
+    window.exportDOCX = async function() {
+        try {
+            toast('Generowanie DOCX...');
 
-        const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = docx;
+            const { Document, Packer, Paragraph, TextRun, AlignmentType } = docx;
 
-        const docNum = document.getElementById('docNumber').value || 'P-XXX-26';
-        const contractDate = document.getElementById('contractDate').value || '';
-        const contractPlace = document.getElementById('contractPlace').value || 'Toruniu';
-        const clientName = document.getElementById('clientName').value || '';
-        const clientCity = document.getElementById('clientCity').value || '';
-        const clientAddress = document.getElementById('clientAddress').value || '';
-        const clientNIP = document.getElementById('clientNIP').value || '';
-        const clientPhone = document.getElementById('clientPhone').value || '';
-        const clientEmail = document.getElementById('clientEmail').value || '';
-        const furnitureType = document.getElementById('furnitureType').value || '';
-        const installationAddress = document.getElementById('installationAddress').value || '';
-        const termWeeksFrom = document.getElementById('termWeeksFrom').value || '';
-        const termWeeksTo = document.getElementById('termWeeksTo').value || '';
-        const priceNetto = document.getElementById('priceNetto').value || '';
-        const priceNettoWords = document.getElementById('priceNettoWords').value || '';
-        const priceBrutto = document.getElementById('priceBrutto').value || '';
-        const priceBruttoWords = document.getElementById('priceBruttoWords').value || '';
-        const payment1Percent = document.getElementById('payment1Percent').value || '';
-        const payment1Amount = document.getElementById('payment1Amount').value || '';
-        const payment2Percent = document.getElementById('payment2Percent').value || '';
-        const payment2Amount = document.getElementById('payment2Amount').value || '';
-        const payment3Percent = document.getElementById('payment3Percent').value || '';
-        const payment3Amount = document.getElementById('payment3Amount').value || '';
-        const warrantyYears = document.getElementById('warrantyYears').value || '';
+            const docNum = document.getElementById('docNumber').value || 'P-XXX-26';
+            const contractDate = document.getElementById('contractDate').value || '';
+            const contractPlace = document.getElementById('contractPlace').value || 'Toruniu';
+            const clientName = document.getElementById('clientName').value || '';
+            const clientCity = document.getElementById('clientCity').value || '';
+            const clientAddress = document.getElementById('clientAddress').value || '';
+            const clientNIP = document.getElementById('clientNIP').value || '';
+            const clientPhone = document.getElementById('clientPhone').value || '';
+            const clientEmail = document.getElementById('clientEmail').value || '';
+            const furnitureType = document.getElementById('furnitureType').value || '';
+            const installationAddress = document.getElementById('installationAddress').value || '';
+            const termWeeksFrom = document.getElementById('termWeeksFrom').value || '';
+            const termWeeksTo = document.getElementById('termWeeksTo').value || '';
+            const priceNetto = document.getElementById('priceNetto').value || '';
+            const priceNettoWords = document.getElementById('priceNettoWords').value || '';
+            const priceBrutto = document.getElementById('priceBrutto').value || '';
+            const priceBruttoWords = document.getElementById('priceBruttoWords').value || '';
+            const payment1Percent = document.getElementById('payment1Percent').value || '';
+            const payment1Amount = document.getElementById('payment1Amount').value || '';
+            const payment2Percent = document.getElementById('payment2Percent').value || '';
+            const payment2Amount = document.getElementById('payment2Amount').value || '';
+            const payment3Percent = document.getElementById('payment3Percent').value || '';
+            const payment3Amount = document.getElementById('payment3Amount').value || '';
+            const warrantyMonths = document.getElementById('warrantyMonths').value || '60';
 
-        const doc = new Document({
-            sections: [{
-                properties: {},
-                children: [
-                    new Paragraph({
-                        children: [new TextRun({ text: `UMOWA Nr ${docNum}`, bold: true, size: 32 })],
-                        alignment: AlignmentType.CENTER,
-                        spacing: { after: 400 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `zawarta w dniu ${contractDate} w ${contractPlace} pomiędzy:`, size: 22 })],
-                        spacing: { after: 200 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: "WYKONAWCA:", bold: true, size: 22 })],
-                        spacing: { before: 200, after: 100 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: "WALABI Spółką z ograniczoną odpowiedzialnością Spółką komandytową", bold: true, size: 22 })],
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: "z siedzibą w Toruniu, ul. Kosynierów Kościuszkowskich 13/4, 87-100 Toruń,", size: 22 })],
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: "KRS 0000725731, REGON: 369866245, NIP: 8792700696,", size: 22 })],
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: 'zwaną dalej „Wykonawcą",', size: 22 })],
-                        spacing: { after: 200 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: "a", size: 22 })],
-                        alignment: AlignmentType.CENTER,
-                        spacing: { after: 200 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: "ZAMAWIAJĄCY:", bold: true, size: 22 })],
-                        spacing: { after: 100 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: clientName || "[Pełna Nazwa Zamawiającego / Firma]", bold: true, size: 22 })],
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `z siedzibą w ${clientCity || "[Miejscowość]"}, ${clientAddress || "[Adres]"}`, size: 22 })],
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `NIP ${clientNIP || "[NIP]"}`, size: 22 })],
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `tel.: ${clientPhone || "[Telefon]"}, e-mail: ${clientEmail || "[E-mail]"}`, size: 22 })],
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: 'zwanym dalej „Zamawiającym",', size: 22 })],
-                        spacing: { after: 200 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: 'zwanymi łącznie „Stronami", a każdy z osobna „Stroną".', size: 22 })],
-                        spacing: { after: 400 }
-                    }),
-                    // §1
-                    new Paragraph({
-                        children: [new TextRun({ text: "§1. PRZEDMIOT UMOWY", bold: true, size: 24 })],
-                        spacing: { before: 300, after: 200 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `1. Zamawiający zleca, a Wykonawca przyjmuje do realizacji zamówienie obejmujące produkcję, dostawę i montaż ${furnitureType || "[Opis Rodzaju Mebli]"} według specyfikacji stanowiącej Załącznik nr 1 oraz projektu stanowiącego Załącznik nr 2.`, size: 22 })],
-                        spacing: { after: 100 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `2. Meble zostaną zamontowane w lokalizacji: ${installationAddress || "[Lokalizacja Montażu]"}`, size: 22 })],
-                        spacing: { after: 200 }
-                    }),
-                    // §2
-                    new Paragraph({
-                        children: [new TextRun({ text: "§2. TERMINY REALIZACJI", bold: true, size: 24 })],
-                        spacing: { before: 300, after: 200 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `1. Termin realizacji: ${termWeeksFrom || "[Liczba]"} do ${termWeeksTo || "[Liczba]"} tygodni od daty podpisania umowy.`, size: 22 })],
-                        spacing: { after: 200 }
-                    }),
-                    // §3
-                    new Paragraph({
-                        children: [new TextRun({ text: "§3. WYNAGRODZENIE", bold: true, size: 24 })],
-                        spacing: { before: 300, after: 200 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `1. Wynagrodzenie: ${priceNetto || "[Kwota]"} zł netto (${priceNettoWords || "[słownie]"}), ${priceBrutto || "[Kwota]"} zł brutto (${priceBruttoWords || "[słownie]"}) z VAT 23%.`, size: 22 })],
-                        spacing: { after: 100 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `2. Pierwsza płatność: ${payment1Percent || "[%]"}% = ${payment1Amount || "[Kwota]"} zł brutto, płatna 3 dni po podpisaniu umowy.`, size: 22 })],
-                        spacing: { after: 100 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `3. Druga płatność: ${payment2Percent || "[%]"}% = ${payment2Amount || "[Kwota]"} zł brutto, płatna przed dostawą.`, size: 22 })],
-                        spacing: { after: 100 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `4. Pozostała kwota: ${payment3Percent || "[%]"}% = ${payment3Amount || "[Kwota]"} zł brutto, płatna 3 dni od montażu i protokołu odbioru.`, size: 22 })],
-                        spacing: { after: 100 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: "5. Nr konta: mBank 31 1140 2004 0000 3302 8257 6928", size: 22 })],
-                        spacing: { after: 200 }
-                    }),
-                    // §6
-                    new Paragraph({
-                        children: [new TextRun({ text: "§6. GWARANCJA", bold: true, size: 24 })],
-                        spacing: { before: 300, after: 200 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `1. Gwarancja: ${warrantyYears || "[Liczba]"} lat od daty odbioru końcowego.`, size: 22 })],
-                        spacing: { after: 400 }
-                    }),
-                    // Signatures
-                    new Paragraph({
-                        children: [
-                            new TextRun({ text: "______________________", size: 22 }),
-                            new TextRun({ text: "                                        ", size: 22 }),
-                            new TextRun({ text: "______________________", size: 22 })
-                        ],
-                        spacing: { before: 600 }
-                    }),
-                    new Paragraph({
-                        children: [
-                            new TextRun({ text: "        Wykonawca        ", size: 20 }),
-                            new TextRun({ text: "                                                    ", size: 20 }),
-                            new TextRun({ text: "        Zamawiający        ", size: 20 })
-                        ]
-                    })
-                ]
-            }]
-        });
+            const children = [
+                // Tytuł
+                new Paragraph({
+                    children: [new TextRun({ text: `UMOWA Nr ${docNum}`, bold: true, size: 32 })],
+                    alignment: AlignmentType.CENTER,
+                    spacing: { after: 300 }
+                }),
+                new Paragraph({
+                    children: [new TextRun({ text: `zawarta w dniu ${contractDate} w ${contractPlace} pomiędzy:`, size: 22 })],
+                    spacing: { after: 200 }
+                }),
 
-        const blob = await Packer.toBlob(doc);
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Umowa_${docNum.replace(/\//g, '-')}_${clientName || 'WALABI'}.docx`;
-        a.click();
-        URL.revokeObjectURL(url);
+                // Wykonawca
+                new Paragraph({ children: [new TextRun({ text: "WYKONAWCA:", bold: true, size: 22 })], spacing: { before: 200, after: 100 } }),
+                new Paragraph({ children: [new TextRun({ text: "WALABI Spółką z ograniczoną odpowiedzialnością Spółką komandytową", bold: true, size: 22 })] }),
+                new Paragraph({ children: [new TextRun({ text: "z siedzibą w Toruniu, ul. Kosynierów Kościuszkowskich 13/4, 87-100 Toruń,", size: 22 })] }),
+                new Paragraph({ children: [new TextRun({ text: "zarejestrowaną w Sądzie Rejonowym w Toruniu, VII Wydział Gospodarczy KRS", size: 22 })] }),
+                new Paragraph({ children: [new TextRun({ text: "pod numerem KRS 0000725731, REGON: 369866245, NIP: 8792700696,", size: 22 })] }),
+                new Paragraph({ children: [new TextRun({ text: "reprezentowaną przez:", size: 22 })] }),
+                new Paragraph({ children: [new TextRun({ text: "Leszka Borowskiego – e-mail: leszek@walabi.pl, tel. 501 260 990", size: 22 })] }),
+                new Paragraph({ children: [new TextRun({ text: "Jarosława Różańskiego – e-mail: jarek@walabi.pl, tel. 501 266 670", size: 22 })] }),
+                new Paragraph({ children: [new TextRun({ text: 'zwaną dalej „Wykonawcą",', size: 22 })], spacing: { after: 200 } }),
 
-        toast('Pobrano plik DOCX', 'success');
-    }
+                new Paragraph({ children: [new TextRun({ text: "a", size: 22 })], alignment: AlignmentType.CENTER, spacing: { after: 200 } }),
+
+                // Zamawiający
+                new Paragraph({ children: [new TextRun({ text: "ZAMAWIAJĄCY:", bold: true, size: 22 })], spacing: { after: 100 } }),
+                new Paragraph({ children: [new TextRun({ text: clientName || "[Pełna Nazwa Zamawiającego / Firma]", bold: true, size: 22 })] }),
+                new Paragraph({ children: [new TextRun({ text: `z siedzibą w ${clientCity || "[Miejscowość]"}, ${clientAddress || "[Adres]"}`, size: 22 })] }),
+                new Paragraph({ children: [new TextRun({ text: `NIP ${clientNIP || "[NIP]"}`, size: 22 })] }),
+                new Paragraph({ children: [new TextRun({ text: `tel.: ${clientPhone || "[Telefon]"}, e-mail: ${clientEmail || "[E-mail]"}`, size: 22 })] }),
+                new Paragraph({ children: [new TextRun({ text: 'zwanym dalej „Zamawiającym",', size: 22 })], spacing: { after: 200 } }),
+                new Paragraph({ children: [new TextRun({ text: 'zwanymi łącznie „Stronami", a każdy z osobna „Stroną".', size: 22 })], spacing: { after: 300 } }),
+
+                // §1. PRZEDMIOT UMOWY
+                new Paragraph({ children: [new TextRun({ text: "§1. PRZEDMIOT UMOWY", bold: true, size: 24 })], spacing: { before: 300, after: 150 } }),
+                new Paragraph({ children: [new TextRun({ text: `1. Zamawiający zleca, a Wykonawca przyjmuje do realizacji zamówienie obejmujące produkcję, dostawę i montaż ${furnitureType || "[Opis Rodzaju Mebli]"} (zwanych dalej "Meblami") według specyfikacji stanowiącej Załącznik nr 1 do niniejszej Umowy oraz projektu/koncepcji stanowiącego Załącznik nr 2.`, size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: `2. Meble zostaną wykonane i zamontowane w lokalizacji: ${installationAddress || "[Lokalizacja Montażu: Pełny Adres]"}`, size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "3. Podstawę realizacji zamówienia stanowią: a) Specyfikacja mebli wraz z wyceną (Załącznik nr 1), b) Projekt wykonawczy/Koncepcja (Załącznik nr 2), c) Uzgodnienia poczynione drogą elektroniczną (e-mail) pomiędzy Stronami, d) Obowiązujące normy i przepisy techniczne.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "4. W przypadku rozbieżności pomiędzy treścią dokumentów wymienionych w ust. 3, pierwszeństwo mają postanowienia niniejszej Umowy, następnie Załącznik nr 1 i Załącznik nr 2, a następnie uzgodnienia poczynione drogą elektroniczną.", size: 22 })], spacing: { after: 150 } }),
+
+                // §2. TERMINY REALIZACJI
+                new Paragraph({ children: [new TextRun({ text: "§2. TERMINY REALIZACJI", bold: true, size: 24 })], spacing: { before: 300, after: 150 } }),
+                new Paragraph({ children: [new TextRun({ text: `1. Termin realizacji przedmiotu umowy ustala się na: ${termWeeksFrom || "[Liczba]"} do ${termWeeksTo || "[Liczba]"} tygodni od daty podpisania umowy.`, size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "2. Przez realizację przedmiotu umowy rozumie się wykonanie i montaż wszystkich Mebli wymienionych w Załączniku nr 1.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "3. Termin realizacji może ulec zmianie w przypadku: a) Działania siły wyższej, b) Wprowadzenia zmian w projekcie lub specyfikacji przez Zamawiającego, c) Nieterminowego przygotowania miejsca montażu przez Zamawiającego, d) Wystąpienia okoliczności niezależnych od Wykonawcy.", size: 22 })], spacing: { after: 150 } }),
+
+                // §3. WYNAGRODZENIE
+                new Paragraph({ children: [new TextRun({ text: "§3. WYNAGRODZENIE", bold: true, size: 24 })], spacing: { before: 300, after: 150 } }),
+                new Paragraph({ children: [new TextRun({ text: `1. Całkowite wynagrodzenie za wykonanie przedmiotu Umowy wynosi: ${priceNetto || "[Kwota]"} zł netto (słownie: ${priceNettoWords || "[słownie]"} złotych), co stanowi ${priceBrutto || "[Kwota]"} zł brutto (słownie: ${priceBruttoWords || "[słownie]"} złotych) z uwzględnieniem podatku VAT 23%.`, size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "2. Wynagrodzenie obejmuje: produkcję mebli, transport, wniesienie oraz montaż w miejscu wskazanym w §1 ust. 2.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "3. Wynagrodzenie płatne będzie w następujących transzach:", size: 22 })], spacing: { after: 50 } }),
+                new Paragraph({ children: [new TextRun({ text: `   a) Pierwsza płatność w wysokości ${payment1Percent || "[%]"}% wartości brutto, tj. ${payment1Amount || "[Kwota]"} zł brutto, płatna 3 dni po podpisaniu umowy;`, size: 22 })], spacing: { after: 50 } }),
+                new Paragraph({ children: [new TextRun({ text: `   b) Druga płatność w wysokości ${payment2Percent || "[%]"}% wartości brutto, tj. ${payment2Amount || "[Kwota]"} zł brutto, płatna przed dostawą;`, size: 22 })], spacing: { after: 50 } }),
+                new Paragraph({ children: [new TextRun({ text: `   c) Pozostała kwota w wysokości ${payment3Percent || "[%]"}% wartości brutto, tj. ${payment3Amount || "[Kwota]"} zł brutto, płatna w terminie 3 dni od daty montażu i podpisania protokołu odbioru.`, size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "4. Płatności będą dokonywane przelewem na rachunek bankowy Wykonawcy: mBank 31 1140 2004 0000 3302 8257 6928.", size: 22 })], spacing: { after: 150 } }),
+
+                // §4. OBOWIĄZKI STRON
+                new Paragraph({ children: [new TextRun({ text: "§4. OBOWIĄZKI STRON", bold: true, size: 24 })], spacing: { before: 300, after: 150 } }),
+                new Paragraph({ children: [new TextRun({ text: "1. Wykonawca zobowiązuje się do: a) Wykonania przedmiotu Umowy zgodnie ze specyfikacją, projektem i zasadami sztuki meblarskiej; b) Użycia materiałów wysokiej jakości, zgodnych z ustaleniami; c) Terminowej realizacji zamówienia; d) Uprzątnięcia miejsca montażu po zakończeniu prac.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "2. Zamawiający zobowiązuje się do: a) Terminowego regulowania płatności; b) Przygotowania miejsca montażu zgodnie z wytycznymi Wykonawcy; c) Zapewnienia dostępu do miejsca montażu w ustalonych terminach; d) Dokonania odbioru Mebli zgodnie z postanowieniami Umowy.", size: 22 })], spacing: { after: 150 } }),
+
+                // §5. OBOWIĄZKI ZAMAWIAJĄCEGO
+                new Paragraph({ children: [new TextRun({ text: "§5. OBOWIĄZKI ZAMAWIAJĄCEGO ZWIĄZANE Z PRZYGOTOWANIEM MIEJSCA MONTAŻU", bold: true, size: 24 })], spacing: { before: 300, after: 150 } }),
+                new Paragraph({ children: [new TextRun({ text: "1. Zamawiający zobowiązany jest do przygotowania miejsca montażu zgodnie z wytycznymi Wykonawcy.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "2. W przypadku braku przygotowania miejsca montażu w ustalonym terminie, Wykonawca ma prawo odmówić rozpoczęcia prac montażowych.", size: 22 })], spacing: { after: 150 } }),
+
+                // §6. ODBIÓR
+                new Paragraph({ children: [new TextRun({ text: "§6. ODBIÓR PRZEDMIOTU UMOWY", bold: true, size: 24 })], spacing: { before: 300, after: 150 } }),
+                new Paragraph({ children: [new TextRun({ text: "1. Po zakończeniu montażu Strony dokonają odbioru końcowego, z którego zostanie sporządzony protokół odbioru.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "2. Zamawiający zobowiązany jest do zgłoszenia wszelkich uwag i zastrzeżeń podczas odbioru.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "3. Brak zgłoszenia uwag podczas odbioru oznacza akceptację wykonanych prac.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "4. W przypadku stwierdzenia wad, Wykonawca zobowiązuje się do ich usunięcia w terminie uzgodnionym przez Strony.", size: 22 })], spacing: { after: 150 } }),
+
+                // §7. GWARANCJA
+                new Paragraph({ children: [new TextRun({ text: "§7. GWARANCJA", bold: true, size: 24 })], spacing: { before: 300, after: 150 } }),
+                new Paragraph({ children: [new TextRun({ text: `1. Wykonawca udziela ${warrantyMonths}-miesięcznej gwarancji na wykonane Meble, liczonej od daty podpisania protokołu odbioru.`, size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "2. Szczegółowe warunki gwarancji określa Załącznik nr 3 – „Zalecenia i warunki gwarancji".", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "3. Gwarancja nie obejmuje: a) Uszkodzeń mechanicznych powstałych z winy użytkownika, b) Uszkodzeń wynikających z nieprawidłowej eksploatacji, c) Naturalnego zużycia materiałów, d) Uszkodzeń powstałych w wyniku działania czynników zewnętrznych.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "4. Zamawiający traci uprawnienia z tytułu gwarancji w przypadku: a) Dokonania napraw przez osoby nieupoważnione, b) Niewłaściwego użytkowania Mebli, c) Nieprzestrzegania zaleceń zawartych w instrukcji użytkowania.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "5. Zgłoszenia reklamacyjne należy kierować na adres e-mail: poczta@walabi.pl lub telefonicznie: 501 260 990.", size: 22 })], spacing: { after: 150 } }),
+
+                // §8. ODSTĄPIENIE OD UMOWY
+                new Paragraph({ children: [new TextRun({ text: "§8. ODSTĄPIENIE OD UMOWY", bold: true, size: 24 })], spacing: { before: 300, after: 150 } }),
+                new Paragraph({ children: [new TextRun({ text: "1. Zamawiający może odstąpić od umowy w przypadku: a) Opóźnienia w realizacji przekraczającego 30 dni z przyczyn leżących wyłącznie po stronie Wykonawcy, b) Rażącego naruszenia przez Wykonawcę postanowień niniejszej umowy.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "2. Wykonawca może odstąpić od umowy w przypadku: a) Opóźnienia w płatnościach przekraczającego 14 dni, b) Niemożności wykonania pomiarów z przyczyn leżących po stronie Zamawiającego, c) Braku współdziałania ze strony Zamawiającego.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "3. Odstąpienie od umowy wymaga formy pisemnej pod rygorem nieważności.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "4. W przypadku odstąpienia od umowy przez Zamawiającego z przyczyn leżących po jego stronie, Wykonawca zachowuje prawo do otrzymanej zaliczki jako odszkodowanie.", size: 22 })], spacing: { after: 150 } }),
+
+                // §9. OCHRONA DANYCH OSOBOWYCH
+                new Paragraph({ children: [new TextRun({ text: "§9. OCHRONA DANYCH OSOBOWYCH", bold: true, size: 24 })], spacing: { before: 300, after: 150 } }),
+                new Paragraph({ children: [new TextRun({ text: "1. Zamawiający wyraża zgodę na przetwarzanie jego danych osobowych przez Wykonawcę w zakresie niezbędnym do realizacji niniejszej umowy, zgodnie z RODO.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "2. Administratorem danych osobowych jest WALABI Sp. z o.o. Sp.k. z siedzibą w Toruniu.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "3. Dane osobowe będą przetwarzane wyłącznie w celu realizacji niniejszej umowy.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "4. Zamawiający ma prawo dostępu do treści swoich danych, ich sprostowania, usunięcia lub ograniczenia przetwarzania.", size: 22 })], spacing: { after: 150 } }),
+
+                // §10. POSTANOWIENIA KOŃCOWE
+                new Paragraph({ children: [new TextRun({ text: "§10. POSTANOWIENIA KOŃCOWE", bold: true, size: 24 })], spacing: { before: 300, after: 150 } }),
+                new Paragraph({ children: [new TextRun({ text: "1. W sprawach nieuregulowanych niniejszą umową mają zastosowanie przepisy Kodeksu cywilnego.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "2. Wszelkie zmiany i uzupełnienia niniejszej umowy wymagają formy pisemnej pod rygorem nieważności.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "3. Strony zobowiązują się dążyć do polubownego rozwiązywania sporów. W przypadku niemożności osiągnięcia porozumienia, spory będą rozstrzygane przez sąd właściwy dla siedziby Wykonawcy.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "4. Umowę sporządzono w dwóch jednobrzmiących egzemplarzach, po jednym dla każdej ze Stron.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "5. Strony dopuszczają możliwość podpisania umowy w formie elektronicznej, poprzez wymianę skanów podpisanych dokumentów w formacie PDF.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "6. Integralną część umowy stanowią załączniki: Załącznik nr 1 – Specyfikacja mebli wraz z wyceną, Załącznik nr 2 – Projekt wykonawczy/Koncepcja, Załącznik nr 3 – Zalecenia i warunki gwarancji.", size: 22 })], spacing: { after: 150 } }),
+
+                // §11. WALORYZACJA
+                new Paragraph({ children: [new TextRun({ text: "§11. WALORYZACJA", bold: true, size: 24 })], spacing: { before: 300, after: 150 } }),
+                new Paragraph({ children: [new TextRun({ text: "1. W przypadku wzrostu cen materiałów budowlanych lub komponentów meblowych przekraczającego 10% w stosunku do daty podpisania umowy, Strony zobowiązują się do renegocjacji wynagrodzenia.", size: 22 })], spacing: { after: 80 } }),
+                new Paragraph({ children: [new TextRun({ text: "2. W przypadku braku porozumienia co do nowej ceny w terminie 14 dni od wezwania do renegocjacji, Wykonawca ma prawo zawiesić realizację zamówienia lub rozwiązać umowę z zachowaniem prawa do rozliczenia prac wykonanych dotychczas.", size: 22 })], spacing: { after: 200 } }),
+
+                // Podpisy
+                new Paragraph({ children: [new TextRun({ text: "" })], spacing: { before: 400 } }),
+                new Paragraph({
+                    children: [
+                        new TextRun({ text: "WYKONAWCA:                                                           ZAMAWIAJĄCY:", size: 22 })
+                    ]
+                }),
+                new Paragraph({ children: [new TextRun({ text: "" })], spacing: { before: 300 } }),
+                new Paragraph({
+                    children: [
+                        new TextRun({ text: "........................................                                              ........................................", size: 22 })
+                    ]
+                })
+            ];
+
+            const doc = new Document({
+                sections: [{
+                    properties: {},
+                    children: children
+                }]
+            });
+
+            const blob = await Packer.toBlob(doc);
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Umowa_${docNum.replace(/\//g, '-')}_${clientName || 'WALABI'}.docx`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            toast('Pobrano plik DOCX', 'success');
+        } catch (error) {
+            console.error('Błąd eksportu DOCX:', error);
+            toast('Błąd eksportu DOCX: ' + error.message, 'error');
+        }
+    };
 
     // ===== TOAST =====
     function toast(msg, type) {
