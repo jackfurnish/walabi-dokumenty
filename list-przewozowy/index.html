@@ -1170,7 +1170,7 @@
         const docNum = document.getElementById('docNumber').value || 'List przewozowy';
         const client = document.getElementById('recipientName').value || '';
         const subject = encodeURIComponent(`WALABI - ${docNum}${client ? ' - ' + client : ''}`);
-        const body = encodeURIComponent(`Dzień dobry,\n\nW załączeniu przesyłam ${docNum}.\n\nZ poważaniem,\nWALABI Sp. z o.o. Sp.k.`);
+        const body = encodeURIComponent(`Dzień dobry,\n\nPrzesyłam ${docNum}.\n\nLink do dokumentu: ${window.location.href}\n\nProszę o pobranie dokumentu PDF używając przycisku "Drukuj PDF" na stronie.\n\nZ poważaniem,\nWALABI Sp. z o.o. Sp.k.`);
         window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
         toast('Otwarto klienta email');
     };
