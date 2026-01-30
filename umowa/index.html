@@ -648,8 +648,9 @@
                         <li>Wynagrodzenie obejmuje: produkcję mebli, transport, wniesienie oraz montaż w miejscu wskazanym w §1 ust. 2.</li>
                         <li>Wynagrodzenie płatne będzie w następujących transzach:
                             <ol>
-                                <li>Zaliczka w wysokości <input type="text" id="advancePercent" class="w-60" placeholder="[%]">% wartości brutto, tj. <input type="text" id="advanceAmount" class="w-100" placeholder="[Kwota]"> zł, płatna w terminie <input type="text" id="advanceDays" class="w-60" placeholder="[dni]"> dni od daty podpisania Umowy;</li>
-                                <li>Pozostała kwota w wysokości <input type="text" id="remainingPercent" class="w-60" placeholder="[%]">% wartości brutto, tj. <input type="text" id="remainingAmount" class="w-100" placeholder="[Kwota]"> zł, płatna w terminie <input type="text" id="remainingDays" class="w-60" placeholder="[dni]"> dni od daty odbioru końcowego.</li>
+                                <li>Pierwsza płatność w wysokości <input type="text" id="payment1Percent" class="w-60" placeholder="[%]">% wartości brutto, tj. <input type="text" id="payment1Amount" class="w-100" placeholder="[Kwota]"> zł brutto, płatna 3 dni po podpisaniu umowy;</li>
+                                <li>Druga płatność w wysokości <input type="text" id="payment2Percent" class="w-60" placeholder="[%]">% wartości brutto, tj. <input type="text" id="payment2Amount" class="w-100" placeholder="[Kwota]"> zł brutto, płatna przed dostawą;</li>
+                                <li>Pozostała kwota w wysokości <input type="text" id="payment3Percent" class="w-60" placeholder="[%]">% wartości brutto, tj. <input type="text" id="payment3Amount" class="w-100" placeholder="[Kwota]"> zł brutto, płatna w terminie 3 dni od daty montażu i podpisania protokołu odbioru.</li>
                             </ol>
                         </li>
                         <li>Płatności będą dokonywane przelewem na rachunek bankowy Wykonawcy: <strong>mBank 31 1140 2004 0000 3302 8257 6928</strong>.</li>
@@ -833,12 +834,12 @@
         const priceNettoWords = document.getElementById('priceNettoWords').value || '';
         const priceBrutto = document.getElementById('priceBrutto').value || '';
         const priceBruttoWords = document.getElementById('priceBruttoWords').value || '';
-        const advancePercent = document.getElementById('advancePercent').value || '';
-        const advanceAmount = document.getElementById('advanceAmount').value || '';
-        const advanceDays = document.getElementById('advanceDays').value || '';
-        const remainingPercent = document.getElementById('remainingPercent').value || '';
-        const remainingAmount = document.getElementById('remainingAmount').value || '';
-        const remainingDays = document.getElementById('remainingDays').value || '';
+        const payment1Percent = document.getElementById('payment1Percent').value || '';
+        const payment1Amount = document.getElementById('payment1Amount').value || '';
+        const payment2Percent = document.getElementById('payment2Percent').value || '';
+        const payment2Amount = document.getElementById('payment2Amount').value || '';
+        const payment3Percent = document.getElementById('payment3Percent').value || '';
+        const payment3Amount = document.getElementById('payment3Amount').value || '';
         const warrantyYears = document.getElementById('warrantyYears').value || '';
 
         const doc = new Document({
@@ -932,15 +933,19 @@
                         spacing: { after: 100 }
                     }),
                     new Paragraph({
-                        children: [new TextRun({ text: `2. Zaliczka: ${advancePercent || "[%]"}% = ${advanceAmount || "[Kwota]"} zł, płatna w ${advanceDays || "[dni]"} dni od podpisania.`, size: 22 })],
+                        children: [new TextRun({ text: `2. Pierwsza płatność: ${payment1Percent || "[%]"}% = ${payment1Amount || "[Kwota]"} zł brutto, płatna 3 dni po podpisaniu umowy.`, size: 22 })],
                         spacing: { after: 100 }
                     }),
                     new Paragraph({
-                        children: [new TextRun({ text: `3. Pozostała kwota: ${remainingPercent || "[%]"}% = ${remainingAmount || "[Kwota]"} zł, płatna w ${remainingDays || "[dni]"} dni od odbioru.`, size: 22 })],
+                        children: [new TextRun({ text: `3. Druga płatność: ${payment2Percent || "[%]"}% = ${payment2Amount || "[Kwota]"} zł brutto, płatna przed dostawą.`, size: 22 })],
                         spacing: { after: 100 }
                     }),
                     new Paragraph({
-                        children: [new TextRun({ text: "4. Nr konta: mBank 31 1140 2004 0000 3302 8257 6928", size: 22 })],
+                        children: [new TextRun({ text: `4. Pozostała kwota: ${payment3Percent || "[%]"}% = ${payment3Amount || "[Kwota]"} zł brutto, płatna 3 dni od montażu i protokołu odbioru.`, size: 22 })],
+                        spacing: { after: 100 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "5. Nr konta: mBank 31 1140 2004 0000 3302 8257 6928", size: 22 })],
                         spacing: { after: 200 }
                     }),
                     // §6
@@ -1099,7 +1104,8 @@
     // ===== PRZELICZANIE KWOT =====
     function calculatePrices() {
         const netto = parseNumber(document.getElementById('priceNetto').value);
-        const advancePercent = parseNumber(document.getElementById('advancePercent').value);
+        const payment1Percent = parseNumber(document.getElementById('payment1Percent').value);
+        const payment2Percent = parseNumber(document.getElementById('payment2Percent').value);
 
         if (netto > 0) {
             // Oblicz brutto (VAT 23%)
@@ -1116,15 +1122,21 @@
             autoResizeInput(nettoWordsEl);
             autoResizeInput(bruttoWordsEl);
 
-            // Oblicz zaliczkę i pozostałą kwotę
-            if (advancePercent > 0) {
-                const advanceAmount = brutto * (advancePercent / 100);
-                const remainingPercent = 100 - advancePercent;
-                const remainingAmount = brutto - advanceAmount;
+            // Oblicz transze płatności
+            const payment1Amount = brutto * (payment1Percent / 100);
+            const payment2Amount = brutto * (payment2Percent / 100);
+            const payment3Percent = 100 - payment1Percent - payment2Percent;
+            const payment3Amount = brutto - payment1Amount - payment2Amount;
 
-                document.getElementById('advanceAmount').value = formatCurrency(advanceAmount);
-                document.getElementById('remainingPercent').value = remainingPercent;
-                document.getElementById('remainingAmount').value = formatCurrency(remainingAmount);
+            if (payment1Percent > 0) {
+                document.getElementById('payment1Amount').value = formatCurrency(payment1Amount);
+            }
+            if (payment2Percent > 0) {
+                document.getElementById('payment2Amount').value = formatCurrency(payment2Amount);
+            }
+            if (payment3Percent >= 0) {
+                document.getElementById('payment3Percent').value = payment3Percent;
+                document.getElementById('payment3Amount').value = formatCurrency(payment3Amount);
             }
         }
     }
@@ -1142,7 +1154,8 @@
             if (val > 0) this.value = formatCurrency(val);
         });
 
-        document.getElementById('advancePercent').addEventListener('input', calculatePrices);
+        document.getElementById('payment1Percent').addEventListener('input', calculatePrices);
+        document.getElementById('payment2Percent').addEventListener('input', calculatePrices);
     });
 </script>
 
