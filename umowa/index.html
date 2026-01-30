@@ -377,6 +377,11 @@
         .paragraph-content .w-150 { width: 150px; }
         .paragraph-content .w-200 { width: 200px; }
         .paragraph-content .w-full { width: 100%; }
+        .paragraph-content .w-auto {
+            width: auto;
+            min-width: 180px;
+            max-width: 100%;
+        }
 
         /* --- SIGNATURES --- */
         .signatures-section {
@@ -639,7 +644,7 @@
                 <div class="paragraph-title">§3. Wynagrodzenie</div>
                 <div class="paragraph-content">
                     <ol>
-                        <li>Całkowite wynagrodzenie za wykonanie przedmiotu Umowy wynosi: <input type="text" id="priceNetto" class="w-100" placeholder="[Kwota]"> zł netto (słownie: <input type="text" id="priceNettoWords" class="w-200" placeholder="[słownie]"> złotych), co stanowi <input type="text" id="priceBrutto" class="w-100" placeholder="[Kwota]"> zł brutto (słownie: <input type="text" id="priceBruttoWords" class="w-200" placeholder="[słownie]"> złotych) z uwzględnieniem podatku VAT 23%.</li>
+                        <li>Całkowite wynagrodzenie za wykonanie przedmiotu Umowy wynosi: <input type="text" id="priceNetto" class="w-100" placeholder="[Kwota]"> zł netto (słownie: <input type="text" id="priceNettoWords" class="w-auto" placeholder="[słownie]"> złotych), co stanowi <input type="text" id="priceBrutto" class="w-100" placeholder="[Kwota]"> zł brutto (słownie: <input type="text" id="priceBruttoWords" class="w-auto" placeholder="[słownie]"> złotych) z uwzględnieniem podatku VAT 23%.</li>
                         <li>Wynagrodzenie obejmuje: produkcję mebli, transport, wniesienie oraz montaż w miejscu wskazanym w §1 ust. 2.</li>
                         <li>Wynagrodzenie płatne będzie w następujących transzach:
                             <ol>
@@ -1074,6 +1079,23 @@
         return result;
     }
 
+    // ===== AUTO-RESIZE INPUT =====
+    function autoResizeInput(input) {
+        // Tworzymy tymczasowy span do pomiaru szerokości tekstu
+        const span = document.createElement('span');
+        span.style.visibility = 'hidden';
+        span.style.position = 'absolute';
+        span.style.whiteSpace = 'nowrap';
+        span.style.font = window.getComputedStyle(input).font;
+        span.textContent = input.value || input.placeholder;
+        document.body.appendChild(span);
+
+        const width = span.offsetWidth + 20; // dodaj margines
+        input.style.width = Math.max(width, 180) + 'px';
+
+        document.body.removeChild(span);
+    }
+
     // ===== PRZELICZANIE KWOT =====
     function calculatePrices() {
         const netto = parseNumber(document.getElementById('priceNetto').value);
@@ -1085,8 +1107,14 @@
             document.getElementById('priceBrutto').value = formatCurrency(brutto);
 
             // Słownie
-            document.getElementById('priceNettoWords').value = numberToWords(netto);
-            document.getElementById('priceBruttoWords').value = numberToWords(brutto);
+            const nettoWordsEl = document.getElementById('priceNettoWords');
+            const bruttoWordsEl = document.getElementById('priceBruttoWords');
+            nettoWordsEl.value = numberToWords(netto);
+            bruttoWordsEl.value = numberToWords(brutto);
+
+            // Dopasuj szerokość pól słownie do zawartości
+            autoResizeInput(nettoWordsEl);
+            autoResizeInput(bruttoWordsEl);
 
             // Oblicz zaliczkę i pozostałą kwotę
             if (advancePercent > 0) {
