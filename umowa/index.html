@@ -1113,14 +1113,6 @@
     const STORAGE_KEY = 'walabi_umowy';
     const CURRENT_KEY = 'walabi_umowa_current';
 
-    // ===== FLATPICKR INIT =====
-    flatpickr.localize(flatpickr.l10ns.pl);
-
-    flatpickr("#contractDate", {
-        dateFormat: "d.m.Y",
-        defaultDate: new Date()
-    });
-
     // ===== PRINT =====
     window.printDoc = function() {
         window.print();
@@ -1150,18 +1142,22 @@
     window.clearForm = function() {
         if (confirm('Czy na pewno chcesz wyczyścić formularz?')) {
             document.querySelectorAll('input[type="text"]').forEach(input => {
-                if (input.id !== 'contractPlace') {
+                if (input.id !== 'contractPlace' && input.id !== 'contractDate') {
                     input.value = '';
                 }
             });
-            document.getElementById('docNumber').value = 'P-XXX-26';
-            flatpickr("#contractDate", {
-                dateFormat: "d.m.Y",
-                defaultDate: new Date()
+            document.querySelectorAll('textarea').forEach(ta => {
+                ta.value = '';
             });
+            document.getElementById('docNumber').value = 'P-XXX-26';
+            document.getElementById('warrantyMonths').value = '60';
+            // Reset daty przez flatpickr
+            const fp = document.getElementById('contractDate')._flatpickr;
+            if (fp) fp.setDate(new Date());
+            syncDocNumbers();
             toast('Formularz wyczyszczony');
         }
-    }
+    };
 
     // ===== EXPORT DOCX =====
     window.exportDOCX = async function() {
@@ -1522,11 +1518,17 @@
         document.getElementById('attachDate3').textContent = date;
     }
 
-    // ===== SET DEFAULT DATE =====
+    // ===== INICJALIZACJA =====
     document.addEventListener('DOMContentLoaded', function() {
-        const today = new Date();
-        const formattedDate = today.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        document.getElementById('contractDate').value = formattedDate;
+        // Flatpickr - kalendarz
+        flatpickr.localize(flatpickr.l10ns.pl);
+        flatpickr("#contractDate", {
+            dateFormat: "d.m.Y",
+            defaultDate: new Date(),
+            onChange: function() {
+                syncDocNumbers();
+            }
+        });
 
         // Dodaj event listenery do pól z kwotami
         document.getElementById('priceNetto').addEventListener('input', calculatePrices);
@@ -1551,7 +1553,6 @@
 
         // Synchronizacja numerów dokumentu
         document.getElementById('docNumber').addEventListener('input', syncDocNumbers);
-        document.getElementById('contractDate').addEventListener('change', syncDocNumbers);
 
         // Synchronizuj specyfikację z furnitureType
         document.getElementById('furnitureType').addEventListener('input', function() {
