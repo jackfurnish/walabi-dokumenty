@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umowa - WALABI</title>
+    <!-- Google Fonts: Plus Jakarta Sans (full charset with Polish diacritics) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&subset=latin-ext&display=swap" rel="stylesheet">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        /* ===== QUIET LUXURY 2026 - TYPOGRAPHY HIERARCHY ===== */
+        :root {
+            /* Colors */
+            --color-primary: #2D2E2E;      /* Deep Anthracite - for DATA */
+            --color-secondary: #757575;     /* Warm Grey - for LABELS */
+            --color-accent: #B8860B;
+            --color-border: #E0E0E0;
+            --color-background: #FAFAFA;
+            --color-white: #FFFFFF;
+            --color-highlight: #F7F5F0;
+
+            /* Typography */
+            --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+            /* LABELS: 7pt, Regular, Warm Grey, Uppercase, 0.08em tracking */
+            --font-size-label: 7pt;
+            --font-weight-label: 400;
+            --color-label: #757575;
+
+            /* DATA: 9pt, Semi-bold, Deep Anthracite, Sentence case */
+            --font-size-data: 9pt;
+            --font-weight-data: 600;
+            --color-data: #2D2E2E;
+
+            /* Other sizes */
+            --font-size-xs: 6.5pt;
+            --font-size-base: 8.5pt;
+            --font-size-lg: 10pt;
+            --font-size-xl: 12pt;
+
+            /* Spacing */
+            --spacing-label-data: 2pt;
+            --spacing-xs: 3px;
+            --spacing-sm: 6px;
+            --spacing-md: 10px;
+            --spacing-lg: 14px;
+            --spacing-xl: 18px;
+
+            --line-height: 1.4;
+            --letter-spacing: 0.08em;
+            --letter-spacing-label: 0.08em;
+            --border-radius: 2px;
+        }
+
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            background: #E8E8E8;
+            color: var(--color-primary);
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== FLATPICKR CUSTOMIZATION ===== */
+        .flatpickr-calendar {
+            font-family: var(--font-primary) !important;
+            font-size: 11px !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,.12) !important;
+            border: 1px solid var(--color-border) !important;
+            border-radius: 4px !important;
+        }
+        .flatpickr-day.selected, .flatpickr-day.selected:hover {
+            background: var(--color-primary) !important;
+            border-color: var(--color-primary) !important;
+        }
+        .flatpickr-day:hover {
+            background: var(--color-highlight) !important;
+        }
+
+        /* ===== LAYOUT ===== */
+        .app-wrapper {
+            display: flex;
+            gap: 20px;
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+        }
+
+        .sidebar-card {
+            background: var(--color-white);
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+            border: 1px solid var(--color-border);
+        }
+
+        .sidebar-card h3 {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            margin-bottom: 10px;
+            color: var(--color-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .sidebar .logo-area {
+            text-align: center;
+            padding: 12px 0;
+        }
+
+        .sidebar .logo-area img {
+            max-width: 110px;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            transition: all .2s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .btn:active { transform: scale(.98); }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+        .btn-primary:hover { background: #1a1a1a; }
+
+        .btn-secondary {
+            background: var(--color-background);
+            color: var(--color-primary);
+            border: 1px solid var(--color-border);
+        }
+        .btn-secondary:hover { background: var(--color-highlight); }
+
+        .btn-danger {
+            background: var(--color-white);
+            color: #9A3412;
+            border: 1px solid var(--color-border);
+        }
+        .btn-danger:hover { background: #FEF2F2; }
+
+        /* ===== DOCUMENT ===== */
+        .page-container {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .document {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 12mm 14mm;
+            background: var(--color-white);
+            box-shadow: 0 4px 24px rgba(0,0,0,.08);
+            position: relative;
+        }
+
+        /* --- HEADER --- */
+        .doc-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .doc-header .logo img {
+            height: 60px;
+            opacity: 0.95;
+        }
+
+        /* --- DOCUMENT TITLE --- */
+        .doc-title {
+            text-align: center;
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            margin: var(--spacing-md) 0;
+            padding: var(--spacing-sm) 0;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--color-primary);
+        }
+
+        .doc-number {
+            text-align: center;
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--color-primary);
+        }
+
+        .doc-number input {
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            font-family: var(--font-primary);
+            text-align: center;
+            width: 120px;
+            color: var(--color-data);
+            background: transparent;
+        }
+
+        .doc-number input:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* --- CONTRACT INTRO --- */
+        .contract-intro {
+            font-size: var(--font-size-base);
+            line-height: 1.5;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .contract-intro p {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .contract-intro .date-place {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .contract-intro .date-place input {
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+            width: 120px;
+        }
+
+        .contract-intro .date-place input:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* --- PARTY SECTION --- */
+        .party-section {
+            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-sm);
+            background: var(--color-highlight);
+            border-radius: var(--border-radius);
+        }
+
+        .party-title {
+            font-size: var(--font-size-label);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .party-details {
+            font-size: var(--font-size-base);
+            line-height: 1.5;
+        }
+
+        .party-details .field-row {
+            margin-bottom: 2px;
+        }
+
+        .party-details input, .party-details textarea {
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+        }
+
+        .party-details input:focus, .party-details textarea:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        .party-details .w-full { width: 100%; }
+        .party-details .w-200 { width: 200px; }
+        .party-details .w-150 { width: 150px; }
+        .party-details .w-120 { width: 120px; }
+        .party-details .w-100 { width: 100px; }
+
+        /* --- PARAGRAPH SECTION --- */
+        .paragraph-section {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .paragraph-title {
+            font-size: var(--font-size-data);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 0.5pt solid var(--color-border);
+        }
+
+        .paragraph-content {
+            font-size: var(--font-size-base);
+            line-height: 1.5;
+        }
+
+        .paragraph-content ol {
+            margin-left: 16px;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .paragraph-content ol li {
+            margin-bottom: 4px;
+        }
+
+        .paragraph-content ol ol {
+            margin-top: 4px;
+            list-style-type: decimal;
+        }
+
+        .paragraph-content input {
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+        }
+
+        .paragraph-content input:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        .paragraph-content .w-60 { width: 60px; }
+        .paragraph-content .w-80 { width: 80px; }
+        .paragraph-content .w-100 { width: 100px; }
+        .paragraph-content .w-150 { width: 150px; }
+        .paragraph-content .w-200 { width: 200px; }
+        .paragraph-content .w-full { width: 100%; }
+
+        /* --- SIGNATURES --- */
+        .signatures-section {
+            margin-top: var(--spacing-xl);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            page-break-inside: avoid;
+        }
+
+        .signature-box {
+            text-align: center;
+        }
+
+        .signature-box .signature-title {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .signature-box .signature-line {
+            border-top: 1px solid var(--color-border);
+            padding-top: var(--spacing-xs);
+            font-size: var(--font-size-xs);
+            color: var(--color-secondary);
+        }
+
+        /* --- FOOTER --- */
+        .doc-footer {
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-md);
+            border-top: 0.5pt solid var(--color-border);
+            font-size: var(--font-size-xs);
+            color: var(--color-primary);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* --- PAGE NUMBER --- */
+        .page-number {
+            position: absolute;
+            top: 10mm;
+            right: 14mm;
+            font-size: var(--font-size-xs);
+            color: var(--color-secondary);
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            html, body {
+                background: var(--color-white);
+                margin: 0;
+                padding: 0;
+            }
+
+            .sidebar, .no-print { display: none !important; }
+
+            .app-wrapper {
+                padding: 0;
+                margin: 0;
+            }
+
+            .document {
+                box-shadow: none;
+                padding: 10mm 12mm;
+                width: 210mm;
+                min-height: 296mm;
+            }
+
+            input, textarea {
+                border-color: transparent !important;
+                background: transparent !important;
+            }
+
+            .party-section {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            @page {
+                size: A4;
+                margin: 6mm;
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media screen and (max-width: 900px) {
+            .app-wrapper {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            .document {
+                width: 100%;
+                min-height: auto;
+                padding: 16px;
+            }
+            .signatures-section {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-lg);
+            }
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: var(--font-primary);
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all .3s ease;
+            z-index: 999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success { background: #166534; }
+        .toast.error   { background: #991B1B; }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar no-print">
+        <div class="sidebar-card logo-area">
+            <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:22px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI<div style=&quot;font-size:8px;color:#757575;font-weight:400;margin-top:2px&quot;>Sp. z o.o. Sp.k.</div></div>'">
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Akcje</h3>
+            <a href="../index.html" class="btn btn-secondary" style="text-decoration:none;margin-bottom:12px;">← Strona główna</a>
+            <button class="btn btn-primary" onclick="printDoc()">Drukuj / Zapisz PDF</button>
+            <button class="btn btn-secondary" onclick="exportDOCX()">📄 Pobierz DOCX</button>
+            <button class="btn btn-secondary" onclick="sendEmail()">✉ Wyślij mailem</button>
+            <button class="btn btn-secondary" onclick="sendWhatsApp()">💬 Wyślij WhatsApp</button>
+            <button class="btn btn-danger" onclick="clearForm()">Wyczyść formularz</button>
+        </div>
+    </aside>
+
+    <!-- ===== DOCUMENT ===== -->
+    <main class="page-container">
+        <div class="document" id="document">
+
+            <!-- Page Number -->
+            <div class="page-number">1</div>
+
+            <!-- Header -->
+            <div class="doc-header">
+                <div class="logo">
+                    <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:24px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI</div>'">
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="doc-title">UMOWA Nr <input type="text" id="docNumber" value="P-XXX-26" style="width:100px;"></div>
+
+            <!-- Contract Intro -->
+            <div class="contract-intro">
+                <p class="date-place">zawarta w dniu <input type="text" id="contractDate" placeholder="data"> w <input type="text" id="contractPlace" value="Toruniu" style="width:80px;"> pomiędzy:</p>
+            </div>
+
+            <!-- Wykonawca -->
+            <div class="party-section">
+                <div class="party-title">Wykonawca</div>
+                <div class="party-details">
+                    <p><strong>WALABI Spółką z ograniczoną odpowiedzialnością Spółką komandytową</strong></p>
+                    <p>z siedzibą w Toruniu, ul. Kosynierów Kościuszkowskich 13/4, 87-100 Toruń,</p>
+                    <p>zarejestrowaną w Sądzie Rejonowym w Toruniu, VII Wydział Gospodarczy Krajowego Rejestru Sądowego</p>
+                    <p>pod numerem KRS 0000725731, REGON: 369866245, NIP: 8792700696,</p>
+                    <p>reprezentowaną przez:</p>
+                    <p>Leszka Borowskiego – e-mail: leszek@walabi.pl, tel. 501 260 990</p>
+                    <p>Jarosława Różańskiego – e-mail: jarek@walabi.pl, tel. 501 266 670</p>
+                    <p>zwaną dalej <strong>„Wykonawcą"</strong>,</p>
+                </div>
+            </div>
+
+            <p style="text-align:center;margin:var(--spacing-sm) 0;font-size:var(--font-size-base);">a</p>
+
+            <!-- Zamawiający -->
+            <div class="party-section">
+                <div class="party-title">Zamawiający</div>
+                <div class="party-details">
+                    <div class="field-row">
+                        <input type="text" id="clientName" class="w-full" placeholder="[Pełna Nazwa Zamawiającego / Firma]">
+                    </div>
+                    <div class="field-row">
+                        z siedzibą w <input type="text" id="clientCity" class="w-150" placeholder="[Miejscowość]">, <input type="text" id="clientAddress" class="w-200" placeholder="[Adres]">
+                    </div>
+                    <div class="field-row">
+                        NIP <input type="text" id="clientNIP" class="w-120" placeholder="[NIP Zamawiającego]">
+                    </div>
+                    <div class="field-row">
+                        tel.: <input type="text" id="clientPhone" class="w-120" placeholder="[Telefon]">, e-mail: <input type="text" id="clientEmail" class="w-150" placeholder="[E-mail]">
+                    </div>
+                    <p>zwanym dalej <strong>„Zamawiającym"</strong>,</p>
+                </div>
+            </div>
+
+            <p style="margin:var(--spacing-sm) 0;font-size:var(--font-size-base);">zwanymi łącznie <strong>„Stronami"</strong>, a każdy z osobna <strong>„Stroną"</strong>.</p>
+
+            <!-- §1. PRZEDMIOT UMOWY -->
+            <div class="paragraph-section">
+                <div class="paragraph-title">§1. Przedmiot Umowy</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>Zamawiający zleca, a Wykonawca przyjmuje do realizacji zamówienie obejmujące produkcję, dostawę i montaż <input type="text" id="furnitureType" class="w-200" placeholder="[Opis Rodzaju Mebli/Zestawu Meblowego]"> (zwanych dalej "Meblami") według specyfikacji stanowiącej Załącznik nr 1 do niniejszej Umowy oraz projektu/koncepcji stanowiącego Załącznik nr 2.</li>
+                        <li>Meble zostaną wykonane i zamontowane w lokalizacji: <input type="text" id="installationAddress" class="w-full" placeholder="[Lokalizacja Montażu: Pełny Adres]"></li>
+                        <li>Podstawę realizacji zamówienia stanowią:
+                            <ol>
+                                <li>Specyfikacja mebli wraz z wyceną (Załącznik nr 1),</li>
+                                <li>Projekt wykonawczy/Koncepcja (Załącznik nr 2),</li>
+                                <li>Uzgodnienia poczynione drogą elektroniczną (e-mail) pomiędzy Stronami</li>
+                                <li>Obowiązujące normy i przepisy techniczne.</li>
+                            </ol>
+                        </li>
+                        <li>W przypadku rozbieżności pomiędzy treścią dokumentów wymienionych w ust. 3, pierwszeństwo mają postanowienia niniejszej Umowy, następnie Załącznik nr 1 i Załącznik nr 2, a następnie uzgodnienia poczynione drogą elektroniczną.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- §2. TERMINY REALIZACJI -->
+            <div class="paragraph-section">
+                <div class="paragraph-title">§2. Terminy Realizacji</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>Termin realizacji przedmiotu umowy ustala się na: <input type="text" id="termWeeksFrom" class="w-60" placeholder="[Liczba]"> do <input type="text" id="termWeeksTo" class="w-60" placeholder="[Liczba]"> tygodni od daty podpisania umowy.</li>
+                        <li>Przez realizację przedmiotu umowy rozumie się wykonanie i montaż wszystkich Mebli wymienionych w Załączniku nr 1.</li>
+                        <li>Termin realizacji może ulec zmianie w przypadku:
+                            <ol>
+                                <li>Działania siły wyższej,</li>
+                                <li>Wprowadzenia zmian w projekcie lub specyfikacji przez Zamawiającego,</li>
+                                <li>Nieterminowego przygotowania miejsca montażu przez Zamawiającego,</li>
+                                <li>Wystąpienia okoliczności niezależnych od Wykonawcy, których nie mógł on przewidzieć przy dochowaniu należytej staranności.</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- §3. WYNAGRODZENIE -->
+            <div class="paragraph-section">
+                <div class="paragraph-title">§3. Wynagrodzenie</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>Całkowite wynagrodzenie za wykonanie przedmiotu Umowy wynosi: <input type="text" id="priceNetto" class="w-100" placeholder="[Kwota]"> zł netto (słownie: <input type="text" id="priceNettoWords" class="w-200" placeholder="[słownie]"> złotych), co stanowi <input type="text" id="priceBrutto" class="w-100" placeholder="[Kwota]"> zł brutto (słownie: <input type="text" id="priceBruttoWords" class="w-200" placeholder="[słownie]"> złotych) z uwzględnieniem podatku VAT 23%.</li>
+                        <li>Wynagrodzenie obejmuje: produkcję mebli, transport, wniesienie oraz montaż w miejscu wskazanym w §1 ust. 2.</li>
+                        <li>Wynagrodzenie płatne będzie w następujących transzach:
+                            <ol>
+                                <li>Zaliczka w wysokości <input type="text" id="advancePercent" class="w-60" placeholder="[%]">% wartości brutto, tj. <input type="text" id="advanceAmount" class="w-100" placeholder="[Kwota]"> zł, płatna w terminie <input type="text" id="advanceDays" class="w-60" placeholder="[dni]"> dni od daty podpisania Umowy;</li>
+                                <li>Pozostała kwota w wysokości <input type="text" id="remainingPercent" class="w-60" placeholder="[%]">% wartości brutto, tj. <input type="text" id="remainingAmount" class="w-100" placeholder="[Kwota]"> zł, płatna w terminie <input type="text" id="remainingDays" class="w-60" placeholder="[dni]"> dni od daty odbioru końcowego.</li>
+                            </ol>
+                        </li>
+                        <li>Płatności będą dokonywane przelewem na rachunek bankowy Wykonawcy: <strong>mBank 31 1140 2004 0000 3302 8257 6928</strong>.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- §4. OBOWIĄZKI STRON -->
+            <div class="paragraph-section">
+                <div class="paragraph-title">§4. Obowiązki Stron</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>Wykonawca zobowiązuje się do:
+                            <ol>
+                                <li>Wykonania przedmiotu Umowy zgodnie ze specyfikacją, projektem i zasadami sztuki meblarskiej;</li>
+                                <li>Użycia materiałów wysokiej jakości, zgodnych z ustaleniami;</li>
+                                <li>Terminowej realizacji zamówienia;</li>
+                                <li>Uprzątnięcia miejsca montażu po zakończeniu prac.</li>
+                            </ol>
+                        </li>
+                        <li>Zamawiający zobowiązuje się do:
+                            <ol>
+                                <li>Terminowego regulowania płatności;</li>
+                                <li>Przygotowania miejsca montażu zgodnie z wytycznymi Wykonawcy;</li>
+                                <li>Zapewnienia dostępu do miejsca montażu w ustalonych terminach;</li>
+                                <li>Dokonania odbioru Mebli zgodnie z postanowieniami Umowy.</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- §5. ODBIÓR PRZEDMIOTU UMOWY -->
+            <div class="paragraph-section">
+                <div class="paragraph-title">§5. Odbiór Przedmiotu Umowy</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>Po zakończeniu montażu Strony dokonają odbioru końcowego, z którego zostanie sporządzony protokół odbioru.</li>
+                        <li>Zamawiający zobowiązany jest do zgłoszenia wszelkich uwag i zastrzeżeń podczas odbioru.</li>
+                        <li>Brak zgłoszenia uwag podczas odbioru oznacza akceptację wykonanych prac.</li>
+                        <li>W przypadku stwierdzenia wad, Wykonawca zobowiązuje się do ich usunięcia w terminie uzgodnionym przez Strony.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- §6. GWARANCJA I RĘKOJMIA -->
+            <div class="paragraph-section">
+                <div class="paragraph-title">§6. Gwarancja i Rękojmia</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>Wykonawca udziela <input type="text" id="warrantyYears" class="w-60" placeholder="[Liczba]">-letniej gwarancji na wykonane Meble, liczonej od daty odbioru końcowego.</li>
+                        <li>Gwarancja obejmuje wady materiałowe i wykonawcze.</li>
+                        <li>Gwarancja nie obejmuje uszkodzeń mechanicznych powstałych z winy użytkownika oraz normalnego zużycia eksploatacyjnego.</li>
+                        <li>Zgłoszenia gwarancyjne należy kierować na adres e-mail: poczta@walabi.pl</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- §7. POSTANOWIENIA KOŃCOWE -->
+            <div class="paragraph-section">
+                <div class="paragraph-title">§7. Postanowienia Końcowe</div>
+                <div class="paragraph-content">
+                    <ol>
+                        <li>Wszelkie zmiany niniejszej Umowy wymagają formy pisemnej pod rygorem nieważności.</li>
+                        <li>W sprawach nieuregulowanych niniejszą Umową mają zastosowanie przepisy Kodeksu cywilnego.</li>
+                        <li>Ewentualne spory będą rozstrzygane przez sąd właściwy dla siedziby Wykonawcy.</li>
+                        <li>Umowę sporządzono w dwóch jednobrzmiących egzemplarzach, po jednym dla każdej ze Stron.</li>
+                        <li>Integralną część Umowy stanowią:
+                            <ol>
+                                <li>Załącznik nr 1 – Specyfikacja mebli wraz z wyceną</li>
+                                <li>Załącznik nr 2 – Projekt wykonawczy/Koncepcja</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Signatures -->
+            <div class="signatures-section">
+                <div class="signature-box">
+                    <div class="signature-title">Wykonawca</div>
+                    <div class="signature-line">podpis i pieczęć</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-title">Zamawiający</div>
+                    <div class="signature-line">podpis i pieczęć</div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="doc-footer">
+                <div class="company-legal">WALABI Sp. z o.o. Sp.k. · ul. Kosynierów Kościuszkowskich 13/4 · 87-100 Toruń</div>
+                <div class="company-registration">KRS: 0000725731 · NIP: 8792700696 · REGON: 369866245 · Tel: +48 501 260 990 · poczta@walabi.pl</div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script>
+
+<!-- docx library for DOCX export -->
+<script src="https://unpkg.com/docx@8.2.2/build/index.umd.js"></script>
+
+<script>
+    // ===== FLATPICKR INIT =====
+    flatpickr.localize(flatpickr.l10ns.pl);
+
+    flatpickr("#contractDate", {
+        dateFormat: "d.m.Y",
+        defaultDate: new Date()
+    });
+
+    // ===== PRINT =====
+    function printDoc() {
+        window.print();
+        toast('Otwarto okno drukowania');
+    }
+
+    // ===== EMAIL =====
+    window.sendEmail = function() {
+        const docNum = document.getElementById('docNumber').value || 'Umowa';
+        const client = document.getElementById('clientName').value || '';
+        const subject = encodeURIComponent(`WALABI - ${docNum}${client ? ' - ' + client : ''}`);
+        const body = encodeURIComponent(`Dzień dobry,\n\nW załączeniu przesyłam ${docNum}.\n\nZ poważaniem,\nWALABI Sp. z o.o. Sp.k.`);
+        window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+        toast('Otwarto klienta email');
+    };
+
+    // ===== WHATSAPP =====
+    window.sendWhatsApp = function() {
+        const docNum = document.getElementById('docNumber').value || 'Umowa';
+        const client = document.getElementById('clientName').value || '';
+        const text = encodeURIComponent(`Dzień dobry,\n\nW załączeniu przesyłam ${docNum}${client ? ' dla ' + client : ''} z WALABI.`);
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+        toast('Otwarto WhatsApp');
+    };
+
+    // ===== CLEAR FORM =====
+    function clearForm() {
+        if (confirm('Czy na pewno chcesz wyczyścić formularz?')) {
+            document.querySelectorAll('input[type="text"]').forEach(input => {
+                if (input.id !== 'contractPlace') {
+                    input.value = '';
+                }
+            });
+            document.getElementById('docNumber').value = 'P-XXX-26';
+            flatpickr("#contractDate", {
+                dateFormat: "d.m.Y",
+                defaultDate: new Date()
+            });
+            toast('Formularz wyczyszczony');
+        }
+    }
+
+    // ===== EXPORT DOCX =====
+    async function exportDOCX() {
+        toast('Generowanie DOCX...');
+
+        const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = docx;
+
+        const docNum = document.getElementById('docNumber').value || 'P-XXX-26';
+        const contractDate = document.getElementById('contractDate').value || '';
+        const contractPlace = document.getElementById('contractPlace').value || 'Toruniu';
+        const clientName = document.getElementById('clientName').value || '';
+        const clientCity = document.getElementById('clientCity').value || '';
+        const clientAddress = document.getElementById('clientAddress').value || '';
+        const clientNIP = document.getElementById('clientNIP').value || '';
+        const clientPhone = document.getElementById('clientPhone').value || '';
+        const clientEmail = document.getElementById('clientEmail').value || '';
+        const furnitureType = document.getElementById('furnitureType').value || '';
+        const installationAddress = document.getElementById('installationAddress').value || '';
+        const termWeeksFrom = document.getElementById('termWeeksFrom').value || '';
+        const termWeeksTo = document.getElementById('termWeeksTo').value || '';
+        const priceNetto = document.getElementById('priceNetto').value || '';
+        const priceNettoWords = document.getElementById('priceNettoWords').value || '';
+        const priceBrutto = document.getElementById('priceBrutto').value || '';
+        const priceBruttoWords = document.getElementById('priceBruttoWords').value || '';
+        const advancePercent = document.getElementById('advancePercent').value || '';
+        const advanceAmount = document.getElementById('advanceAmount').value || '';
+        const advanceDays = document.getElementById('advanceDays').value || '';
+        const remainingPercent = document.getElementById('remainingPercent').value || '';
+        const remainingAmount = document.getElementById('remainingAmount').value || '';
+        const remainingDays = document.getElementById('remainingDays').value || '';
+        const warrantyYears = document.getElementById('warrantyYears').value || '';
+
+        const doc = new Document({
+            sections: [{
+                properties: {},
+                children: [
+                    new Paragraph({
+                        children: [new TextRun({ text: `UMOWA Nr ${docNum}`, bold: true, size: 32 })],
+                        alignment: AlignmentType.CENTER,
+                        spacing: { after: 400 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `zawarta w dniu ${contractDate} w ${contractPlace} pomiędzy:`, size: 22 })],
+                        spacing: { after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "WYKONAWCA:", bold: true, size: 22 })],
+                        spacing: { before: 200, after: 100 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "WALABI Spółką z ograniczoną odpowiedzialnością Spółką komandytową", bold: true, size: 22 })],
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "z siedzibą w Toruniu, ul. Kosynierów Kościuszkowskich 13/4, 87-100 Toruń,", size: 22 })],
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "KRS 0000725731, REGON: 369866245, NIP: 8792700696,", size: 22 })],
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: 'zwaną dalej „Wykonawcą",', size: 22 })],
+                        spacing: { after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "a", size: 22 })],
+                        alignment: AlignmentType.CENTER,
+                        spacing: { after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "ZAMAWIAJĄCY:", bold: true, size: 22 })],
+                        spacing: { after: 100 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: clientName || "[Pełna Nazwa Zamawiającego / Firma]", bold: true, size: 22 })],
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `z siedzibą w ${clientCity || "[Miejscowość]"}, ${clientAddress || "[Adres]"}`, size: 22 })],
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `NIP ${clientNIP || "[NIP]"}`, size: 22 })],
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `tel.: ${clientPhone || "[Telefon]"}, e-mail: ${clientEmail || "[E-mail]"}`, size: 22 })],
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: 'zwanym dalej „Zamawiającym",', size: 22 })],
+                        spacing: { after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: 'zwanymi łącznie „Stronami", a każdy z osobna „Stroną".', size: 22 })],
+                        spacing: { after: 400 }
+                    }),
+                    // §1
+                    new Paragraph({
+                        children: [new TextRun({ text: "§1. PRZEDMIOT UMOWY", bold: true, size: 24 })],
+                        spacing: { before: 300, after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `1. Zamawiający zleca, a Wykonawca przyjmuje do realizacji zamówienie obejmujące produkcję, dostawę i montaż ${furnitureType || "[Opis Rodzaju Mebli]"} według specyfikacji stanowiącej Załącznik nr 1 oraz projektu stanowiącego Załącznik nr 2.`, size: 22 })],
+                        spacing: { after: 100 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `2. Meble zostaną zamontowane w lokalizacji: ${installationAddress || "[Lokalizacja Montażu]"}`, size: 22 })],
+                        spacing: { after: 200 }
+                    }),
+                    // §2
+                    new Paragraph({
+                        children: [new TextRun({ text: "§2. TERMINY REALIZACJI", bold: true, size: 24 })],
+                        spacing: { before: 300, after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `1. Termin realizacji: ${termWeeksFrom || "[Liczba]"} do ${termWeeksTo || "[Liczba]"} tygodni od daty podpisania umowy.`, size: 22 })],
+                        spacing: { after: 200 }
+                    }),
+                    // §3
+                    new Paragraph({
+                        children: [new TextRun({ text: "§3. WYNAGRODZENIE", bold: true, size: 24 })],
+                        spacing: { before: 300, after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `1. Wynagrodzenie: ${priceNetto || "[Kwota]"} zł netto (${priceNettoWords || "[słownie]"}), ${priceBrutto || "[Kwota]"} zł brutto (${priceBruttoWords || "[słownie]"}) z VAT 23%.`, size: 22 })],
+                        spacing: { after: 100 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `2. Zaliczka: ${advancePercent || "[%]"}% = ${advanceAmount || "[Kwota]"} zł, płatna w ${advanceDays || "[dni]"} dni od podpisania.`, size: 22 })],
+                        spacing: { after: 100 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `3. Pozostała kwota: ${remainingPercent || "[%]"}% = ${remainingAmount || "[Kwota]"} zł, płatna w ${remainingDays || "[dni]"} dni od odbioru.`, size: 22 })],
+                        spacing: { after: 100 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "4. Nr konta: mBank 31 1140 2004 0000 3302 8257 6928", size: 22 })],
+                        spacing: { after: 200 }
+                    }),
+                    // §6
+                    new Paragraph({
+                        children: [new TextRun({ text: "§6. GWARANCJA", bold: true, size: 24 })],
+                        spacing: { before: 300, after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `1. Gwarancja: ${warrantyYears || "[Liczba]"} lat od daty odbioru końcowego.`, size: 22 })],
+                        spacing: { after: 400 }
+                    }),
+                    // Signatures
+                    new Paragraph({
+                        children: [
+                            new TextRun({ text: "______________________", size: 22 }),
+                            new TextRun({ text: "                                        ", size: 22 }),
+                            new TextRun({ text: "______________________", size: 22 })
+                        ],
+                        spacing: { before: 600 }
+                    }),
+                    new Paragraph({
+                        children: [
+                            new TextRun({ text: "        Wykonawca        ", size: 20 }),
+                            new TextRun({ text: "                                                    ", size: 20 }),
+                            new TextRun({ text: "        Zamawiający        ", size: 20 })
+                        ]
+                    })
+                ]
+            }]
+        });
+
+        const blob = await Packer.toBlob(doc);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Umowa_${docNum.replace(/\//g, '-')}_${clientName || 'WALABI'}.docx`;
+        a.click();
+        URL.revokeObjectURL(url);
+
+        toast('Pobrano plik DOCX', 'success');
+    }
+
+    // ===== TOAST =====
+    function toast(msg, type) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.className = 'toast show' + (type ? ' ' + type : '');
+        setTimeout(() => el.className = 'toast', 3000);
+    }
+
+    // ===== SET DEFAULT DATE =====
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        document.getElementById('contractDate').value = formattedDate;
+    });
+</script>
+
+</body>
+</html>
