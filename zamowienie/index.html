@@ -1369,7 +1369,7 @@
         const docNum = document.getElementById('orderNumber').value || 'Zamówienie';
         const client = document.getElementById('clientName').value || '';
         const subject = encodeURIComponent(`WALABI - ${docNum}${client ? ' - ' + client : ''}`);
-        const body = encodeURIComponent(`Dzień dobry,\n\nPrzesyłam ${docNum}.\n\nLink do dokumentu: ${window.location.href}\n\nProszę o pobranie dokumentu PDF używając przycisku "Drukuj PDF" na stronie.\n\nZ poważaniem,\nWALABI Sp. z o.o. Sp.k.`);
+        const body = encodeURIComponent(`Dzień dobry,\n\nW załączeniu przesyłam ${docNum}.\n\nZ poważaniem,\nWALABI Sp. z o.o. Sp.k.`);
         window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
         toast('Otwarto klienta email');
     };
@@ -1377,7 +1377,7 @@
     window.sendWhatsApp = function() {
         const docNum = document.getElementById('orderNumber').value || 'Zamówienie';
         const client = document.getElementById('clientName').value || '';
-        const text = encodeURIComponent(`Dzień dobry,\n\nPrzesyłam ${docNum}${client ? ' dla ' + client : ''} z WALABI.\n\nLink do dokumentu: ${window.location.href}`);
+        const text = encodeURIComponent(`Dzień dobry,\n\nW załączeniu przesyłam ${docNum}${client ? ' dla ' + client : ''} z WALABI.`);
         window.open(`https://wa.me/?text=${text}`, '_blank');
         toast('Otwarto WhatsApp');
     };
