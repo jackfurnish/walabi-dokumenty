@@ -1122,10 +1122,10 @@
     });
 
     // ===== PRINT =====
-    function printDoc() {
+    window.printDoc = function() {
         window.print();
         toast('Otwarto okno drukowania');
-    }
+    };
 
     // ===== EMAIL =====
     window.sendEmail = function() {
@@ -1147,7 +1147,7 @@
     };
 
     // ===== CLEAR FORM =====
-    function clearForm() {
+    window.clearForm = function() {
         if (confirm('Czy na pewno chcesz wyczyścić formularz?')) {
             document.querySelectorAll('input[type="text"]').forEach(input => {
                 if (input.id !== 'contractPlace') {
