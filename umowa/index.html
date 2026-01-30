@@ -1520,6 +1520,9 @@
 
     // ===== INICJALIZACJA =====
     document.addEventListener('DOMContentLoaded', function() {
+        // Buduj tabelę specyfikacji NAJPIERW
+        buildSpecRows(1);
+
         // Flatpickr - kalendarz
         flatpickr.localize(flatpickr.l10ns.pl);
         flatpickr("#contractDate", {
@@ -1541,13 +1544,11 @@
         document.getElementById('payment2Percent').addEventListener('input', calculatePrices);
 
         // Auto-resize dla pól tekstowych
-        const furnitureTypeEl = document.getElementById('furnitureType');
-        furnitureTypeEl.addEventListener('input', function() {
+        document.getElementById('furnitureType').addEventListener('input', function() {
             autoResizeInput(this);
         });
 
-        const installationAddressEl = document.getElementById('installationAddress');
-        installationAddressEl.addEventListener('input', function() {
+        document.getElementById('installationAddress').addEventListener('input', function() {
             autoResizeInput(this);
         });
 
@@ -1556,7 +1557,18 @@
 
         // Synchronizuj specyfikację z furnitureType
         document.getElementById('furnitureType').addEventListener('input', function() {
-            document.getElementById('spec1Desc').value = this.value;
+            const spec1Desc = document.getElementById('spec1Desc');
+            if (spec1Desc) spec1Desc.value = this.value;
+        });
+
+        // Event listenery dla pól kosztów dodatkowych
+        document.getElementById('sumDodatkowe').addEventListener('input', calculateSpecTotals);
+        document.getElementById('sumTransport').addEventListener('input', calculateSpecTotals);
+        document.getElementById('sumMontaz').addEventListener('input', calculateSpecTotals);
+
+        // Odznacz synchronizację gdy użytkownik ręcznie zmieni priceNetto
+        document.getElementById('priceNetto').addEventListener('focus', function() {
+            this.dataset.synced = 'false';
         });
 
         // Wczytaj historię przy starcie
@@ -1802,21 +1814,6 @@
         }
     };
 
-    // Inicjalizacja tabeli specyfikacji przy starcie
-    document.addEventListener('DOMContentLoaded', function() {
-        // Buduj tabelę specyfikacji
-        buildSpecRows(1);
-
-        // Event listenery dla pól kosztów dodatkowych
-        document.getElementById('sumDodatkowe').addEventListener('input', calculateSpecTotals);
-        document.getElementById('sumTransport').addEventListener('input', calculateSpecTotals);
-        document.getElementById('sumMontaz').addEventListener('input', calculateSpecTotals);
-
-        // Odznacz synchronizację gdy użytkownik ręcznie zmieni priceNetto
-        document.getElementById('priceNetto').addEventListener('focus', function() {
-            this.dataset.synced = 'false';
-        });
-    });
 </script>
 
 </body>
