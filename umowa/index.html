@@ -627,7 +627,7 @@
                 <div class="paragraph-content">
                     <ol>
                         <li>Zamawiający zleca, a Wykonawca przyjmuje do realizacji zamówienie obejmujące produkcję, dostawę i montaż <input type="text" id="furnitureType" class="w-auto" placeholder="[Opis Rodzaju Mebli/Zestawu Meblowego]"> (zwanych dalej "Meblami") według specyfikacji stanowiącej Załącznik nr 1 do niniejszej Umowy oraz projektu/koncepcji stanowiącego Załącznik nr 2.</li>
-                        <li>Meble zostaną wykonane i zamontowane w lokalizacji: <input type="text" id="installationAddress" class="w-full" placeholder="[Lokalizacja Montażu: Pełny Adres]"></li>
+                        <li>Meble zostaną wykonane i zamontowane w lokalizacji: <input type="text" id="installationAddress" class="w-auto" placeholder="[Lokalizacja Montażu: Pełny Adres]"></li>
                         <li>Podstawę realizacji zamówienia stanowią:
                             <ol>
                                 <li>Specyfikacja mebli wraz z wyceną (Załącznik nr 1),</li>
@@ -1178,9 +1178,14 @@
         document.getElementById('payment1Percent').addEventListener('input', calculatePrices);
         document.getElementById('payment2Percent').addEventListener('input', calculatePrices);
 
-        // Auto-resize dla pola opisu mebli
+        // Auto-resize dla pól tekstowych
         const furnitureTypeEl = document.getElementById('furnitureType');
         furnitureTypeEl.addEventListener('input', function() {
+            autoResizeInput(this);
+        });
+
+        const installationAddressEl = document.getElementById('installationAddress');
+        installationAddressEl.addEventListener('input', function() {
             autoResizeInput(this);
         });
     });
