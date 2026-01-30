@@ -264,6 +264,7 @@
             background: transparent;
             color: var(--color-data);
             width: 120px;
+            text-align: center;
         }
 
         .contract-intro .date-place input:focus {
@@ -305,6 +306,7 @@
             font-family: var(--font-primary);
             background: transparent;
             color: var(--color-data);
+            text-align: center;
         }
 
         .party-details input:focus, .party-details textarea:focus {
@@ -361,6 +363,7 @@
             font-family: var(--font-primary);
             background: transparent;
             color: var(--color-data);
+            text-align: center;
         }
 
         .paragraph-content input:focus {
@@ -994,6 +997,83 @@
         return parseFloat(str.replace(/\s/g, '').replace(',', '.')) || 0;
     }
 
+    // ===== KWOTA SŁOWNIE =====
+    function numberToWords(num) {
+        const ones = ['', 'jeden', 'dwa', 'trzy', 'cztery', 'pięć', 'sześć', 'siedem', 'osiem', 'dziewięć'];
+        const teens = ['dziesięć', 'jedenaście', 'dwanaście', 'trzynaście', 'czternaście', 'piętnaście', 'szesnaście', 'siedemnaście', 'osiemnaście', 'dziewiętnaście'];
+        const tens = ['', 'dziesięć', 'dwadzieścia', 'trzydzieści', 'czterdzieści', 'pięćdziesiąt', 'sześćdziesiąt', 'siedemdziesiąt', 'osiemdziesiąt', 'dziewięćdziesiąt'];
+        const hundreds = ['', 'sto', 'dwieście', 'trzysta', 'czterysta', 'pięćset', 'sześćset', 'siedemset', 'osiemset', 'dziewięćset'];
+
+        function getThousandForm(n) {
+            if (n === 1) return 'tysiąc';
+            if (n >= 2 && n <= 4) return 'tysiące';
+            if (n >= 5 && n <= 21) return 'tysięcy';
+            const lastDigit = n % 10;
+            if (lastDigit >= 2 && lastDigit <= 4) return 'tysiące';
+            return 'tysięcy';
+        }
+
+        function getMillionForm(n) {
+            if (n === 1) return 'milion';
+            if (n >= 2 && n <= 4) return 'miliony';
+            if (n >= 5 && n <= 21) return 'milionów';
+            const lastDigit = n % 10;
+            if (lastDigit >= 2 && lastDigit <= 4) return 'miliony';
+            return 'milionów';
+        }
+
+        function convertHundreds(n) {
+            if (n === 0) return '';
+            let result = '';
+            const h = Math.floor(n / 100);
+            const remainder = n % 100;
+            if (h > 0) result += hundreds[h] + ' ';
+            if (remainder >= 10 && remainder < 20) {
+                result += teens[remainder - 10];
+            } else {
+                const t = Math.floor(remainder / 10);
+                const o = remainder % 10;
+                if (t > 0) result += tens[t] + ' ';
+                if (o > 0) result += ones[o];
+            }
+            return result.trim();
+        }
+
+        if (num === 0) return 'zero';
+
+        const intPart = Math.floor(num);
+        const grosze = Math.round((num - intPart) * 100);
+
+        let result = '';
+
+        // Miliony
+        const millions = Math.floor(intPart / 1000000);
+        if (millions > 0) {
+            result += convertHundreds(millions) + ' ' + getMillionForm(millions) + ' ';
+        }
+
+        // Tysiące
+        const thousands = Math.floor((intPart % 1000000) / 1000);
+        if (thousands > 0) {
+            result += convertHundreds(thousands) + ' ' + getThousandForm(thousands) + ' ';
+        }
+
+        // Setki, dziesiątki, jedności
+        const rest = intPart % 1000;
+        if (rest > 0) {
+            result += convertHundreds(rest);
+        }
+
+        result = result.trim();
+
+        // Dodaj grosze
+        if (grosze > 0) {
+            result += ' ' + grosze.toString().padStart(2, '0') + '/100';
+        }
+
+        return result;
+    }
+
     // ===== PRZELICZANIE KWOT =====
     function calculatePrices() {
         const netto = parseNumber(document.getElementById('priceNetto').value);
@@ -1003,6 +1083,10 @@
             // Oblicz brutto (VAT 23%)
             const brutto = netto * 1.23;
             document.getElementById('priceBrutto').value = formatCurrency(brutto);
+
+            // Słownie
+            document.getElementById('priceNettoWords').value = numberToWords(netto);
+            document.getElementById('priceBruttoWords').value = numberToWords(brutto);
 
             // Oblicz zaliczkę i pozostałą kwotę
             if (advancePercent > 0) {
