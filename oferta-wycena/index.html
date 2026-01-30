@@ -921,6 +921,8 @@
             <h3>Akcje</h3>
             <a href="../index.html" class="btn btn-secondary" style="text-decoration:none;margin-bottom:12px;">← Strona główna</a>
             <button class="btn btn-primary" onclick="printDoc()">Drukuj / Zapisz PDF</button>
+            <button class="btn btn-secondary" onclick="sendEmail()">✉ Wyślij mailem</button>
+            <button class="btn btn-secondary" onclick="sendWhatsApp()">💬 Wyślij WhatsApp</button>
             <button class="btn btn-secondary" onclick="saveDocument()">Zapisz dokument</button>
             <button class="btn btn-secondary" onclick="newDocument()">Nowy dokument</button>
             <button class="btn btn-danger" onclick="clearForm()">Wyczyść formularz</button>
@@ -1494,6 +1496,23 @@
 
     window.printDoc = function() {
         window.print();
+    };
+
+    window.sendEmail = function() {
+        const docNum = document.getElementById('docNumber').value || 'Oferta';
+        const client = document.getElementById('clientName').value || '';
+        const subject = encodeURIComponent(`WALABI - ${docNum}${client ? ' - ' + client : ''}`);
+        const body = encodeURIComponent(`Dzień dobry,\n\nW załączeniu przesyłam ${docNum}.\n\nZ poważaniem,\nWALABI Sp. z o.o. Sp.k.`);
+        window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+        toast('Otwarto klienta email');
+    };
+
+    window.sendWhatsApp = function() {
+        const docNum = document.getElementById('docNumber').value || 'Oferta';
+        const client = document.getElementById('clientName').value || '';
+        const text = encodeURIComponent(`Dzień dobry,\n\nPrzesyłam ${docNum}${client ? ' dla ' + client : ''} z WALABI.\n\nLink do dokumentu: ${window.location.href}`);
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+        toast('Otwarto WhatsApp');
     };
 
     // ===== TOAST =====
