@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oferta i Specyfikacja Projektowa - WALABI</title>
+    <!-- Google Fonts: Plus Jakarta Sans (full charset with Polish diacritics) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&subset=latin-ext&display=swap" rel="stylesheet">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        /* ===== QUIET LUXURY 2026 - TYPOGRAPHY HIERARCHY ===== */
+        :root {
+            /* Colors */
+            --color-primary: #2D2E2E;      /* Deep Anthracite - for DATA */
+            --color-secondary: #757575;     /* Warm Grey - for LABELS */
+            --color-accent: #B8860B;
+            --color-border: #E0E0E0;
+            --color-background: #FAFAFA;
+            --color-white: #FFFFFF;
+            --color-highlight: #F7F5F0;
+
+            /* Typography */
+            --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+            /* LABELS: 7pt, Regular, Warm Grey, Uppercase, 0.08em tracking */
+            --font-size-label: 7pt;
+            --font-weight-label: 400;
+            --color-label: #757575;
+
+            /* DATA: 9pt, Semi-bold, Deep Anthracite, Sentence case */
+            --font-size-data: 9pt;
+            --font-weight-data: 600;
+            --color-data: #2D2E2E;
+
+            /* Other sizes */
+            --font-size-xs: 6.5pt;
+            --font-size-base: 8.5pt;
+            --font-size-lg: 10pt;
+            --font-size-xl: 12pt;
+
+            /* Spacing */
+            --spacing-label-data: 2pt;      /* Gap between label and data */
+            --spacing-xs: 3px;
+            --spacing-sm: 6px;
+            --spacing-md: 10px;
+            --spacing-lg: 14px;
+            --spacing-xl: 18px;
+
+            --line-height: 1.3;
+            --letter-spacing: 0.08em;
+            --border-radius: 2px;
+        }
+
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            background: #E8E8E8;
+            color: var(--color-primary);
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== FLATPICKR CUSTOMIZATION ===== */
+        .flatpickr-calendar {
+            font-family: var(--font-primary) !important;
+            font-size: 11px !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,.12) !important;
+            border: 1px solid var(--color-border) !important;
+            border-radius: 4px !important;
+        }
+        .flatpickr-day.selected, .flatpickr-day.selected:hover {
+            background: var(--color-primary) !important;
+            border-color: var(--color-primary) !important;
+        }
+        .flatpickr-day:hover {
+            background: var(--color-highlight) !important;
+        }
+
+        /* ===== LAYOUT ===== */
+        .app-wrapper {
+            display: flex;
+            gap: 20px;
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+        }
+
+        .sidebar-card {
+            background: var(--color-white);
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+            border: 1px solid var(--color-border);
+        }
+
+        .sidebar-card h3 {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            margin-bottom: 10px;
+            color: var(--color-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .sidebar .logo-area {
+            text-align: center;
+            padding: 12px 0;
+        }
+
+        .sidebar .logo-area img {
+            max-width: 110px;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            transition: all .2s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .btn:active { transform: scale(.98); }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+        .btn-primary:hover { background: #1a1a1a; }
+
+        .btn-secondary {
+            background: var(--color-background);
+            color: var(--color-primary);
+            border: 1px solid var(--color-border);
+        }
+        .btn-secondary:hover { background: var(--color-highlight); }
+
+        .btn-danger {
+            background: var(--color-white);
+            color: #9A3412;
+            border: 1px solid var(--color-border);
+        }
+        .btn-danger:hover { background: #FEF2F2; }
+
+        /* Historia */
+        .history-list {
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 8px 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--color-border);
+            transition: background .15s;
+        }
+
+        .history-item:last-child { border-bottom: none; }
+        .history-item:hover { background: var(--color-highlight); }
+
+        .history-item .hi-number {
+            font-weight: var(--font-weight-data);
+            font-size: var(--font-size-data);
+            color: var(--color-data);
+        }
+        .history-item .hi-client {
+            color: var(--color-label);
+            font-size: var(--font-size-label);
+            margin-top: 1px;
+        }
+        .history-item .hi-delete {
+            color: var(--color-secondary);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 3px;
+            border: none;
+            background: none;
+            opacity: 0.5;
+            transition: opacity .15s;
+        }
+        .history-item .hi-delete:hover { opacity: 1; color: #9A3412; }
+
+        .history-empty {
+            color: var(--color-secondary);
+            font-style: italic;
+            padding: 12px;
+            text-align: center;
+            font-size: var(--font-size-label);
+        }
+
+        /* ===== DOCUMENT ===== */
+        .page-container {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .document {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 14mm 16mm;
+            background: var(--color-white);
+            box-shadow: 0 4px 24px rgba(0,0,0,.08);
+            position: relative;
+        }
+
+        /* --- HEADER (no bottom border) --- */
+        .doc-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .doc-header .logo img {
+            height: 78px;
+            opacity: 0.95;
+        }
+
+        .doc-header .company-info {
+            text-align: right;
+            font-size: var(--font-size-base);
+            color: var(--color-secondary);
+            line-height: 1.4;
+        }
+
+        .doc-header .company-info .name {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-data);
+            color: var(--color-data);
+            margin-bottom: 2px;
+            letter-spacing: 0.02em;
+        }
+
+        .doc-header .company-info .tagline {
+            font-weight: 300;
+            font-style: italic;
+            margin-bottom: 4px;
+            color: var(--color-secondary);
+            font-size: var(--font-size-base);
+        }
+
+        /* --- DOCUMENT TITLE (compact) --- */
+        .doc-title {
+            text-align: center;
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            margin: var(--spacing-lg) 0;
+            padding: var(--spacing-md) 0;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--color-primary);
+            border-top: 0.5pt solid var(--color-primary);
+            border-bottom: 0.5pt solid var(--color-primary);
+        }
+
+        /* --- SECTION HEADERS --- */
+        .doc-section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .doc-section-title {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            margin-bottom: var(--spacing-sm);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 0.5pt solid var(--color-border);
+        }
+
+        /* --- DOCUMENT META (compact) --- */
+        .doc-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background: var(--color-highlight);
+            border-radius: var(--border-radius);
+        }
+
+        .doc-meta-item {
+            font-size: var(--font-size-data);
+        }
+
+        .doc-meta-item label {
+            display: block;
+            font-size: var(--font-size-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            margin-bottom: var(--spacing-label-data);
+            font-weight: var(--font-weight-label);
+        }
+
+        /* --- DATA INPUTS (9pt, Semi-bold, Sentence case) --- */
+        .doc-field {
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            padding: 2px 0;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+            transition: border-color .2s;
+        }
+
+        .doc-field:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        .doc-field::placeholder {
+            color: #BDBDBD;
+            font-weight: 300;
+        }
+
+        .w60  { width: 60px; }
+        .w80  { width: 80px; }
+        .w100 { width: 100px; }
+        .w120 { width: 120px; }
+        .w-full { width: 100%; }
+
+        /* --- CLIENT SECTION (compact grid) --- */
+        .client-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-sm) var(--spacing-xl);
+        }
+
+        .client-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .client-field label {
+            font-size: var(--font-size-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            margin-bottom: var(--spacing-label-data);
+            font-weight: var(--font-weight-label);
+        }
+
+        .client-field input {
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            padding: 3px 0;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+            transition: border-color .2s;
+        }
+
+        .client-field input:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        .client-field.full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* --- PROJECT NAME (compact) --- */
+        .project-section {
+            background: var(--color-highlight);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .project-section label {
+            font-size: var(--font-size-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            font-weight: var(--font-weight-label);
+        }
+
+        .project-section input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            padding: 4px 0;
+            margin-top: var(--spacing-label-data);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+        }
+
+        .project-section input:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* --- PRODUCTS TABLE (compact, minimal) --- */
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-sm) 0;
+        }
+
+        /* Table headers - LABEL style */
+        .products-table th {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            padding: 6pt 0;
+            text-align: left;
+            border-bottom: 0.5pt solid var(--color-primary);
+            background: transparent;
+        }
+
+        .products-table th:first-child {
+            text-align: center;
+            width: 24px;
+            padding-left: 0;
+        }
+
+        .products-table th.col-qty,
+        .products-table th.col-unit,
+        .products-table th.col-price,
+        .products-table th.col-vat,
+        .products-table th.col-total {
+            text-align: right;
+            padding-right: 0;
+        }
+
+        .products-table th.col-qty { width: 38px; }
+        .products-table th.col-unit { width: 36px; }
+        .products-table th.col-price { width: 72px; }
+        .products-table th.col-vat { width: 34px; }
+        .products-table th.col-total { width: 80px; }
+
+        /* Table cells - DATA style */
+        .products-table td {
+            padding: 6pt 0;
+            border-bottom: 0.5pt solid var(--color-border);
+            vertical-align: middle;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            color: var(--color-data);
+        }
+
+        .products-table td:first-child {
+            text-align: center;
+            font-weight: 500;
+            color: var(--color-secondary);
+            padding-left: 0;
+        }
+
+        .products-table td.col-qty,
+        .products-table td.col-unit,
+        .products-table td.col-price,
+        .products-table td.col-vat,
+        .products-table td.col-total {
+            text-align: right;
+            padding-right: 0;
+        }
+
+        .products-table .col-name { width: 24%; }
+        .products-table .col-desc { width: 30%; }
+
+        /* Table inputs - DATA style */
+        .products-table input {
+            width: 100%;
+            border: none;
+            padding: 2px 0;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+        }
+
+        .products-table input:focus {
+            outline: none;
+            background: var(--color-highlight);
+        }
+
+        .products-table input[type="number"] {
+            text-align: right;
+            -moz-appearance: textfield;
+        }
+
+        .products-table input[type="number"]::-webkit-inner-spin-button,
+        .products-table input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+        }
+
+        .products-table select {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid transparent;
+            padding: 2px 0;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            background-image: none;
+            color: var(--color-data);
+            text-align: right;
+            text-align-last: right;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            transition: border-color 0.2s;
+        }
+
+        /* Hide select arrows in all browsers */
+        .products-table select::-ms-expand {
+            display: none;
+        }
+
+        .products-table select:hover {
+            border-bottom-color: var(--color-border);
+        }
+
+        .products-table select:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* Empty row styling */
+        .products-table tr.empty-row td {
+            opacity: 0.4;
+        }
+
+        /* --- SUMMARY (compact) --- */
+        .summary-section {
+            margin-top: var(--spacing-lg);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .summary-table {
+            width: 240px;
+            border-collapse: collapse;
+        }
+
+        .summary-table tr {
+            border-bottom: 0.5pt solid var(--color-border);
+        }
+
+        .summary-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .summary-table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+        }
+
+        /* Summary labels - LABEL style */
+        .summary-table td:first-child {
+            text-align: left;
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            color: var(--color-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+        }
+
+        /* Summary values - DATA style */
+        .summary-table td:last-child {
+            text-align: right;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            color: var(--color-data);
+        }
+
+        .summary-table .total-row {
+            background: var(--color-primary);
+        }
+
+        .summary-table .total-row td {
+            padding: var(--spacing-md);
+            color: var(--color-white);
+            font-weight: 600;
+        }
+
+        .summary-table .total-row td:first-child {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .summary-table .total-row td:last-child {
+            font-size: var(--font-size-lg);
+            color: var(--color-white);
+        }
+
+        /* --- TERMS (compact 3-column grid) --- */
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-sm) var(--spacing-md);
+            margin: var(--spacing-lg) 0;
+            padding: var(--spacing-md) 0;
+            border-top: 0.5pt solid var(--color-border);
+            border-bottom: 0.5pt solid var(--color-border);
+        }
+
+        .term-item label {
+            display: block;
+            font-size: var(--font-size-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            margin-bottom: var(--spacing-label-data);
+            font-weight: var(--font-weight-label);
+        }
+
+        .term-item input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            padding: 2px 0;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+        }
+
+        .term-item input:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* --- VALIDITY (compact) --- */
+        .validity-section {
+            text-align: center;
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            font-size: var(--font-size-base);
+            color: var(--color-secondary);
+            background: var(--color-highlight);
+            border-radius: var(--border-radius);
+        }
+
+        .validity-section strong {
+            color: var(--color-data);
+            font-weight: var(--font-weight-data);
+        }
+
+        /* --- NOTES (compact) --- */
+        .notes-section {
+            margin: var(--spacing-md) 0;
+        }
+
+        .notes-section label {
+            display: block;
+            font-size: var(--font-size-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            margin-bottom: var(--spacing-label-data);
+            font-weight: var(--font-weight-label);
+        }
+
+        .notes-section textarea {
+            width: 100%;
+            min-height: 45px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            font-size: var(--font-size-data);
+            font-weight: 500;
+            font-family: var(--font-primary);
+            color: var(--color-data);
+            resize: vertical;
+            line-height: var(--line-height);
+        }
+
+        .notes-section textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        /* --- SIGNATURES (compact, pinned) --- */
+        .closing-section {
+            margin-top: var(--spacing-xl);
+            page-break-inside: avoid;
+        }
+
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-md);
+        }
+
+        .signature-box h4 {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 0.5pt solid var(--color-border);
+        }
+
+        .signature-row {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .signature-row label {
+            display: block;
+            font-size: var(--font-size-label);
+            color: var(--color-label);
+            margin-bottom: var(--spacing-label-data);
+            font-weight: var(--font-weight-label);
+        }
+
+        .signature-row input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            padding: 2px 0;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+        }
+
+        .signature-row input:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        .signature-line {
+            border-bottom: 1px solid var(--color-border);
+            min-height: 22px;
+            margin-top: var(--spacing-xs);
+        }
+
+        /* --- FOOTER (compact legal) --- */
+        .doc-footer {
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-md);
+            border-top: 0.5pt solid var(--color-border);
+            font-size: var(--font-size-xs);
+            color: var(--color-primary);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .doc-footer .company-legal {
+            margin-bottom: 2px;
+        }
+
+        .doc-footer .company-registration {
+            font-size: 6pt;
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            html, body {
+                background: var(--color-white);
+                margin: 0;
+                padding: 0;
+            }
+
+            .sidebar, .no-print { display: none !important; }
+
+            .app-wrapper {
+                padding: 0;
+                margin: 0;
+            }
+
+            .document {
+                box-shadow: none;
+                padding: 10mm 12mm;
+                width: 210mm;
+                min-height: 296mm;
+            }
+
+            .doc-field,
+            .client-field input,
+            .project-section input,
+            .products-table input,
+            .products-table select,
+            .term-item input,
+            .signature-row input,
+            .notes-section textarea {
+                border-color: transparent !important;
+                background: transparent !important;
+            }
+
+            .summary-table .total-row,
+            .doc-meta,
+            .project-section,
+            .validity-section {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .closing-section {
+                page-break-inside: avoid;
+            }
+
+            /* Hide empty rows when printing */
+            .products-table tr.empty-row {
+                display: none;
+            }
+
+            @page {
+                size: A4;
+                margin: 6mm;
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media screen and (max-width: 900px) {
+            .app-wrapper {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            .document {
+                width: 100%;
+                min-height: auto;
+                padding: 16px;
+            }
+            .doc-meta,
+            .client-grid,
+            .terms-grid {
+                grid-template-columns: 1fr;
+            }
+            .signatures-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: var(--font-primary);
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all .3s ease;
+            z-index: 999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success { background: #166534; }
+        .toast.error   { background: #991B1B; }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar no-print">
+        <div class="sidebar-card logo-area">
+            <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:22px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI<div style=&quot;font-size:8px;color:#757575;font-weight:400;margin-top:2px&quot;>Sp. z o.o. Sp.k.</div></div>'">
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Akcje</h3>
+            <a href="../index.html" class="btn btn-secondary" style="text-decoration:none;margin-bottom:12px;">← Strona główna</a>
+            <button class="btn btn-primary" onclick="printDoc()">Drukuj / Zapisz PDF</button>
+            <button class="btn btn-secondary" onclick="saveDocument()">Zapisz dokument</button>
+            <button class="btn btn-secondary" onclick="newDocument()">Nowy dokument</button>
+            <button class="btn btn-danger" onclick="clearForm()">Wyczyść formularz</button>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Pozycje w tabeli</h3>
+            <div style="display:flex;gap:6px;">
+                <button class="btn btn-secondary" onclick="addRow()" style="flex:1;text-align:center;">+ Dodaj</button>
+                <button class="btn btn-secondary" onclick="removeRow()" style="flex:1;text-align:center;">− Usuń</button>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Historia dokumentów</h3>
+            <div id="historyList" class="history-list">
+                <div class="history-empty">Brak zapisanych dokumentów</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ===== DOCUMENT ===== -->
+    <main class="page-container">
+        <div class="document" id="document">
+
+            <!-- Header (no bottom border) -->
+            <div class="doc-header">
+                <div class="logo">
+                    <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:28px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI</div>'">
+                </div>
+                <div class="company-info">
+                    <div class="name">WALABI sp. z o.o. sp.k.</div>
+                    <div class="tagline">Produkcja mebli na wymiar</div>
+                    <div>ul. Kosynierów Kościuszkowskich 13/4, 87-100 Toruń</div>
+                    <div>Tel: +48 501 260 990 · poczta@walabi.pl</div>
+                </div>
+            </div>
+
+            <!-- Title (compact) -->
+            <div class="doc-title">Oferta i Specyfikacja Projektowa</div>
+
+            <!-- Document Meta -->
+            <div class="doc-meta">
+                <div class="doc-meta-item">
+                    <label>Nr oferty</label>
+                    <span>OF-</span><input type="text" class="doc-field w80" id="offerNumber" placeholder="001/2026">
+                </div>
+                <div class="doc-meta-item">
+                    <label>Data wystawienia</label>
+                    <input type="text" class="doc-field w100" id="issueDate" placeholder="">
+                </div>
+                <div class="doc-meta-item">
+                    <label>Ważność oferty</label>
+                    <input type="text" class="doc-field w100" id="validUntil" placeholder="">
+                </div>
+            </div>
+
+            <!-- Client Section -->
+            <div class="doc-section">
+                <div class="doc-section-title">Dane Klienta</div>
+                <div class="client-grid">
+                    <div class="client-field full-width">
+                        <label>Nazwa firmy / Imię i nazwisko</label>
+                        <input type="text" id="clientName" placeholder="">
+                    </div>
+                    <div class="client-field full-width">
+                        <label>Adres</label>
+                        <input type="text" id="clientAddress" placeholder="">
+                    </div>
+                    <div class="client-field">
+                        <label>NIP</label>
+                        <input type="text" id="clientNip" placeholder="">
+                    </div>
+                    <div class="client-field">
+                        <label>Telefon</label>
+                        <input type="text" id="clientPhone" placeholder="">
+                    </div>
+                    <div class="client-field">
+                        <label>E-mail</label>
+                        <input type="text" id="clientEmail" placeholder="">
+                    </div>
+                    <div class="client-field">
+                        <label>Osoba kontaktowa</label>
+                        <input type="text" id="clientContact" placeholder="">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Name -->
+            <div class="project-section">
+                <label>Inwestycja / Projekt</label>
+                <input type="text" id="projectName" placeholder="">
+            </div>
+
+            <!-- Products Table -->
+            <div class="doc-section">
+                <div class="doc-section-title">Zestawienie Produktów i Usług</div>
+                <table class="products-table" id="productsTable">
+                    <thead>
+                        <tr>
+                            <th>Lp.</th>
+                            <th class="col-name">Produkt / Usługa</th>
+                            <th class="col-desc">Specyfikacja</th>
+                            <th class="col-qty">Ilość</th>
+                            <th class="col-unit">Jedn.</th>
+                            <th class="col-price">Cena netto</th>
+                            <th class="col-vat">VAT</th>
+                            <th class="col-total">Wartość netto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Generated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Closing Section (Summary + Signatures - always together) -->
+            <div class="closing-section">
+                <!-- Summary -->
+                <div class="summary-section">
+                    <table class="summary-table">
+                        <tr>
+                            <td>Wartość netto</td>
+                            <td><span id="sumNetto">0,00</span> PLN</td>
+                        </tr>
+                        <tr>
+                            <td>VAT</td>
+                            <td><span id="sumVat">0,00</span> PLN</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td>Razem brutto</td>
+                            <td><span id="sumBrutto">0,00</span> PLN</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Terms Grid -->
+                <div class="terms-grid">
+                    <div class="term-item">
+                        <label>Termin realizacji</label>
+                        <input type="text" id="termRealization" placeholder="6-8 tygodni">
+                    </div>
+                    <div class="term-item">
+                        <label>Warunki płatności</label>
+                        <input type="text" id="termPayment" placeholder="50% zaliczka">
+                    </div>
+                    <div class="term-item">
+                        <label>Dostawa</label>
+                        <input type="text" id="termDelivery" placeholder="Transport własny">
+                    </div>
+                    <div class="term-item">
+                        <label>Montaż</label>
+                        <input type="text" id="termAssembly" placeholder="W cenie">
+                    </div>
+                    <div class="term-item">
+                        <label>Gwarancja</label>
+                        <input type="text" id="termWarranty" placeholder="24 miesiące">
+                    </div>
+                </div>
+
+                <!-- Validity -->
+                <div class="validity-section">
+                    Niniejsza oferta jest ważna do dnia <strong><span id="validityDisplay">__________</span></strong>.
+                    Po tym terminie prosimy o kontakt w celu potwierdzenia aktualności cen.
+                </div>
+
+                <!-- Notes -->
+                <div class="notes-section">
+                    <label>Uwagi dodatkowe</label>
+                    <textarea id="notes" placeholder="Dodatkowe informacje, ustalenia, szczegóły techniczne..."></textarea>
+                </div>
+
+                <!-- Signatures -->
+                <div class="doc-section">
+                    <div class="doc-section-title">Potwierdzenie i Akceptacja</div>
+                    <div class="signatures-grid">
+                        <div class="signature-box">
+                            <h4>Wystawił (WALABI)</h4>
+                            <div class="signature-row">
+                                <label>Imię i nazwisko</label>
+                                <input type="text" id="walabiSignName" placeholder="">
+                            </div>
+                            <div class="signature-row">
+                                <label>Stanowisko</label>
+                                <input type="text" id="walabiSignPosition" placeholder="">
+                            </div>
+                            <div class="signature-row">
+                                <label>Podpis</label>
+                                <div class="signature-line"></div>
+                            </div>
+                        </div>
+
+                        <div class="signature-box">
+                            <h4>Akceptacja Klienta</h4>
+                            <div class="signature-row">
+                                <label>Imię i nazwisko</label>
+                                <input type="text" id="clientSignName" placeholder="">
+                            </div>
+                            <div class="signature-row">
+                                <label>Podpis</label>
+                                <div class="signature-line"></div>
+                            </div>
+                            <div class="signature-row">
+                                <label>Data akceptacji</label>
+                                <input type="text" id="clientSignDate" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="doc-footer">
+                <div class="company-legal">
+                    WALABI Sp. z o.o. Sp.k. · ul. Kosynierów Kościuszkowskich 13/4 · 87-100 Toruń
+                </div>
+                <div class="company-registration">
+                    NIP: 8792700696 · REGON: 382525739 · KRS: 0000771398 · Bank: ING Bank Śląski · IBAN: PL 12 1050 1139 1000 0090 8031 8590
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+    'use strict';
+
+    const STORAGE_KEY = 'walabi_offers';
+    const CURRENT_KEY = 'walabi_offer_current';
+    let rowCount = 1;
+
+    // ===== TEXT CASE CONVERSION =====
+    // Converts UPPERCASE text to Sentence Case (e.g., "ALKA SUN RESORT" -> "Alka Sun Resort")
+    function toSentenceCase(str) {
+        if (!str) return str;
+        // If string is all uppercase, convert to title case
+        if (str === str.toUpperCase() && str.length > 1) {
+            return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+        }
+        return str;
+    }
+
+    // Apply sentence case transformation on blur for specific fields
+    function applySentenceCaseOnBlur(input) {
+        input.addEventListener('blur', function() {
+            this.value = toSentenceCase(this.value);
+        });
+    }
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', function() {
+        buildRows(1);
+        setDefaultDates();
+        setNextOfferNumber();
+        renderHistory();
+
+        // Apply sentence case to client and project fields
+        const sentenceCaseFields = [
+            'clientName', 'clientAddress', 'clientContact',
+            'projectName', 'walabiSignName', 'walabiSignPosition',
+            'clientSignName'
+        ];
+        sentenceCaseFields.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) applySentenceCaseOnBlur(el);
+        });
+
+        document.getElementById('productsTable').addEventListener('input', function(e) {
+            calculateTotals();
+            checkEmptyRows();
+        });
+
+        // Apply sentence case to product names on blur
+        document.getElementById('productsTable').addEventListener('blur', function(e) {
+            if (e.target.id && e.target.id.includes('_name')) {
+                e.target.value = toSentenceCase(e.target.value);
+            }
+            if (e.target.id && e.target.id.includes('_desc')) {
+                e.target.value = toSentenceCase(e.target.value);
+            }
+        }, true);
+
+        document.getElementById('validUntil').addEventListener('change', updateValidityDisplay);
+    });
+
+    // ===== TABLE ROWS =====
+    function buildRows(count) {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        for (let i = 1; i <= count; i++) {
+            tbody.appendChild(createRow(i));
+        }
+        rowCount = count;
+    }
+
+    function createRow(num) {
+        const tr = document.createElement('tr');
+        tr.dataset.row = num;
+        tr.innerHTML = `
+            <td>${num}</td>
+            <td><input type="text" id="item${num}_name" placeholder=""></td>
+            <td><input type="text" id="item${num}_desc" placeholder=""></td>
+            <td class="col-qty"><input type="number" id="item${num}_qty" min="0" step="1" placeholder=""></td>
+            <td class="col-unit">
+                <select id="item${num}_unit">
+                    <option value="szt.">szt.</option>
+                    <option value="kpl.">kpl.</option>
+                    <option value="mb.">mb.</option>
+                    <option value="m²">m²</option>
+                    <option value="godz.">godz.</option>
+                    <option value="usł.">usł.</option>
+                </select>
+            </td>
+            <td class="col-price"><input type="number" id="item${num}_price" min="0" step="0.01" placeholder=""></td>
+            <td class="col-vat">
+                <select id="item${num}_vat">
+                    <option value="23">23%</option>
+                    <option value="8">8%</option>
+                    <option value="5">5%</option>
+                    <option value="0">0%</option>
+                </select>
+            </td>
+            <td class="col-total"><span id="item${num}_total">0,00</span></td>`;
+        return tr;
+    }
+
+    function checkEmptyRows() {
+        const tbody = document.getElementById('tableBody');
+        const rows = tbody.querySelectorAll('tr');
+
+        rows.forEach(tr => {
+            const num = tr.dataset.row;
+            const name = document.getElementById(`item${num}_name`)?.value || '';
+            const qty = document.getElementById(`item${num}_qty`)?.value || '';
+            const price = document.getElementById(`item${num}_price`)?.value || '';
+
+            if (!name && !qty && !price) {
+                tr.classList.add('empty-row');
+            } else {
+                tr.classList.remove('empty-row');
+            }
+        });
+    }
+
+    window.addRow = function() {
+        rowCount++;
+        const tbody = document.getElementById('tableBody');
+        tbody.appendChild(createRow(rowCount));
+        checkEmptyRows();
+        toast('Dodano pozycję ' + rowCount);
+    };
+
+    window.removeRow = function() {
+        if (rowCount <= 1) return;
+        const tbody = document.getElementById('tableBody');
+        tbody.removeChild(tbody.lastElementChild);
+        rowCount--;
+        calculateTotals();
+        toast('Usunięto pozycję');
+    };
+
+    // ===== NUMBER FORMATTING =====
+    // Format number with spaces as thousand separators (Polish style: 62 450,00)
+    function formatNumber(num) {
+        const fixed = num.toFixed(2);
+        const parts = fixed.split('.');
+        const intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        return intPart + ',' + parts[1];
+    }
+
+    // ===== CALCULATIONS =====
+    function calculateTotals() {
+        let sumNetto = 0;
+        let sumVat = 0;
+
+        for (let i = 1; i <= rowCount; i++) {
+            const qtyEl = document.getElementById(`item${i}_qty`);
+            const priceEl = document.getElementById(`item${i}_price`);
+            const vatEl = document.getElementById(`item${i}_vat`);
+            const totalEl = document.getElementById(`item${i}_total`);
+
+            const qty = parseFloat(qtyEl?.value) || 0;
+            const price = parseFloat(priceEl?.value) || 0;
+            const vatRate = parseFloat(vatEl?.value) || 23;
+
+            const lineNetto = qty * price;
+            const lineVat = lineNetto * (vatRate / 100);
+
+            sumNetto += lineNetto;
+            sumVat += lineVat;
+
+            if (totalEl) {
+                totalEl.textContent = formatNumber(lineNetto);
+            }
+        }
+
+        const sumBrutto = sumNetto + sumVat;
+
+        document.getElementById('sumNetto').textContent = formatNumber(sumNetto);
+        document.getElementById('sumVat').textContent = formatNumber(sumVat);
+        document.getElementById('sumBrutto').textContent = formatNumber(sumBrutto);
+    }
+
+    // ===== DATES & NUMBERS =====
+    function setDefaultDates() {
+        const d = new Date();
+        const issueStr = formatDate(d);
+        document.getElementById('issueDate').value = issueStr;
+
+        const validDate = new Date(d.getTime() + 30 * 24 * 60 * 60 * 1000);
+        const validStr = formatDate(validDate);
+        document.getElementById('validUntil').value = validStr;
+        updateValidityDisplay();
+    }
+
+    function formatDate(d) {
+        return String(d.getDate()).padStart(2,'0') + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + d.getFullYear();
+    }
+
+    function updateValidityDisplay() {
+        const val = document.getElementById('validUntil').value;
+        document.getElementById('validityDisplay').textContent = val || '__________';
+    }
+
+    function setNextOfferNumber() {
+        const docs = loadAllDocs();
+        const year = new Date().getFullYear();
+        const count = docs.filter(d => d.number && d.number.includes(year.toString())).length + 1;
+        document.getElementById('offerNumber').value = String(count).padStart(3, '0') + '/' + year;
+    }
+
+    // ===== SERIALIZATION =====
+    function collectFormData() {
+        const data = { rowCount: rowCount, fields: {} };
+        document.querySelectorAll('.document input, .document textarea, .document select').forEach(el => {
+            if (!el.id) return;
+            data.fields[el.id] = el.value;
+        });
+        return data;
+    }
+
+    function restoreFormData(data) {
+        if (data.rowCount) buildRows(data.rowCount);
+        Object.keys(data.fields).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = data.fields[id];
+        });
+        calculateTotals();
+        updateValidityDisplay();
+        checkEmptyRows();
+    }
+
+    // ===== STORAGE =====
+    function loadAllDocs() {
+        try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        } catch { return []; }
+    }
+
+    function saveAllDocs(docs) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(docs));
+    }
+
+    window.saveDocument = function() {
+        const data = collectFormData();
+        const offerNr = document.getElementById('offerNumber').value || '???';
+        const client = document.getElementById('clientName').value || 'Brak klienta';
+        const date = document.getElementById('issueDate').value || '';
+        const total = document.getElementById('sumBrutto').textContent;
+
+        const doc = {
+            id: Date.now(),
+            number: 'OF-' + offerNr,
+            client: client,
+            date: date,
+            total: total,
+            data: data
+        };
+
+        const docs = loadAllDocs();
+        const currentId = parseInt(localStorage.getItem(CURRENT_KEY));
+        const existingIdx = docs.findIndex(d => d.id === currentId);
+
+        if (existingIdx >= 0) {
+            docs[existingIdx] = { ...docs[existingIdx], number: doc.number, client: doc.client, date: doc.date, total: doc.total, data: doc.data };
+        } else {
+            docs.push(doc);
+            localStorage.setItem(CURRENT_KEY, doc.id);
+        }
+
+        saveAllDocs(docs);
+        renderHistory();
+        toast('Dokument zapisany', 'success');
+    };
+
+    window.loadDocument = function(id) {
+        const docs = loadAllDocs();
+        const doc = docs.find(d => d.id === id);
+        if (!doc) return;
+        restoreFormData(doc.data);
+        localStorage.setItem(CURRENT_KEY, id);
+        toast('Wczytano: ' + doc.number);
+    };
+
+    window.deleteDocument = function(id, e) {
+        e.stopPropagation();
+        if (!confirm('Usunąć ten dokument z historii?')) return;
+        let docs = loadAllDocs();
+        docs = docs.filter(d => d.id !== id);
+        saveAllDocs(docs);
+        renderHistory();
+        toast('Dokument usunięty');
+    };
+
+    // ===== HISTORY =====
+    function renderHistory() {
+        const docs = loadAllDocs();
+        const container = document.getElementById('historyList');
+
+        if (!docs.length) {
+            container.innerHTML = '<div class="history-empty">Brak zapisanych dokumentów</div>';
+            return;
+        }
+
+        container.innerHTML = docs.map(doc => `
+            <div class="history-item" onclick="loadDocument(${doc.id})">
+                <div>
+                    <div class="hi-number">${doc.number}</div>
+                    <div class="hi-client">${doc.client} | ${doc.total} PLN</div>
+                </div>
+                <button class="hi-delete" onclick="deleteDocument(${doc.id}, event)" title="Usuń">&times;</button>
+            </div>
+        `).reverse().join('');
+    }
+
+    // ===== ACTIONS =====
+    window.newDocument = function() {
+        if (!confirm('Rozpocząć nowy dokument? Niezapisane dane zostaną utracone.')) return;
+        buildRows(1);
+        document.querySelectorAll('.document input, .document textarea').forEach(el => {
+            el.value = '';
+        });
+        document.querySelectorAll('.document select').forEach(el => {
+            el.selectedIndex = 0;
+        });
+        localStorage.removeItem(CURRENT_KEY);
+        setDefaultDates();
+        setNextOfferNumber();
+        calculateTotals();
+        checkEmptyRows();
+        toast('Nowy dokument');
+    };
+
+    window.clearForm = function() {
+        if (!confirm('Wyczyścić wszystkie pola formularza?')) return;
+        document.querySelectorAll('.document input, .document textarea').forEach(el => {
+            el.value = '';
+        });
+        document.querySelectorAll('.document select').forEach(el => {
+            el.selectedIndex = 0;
+        });
+        setDefaultDates();
+        calculateTotals();
+        checkEmptyRows();
+        toast('Formularz wyczyszczony');
+    };
+
+    window.printDoc = function() {
+        window.print();
+    };
+
+    // ===== TOAST =====
+    function toast(msg, type) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.className = 'toast show ' + (type || '');
+        clearTimeout(el._timer);
+        el._timer = setTimeout(() => { el.className = 'toast'; }, 2500);
+    }
+
+})();
+</script>
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fpConfig = {
+            locale: 'pl',
+            dateFormat: 'd.m.Y',
+            allowInput: true,
+            disableMobile: false
+        };
+
+        flatpickr('#issueDate', fpConfig);
+        flatpickr('#validUntil', {
+            ...fpConfig,
+            onChange: function(selectedDates, dateStr) {
+                document.getElementById('validityDisplay').textContent = dateStr || '__________';
+            }
+        });
+        flatpickr('#clientSignDate', fpConfig);
+    });
+</script>
+</body>
+</html>

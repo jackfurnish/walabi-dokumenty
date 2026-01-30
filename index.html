@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WALABI - Dokumenty</title>
+    <!-- Google Fonts - Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== QUIET LUXURY 2026 DESIGN SYSTEM ===== */
+        :root {
+            --color-primary: #2D2E2E;
+            --color-secondary: #757575;
+            --color-border: #E0E0E0;
+            --color-background: #FAFAFA;
+            --color-white: #FFFFFF;
+            --color-highlight: #F7F5F0;
+
+            --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: linear-gradient(135deg, #E8E8E8 0%, #F5F5F5 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            color: var(--color-primary);
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .logo {
+            margin-bottom: 16px;
+        }
+
+        .logo img {
+            height: 70px;
+        }
+
+        .logo-text {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--color-primary);
+            letter-spacing: 0.1em;
+        }
+
+        .logo-subtext {
+            font-size: 12px;
+            color: var(--color-secondary);
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: var(--color-secondary);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 12px;
+        }
+
+        /* Documents Grid */
+        .documents-title {
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-secondary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .document-card {
+            background: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 28px 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .document-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--color-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .document-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+            border-color: var(--color-primary);
+        }
+
+        .document-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .document-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--color-background);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+            font-size: 22px;
+        }
+
+        .document-card:hover .document-icon {
+            background: var(--color-highlight);
+        }
+
+        .document-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 8px;
+        }
+
+        .document-description {
+            font-size: 13px;
+            color: var(--color-secondary);
+            line-height: 1.5;
+        }
+
+        .document-arrow {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            width: 32px;
+            height: 32px;
+            background: var(--color-background);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .document-card:hover .document-arrow {
+            opacity: 1;
+            transform: translateX(0);
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            font-size: 11px;
+            color: var(--color-primary);
+            letter-spacing: 0.03em;
+        }
+
+        .footer a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .header {
+                margin-bottom: 40px;
+            }
+
+            .logo-text {
+                font-size: 32px;
+            }
+
+            .documents-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .document-card {
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <img src="list-przewozowy/logo.png" alt="WALABI" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <div class="logo-text" style="display:none;">WALABI</div>
+        </div>
+        <div class="logo-subtext">Sp. z o.o. Sp.k.</div>
+        <div class="tagline">Produkcja · Dostawa · Montaż mebli na zamówienie</div>
+    </header>
+
+    <!-- Documents -->
+    <section>
+        <h2 class="documents-title">Dokumenty firmowe</h2>
+        <div class="documents-grid">
+
+            <a href="oferta-wycena/index.html" class="document-card">
+                <div class="document-icon">📋</div>
+                <div class="document-name">Oferta / Wycena</div>
+                <div class="document-description">Przygotowanie oferty cenowej z kalkulacją produktów i usług</div>
+                <div class="document-arrow">→</div>
+            </a>
+
+            <a href="zamowienie/index.html" class="document-card">
+                <div class="document-icon">📝</div>
+                <div class="document-name">Zamówienie</div>
+                <div class="document-description">Formularz zamówienia z danymi klienta i specyfikacją produktów</div>
+                <div class="document-arrow">→</div>
+            </a>
+
+            <a href="list-przewozowy/index.html" class="document-card">
+                <div class="document-icon">🚚</div>
+                <div class="document-name">List Przewozowy</div>
+                <div class="document-description">Dokument transportowy z listą przewożonych elementów</div>
+                <div class="document-arrow">→</div>
+            </a>
+
+            <a href="potwierdzenie-dostawy/index.html" class="document-card">
+                <div class="document-icon">✅</div>
+                <div class="document-name">Potwierdzenie Dostawy</div>
+                <div class="document-description">Protokół potwierdzający odbiór dostarczonego towaru</div>
+                <div class="document-arrow">→</div>
+            </a>
+
+            <a href="protokol-montazu/index.html" class="document-card">
+                <div class="document-icon">🔧</div>
+                <div class="document-name">Protokół Montażu</div>
+                <div class="document-description">Dokument odbioru wykonanego montażu mebli</div>
+                <div class="document-arrow">→</div>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        WALABI Sp. z o.o. Sp.k. · ul. Kosynierów Kościuszkowskich 13/4 · 87-100 Toruń<br>
+        <a href="mailto:poczta@walabi.pl">poczta@walabi.pl</a> · <a href="https://walabi.pl">www.walabi.pl</a> · NIP: 8792700696
+    </footer>
+</div>
+
+</body>
+</html>

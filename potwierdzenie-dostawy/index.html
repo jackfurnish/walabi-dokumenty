@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potwierdzenie Dostawy Mebli - WALABI</title>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&subset=latin-ext&display=swap" rel="stylesheet">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        /* ===== QUIET LUXURY 2026 - TYPOGRAPHY HIERARCHY ===== */
+        :root {
+            --color-primary: #2D2E2E;
+            --color-secondary: #757575;
+            --color-accent: #B8860B;
+            --color-border: #E0E0E0;
+            --color-background: #FAFAFA;
+            --color-white: #FFFFFF;
+            --color-highlight: #F7F5F0;
+
+            --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+            --font-size-label: 7pt;
+            --font-weight-label: 400;
+            --color-label: #757575;
+
+            --font-size-data: 9pt;
+            --font-weight-data: 600;
+            --color-data: #2D2E2E;
+
+            --font-size-xs: 6.5pt;
+            --font-size-base: 8.5pt;
+            --font-size-lg: 10pt;
+            --font-size-xl: 12pt;
+
+            --spacing-label-data: 2pt;
+            --spacing-xs: 3px;
+            --spacing-sm: 6px;
+            --spacing-md: 10px;
+            --spacing-lg: 14px;
+            --spacing-xl: 18px;
+
+            --line-height: 1.3;
+            --letter-spacing: 0.08em;
+            --border-radius: 2px;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-primary);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            background: #E8E8E8;
+            color: var(--color-primary);
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== FLATPICKR ===== */
+        .flatpickr-calendar {
+            font-family: var(--font-primary) !important;
+            font-size: 11px !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,.12) !important;
+            border: 1px solid var(--color-border) !important;
+            border-radius: 4px !important;
+        }
+        .flatpickr-day.selected, .flatpickr-day.selected:hover {
+            background: var(--color-primary) !important;
+            border-color: var(--color-primary) !important;
+        }
+        .flatpickr-day:hover { background: var(--color-highlight) !important; }
+
+        /* ===== LAYOUT ===== */
+        .app-wrapper {
+            display: flex;
+            gap: 20px;
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+        }
+
+        .sidebar-card {
+            background: var(--color-white);
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+            border: 1px solid var(--color-border);
+        }
+
+        .sidebar-card h3 {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            margin-bottom: 10px;
+            color: var(--color-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .sidebar .logo-area {
+            text-align: center;
+            padding: 12px 0;
+        }
+
+        .sidebar .logo-area img {
+            max-width: 110px;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            transition: all .2s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .btn:active { transform: scale(.98); }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+        .btn-primary:hover { background: #1a1a1a; }
+
+        .btn-secondary {
+            background: var(--color-background);
+            color: var(--color-primary);
+            border: 1px solid var(--color-border);
+        }
+        .btn-secondary:hover { background: var(--color-highlight); }
+
+        .btn-danger {
+            background: var(--color-white);
+            color: #9A3412;
+            border: 1px solid var(--color-border);
+        }
+        .btn-danger:hover { background: #FEF2F2; }
+
+        .history-list { max-height: 180px; overflow-y: auto; }
+
+        .history-item {
+            padding: 8px 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--color-border);
+            transition: background .15s;
+        }
+
+        .history-item:last-child { border-bottom: none; }
+        .history-item:hover { background: var(--color-highlight); }
+
+        .history-item .hi-number {
+            font-weight: var(--font-weight-data);
+            font-size: var(--font-size-data);
+            color: var(--color-data);
+        }
+        .history-item .hi-client {
+            color: var(--color-label);
+            font-size: var(--font-size-label);
+            margin-top: 1px;
+        }
+        .history-item .hi-delete {
+            color: var(--color-secondary);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 3px;
+            border: none;
+            background: none;
+            opacity: 0.5;
+            transition: opacity .15s;
+        }
+        .history-item .hi-delete:hover { opacity: 1; color: #9A3412; }
+
+        .history-empty {
+            color: var(--color-secondary);
+            font-style: italic;
+            padding: 12px;
+            text-align: center;
+            font-size: var(--font-size-label);
+        }
+
+        /* ===== DOCUMENT ===== */
+        .page-container { flex: 1; min-width: 0; }
+
+        .document {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 14mm 16mm;
+            background: var(--color-white);
+            box-shadow: 0 4px 24px rgba(0,0,0,.08);
+            position: relative;
+        }
+
+        /* --- HEADER --- */
+        .doc-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .doc-header .logo img {
+            height: 78px;
+            opacity: 0.95;
+        }
+
+        .doc-header h1 {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--color-primary);
+            text-align: center;
+            flex: 1;
+        }
+
+        .doc-header .logo-placeholder { width: 78px; }
+
+        /* --- DOCUMENT META --- */
+        .doc-meta {
+            display: flex;
+            gap: var(--spacing-lg);
+            font-size: var(--font-size-data);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 0.5pt solid var(--color-border);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .doc-meta-item label {
+            font-size: var(--font-size-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            font-weight: var(--font-weight-label);
+            margin-right: var(--spacing-xs);
+        }
+
+        /* --- SECTIONS --- */
+        .doc-section { margin-bottom: var(--spacing-lg); }
+
+        .doc-section-title {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            margin-bottom: var(--spacing-sm);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 0.5pt solid var(--color-border);
+        }
+
+        .doc-hr {
+            border: none;
+            border-top: 0.5pt solid var(--color-primary);
+            margin: var(--spacing-md) 0;
+        }
+
+        /* --- INPUTS --- */
+        .doc-field {
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            padding: 2px 0;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+            transition: border-color .2s;
+        }
+
+        .doc-field:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        .doc-field::placeholder { color: #BDBDBD; font-weight: 300; }
+
+        .w40  { width: 40px; }
+        .w60  { width: 60px; }
+        .w80  { width: 80px; }
+        .w100 { width: 100px; }
+        .w120 { width: 120px; }
+        .w150 { width: 150px; }
+        .w200 { width: 200px; }
+        .w250 { width: 250px; }
+        .w300 { width: 300px; }
+
+        /* --- ROWS --- */
+        .doc-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px 10px;
+            align-items: baseline;
+            margin-bottom: var(--spacing-sm);
+            font-size: var(--font-size-data);
+        }
+
+        .doc-row b {
+            font-weight: var(--font-weight-data);
+            color: var(--color-data);
+        }
+
+        .doc-row label {
+            font-size: var(--font-size-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            font-weight: var(--font-weight-label);
+        }
+
+        .doc-sep { color: var(--color-border); }
+
+        /* --- PROJECT INFO --- */
+        .project-info {
+            background: var(--color-highlight);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* --- TABLE --- */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-sm) 0;
+            font-size: var(--font-size-data);
+        }
+
+        .items-table th {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            padding: 6pt 0;
+            text-align: left;
+            border-bottom: 0.5pt solid var(--color-primary);
+            background: transparent;
+        }
+
+        .items-table th:first-child { text-align: center; width: 24px; }
+        .items-table th.col-qty,
+        .items-table th.col-unit { text-align: center; width: 50px; }
+
+        .items-table td {
+            padding: 6pt 0;
+            border-bottom: 0.5pt solid var(--color-border);
+            vertical-align: middle;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            color: var(--color-data);
+        }
+
+        .items-table td:first-child {
+            text-align: center;
+            font-weight: 500;
+            color: var(--color-secondary);
+        }
+
+        .items-table td.col-qty,
+        .items-table td.col-unit { text-align: center; }
+
+        .items-table .col-name { width: 28%; }
+        .items-table .col-desc { width: 38%; }
+
+        .items-table input {
+            width: 100%;
+            border: none;
+            padding: 2px 0;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+        }
+
+        .items-table input:focus {
+            outline: none;
+            background: var(--color-highlight);
+        }
+
+        .items-table input[type="number"] {
+            text-align: center;
+            -moz-appearance: textfield;
+        }
+
+        .items-table input[type="number"]::-webkit-inner-spin-button,
+        .items-table input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+        }
+
+        .items-table .sum-row td {
+            background: var(--color-primary);
+            color: var(--color-white);
+            font-weight: 600;
+            border-top: none;
+            border-bottom: none;
+            padding: var(--spacing-sm) 0;
+        }
+
+        .items-table .sum-row td:first-child {
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* --- STATEMENT --- */
+        .statement-box {
+            margin: var(--spacing-md) 0;
+            padding: var(--spacing-md) 0;
+            border-top: 0.5pt solid var(--color-border);
+            border-bottom: 0.5pt solid var(--color-border);
+            font-size: var(--font-size-base);
+            color: var(--color-secondary);
+            line-height: 1.5;
+        }
+
+        .statement-box p { margin-bottom: var(--spacing-sm); }
+        .statement-box p:last-child { margin-bottom: 0; }
+
+        .statement-box strong {
+            color: var(--color-data);
+            font-weight: var(--font-weight-data);
+        }
+
+        /* --- SIGNATURES --- */
+        .signatures-section { margin-top: var(--spacing-xl); }
+
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+        }
+
+        .signature-box h4 {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 0.5pt solid var(--color-border);
+        }
+
+        .signature-row { margin-bottom: var(--spacing-sm); }
+
+        .signature-row label {
+            display: block;
+            font-size: var(--font-size-label);
+            color: var(--color-label);
+            margin-bottom: var(--spacing-label-data);
+            font-weight: var(--font-weight-label);
+        }
+
+        .signature-line {
+            border-bottom: 1px solid var(--color-border);
+            min-height: 22px;
+            margin-top: var(--spacing-xs);
+        }
+
+        .signature-row input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            padding: 2px 0;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+        }
+
+        .signature-row input:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* --- FOOTER --- */
+        .doc-footer {
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-md);
+            border-top: 0.5pt solid var(--color-border);
+            font-size: var(--font-size-xs);
+            color: var(--color-primary);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* ===== PRINT ===== */
+        @media print {
+            html, body { background: var(--color-white); margin: 0; padding: 0; }
+            .sidebar, .no-print { display: none !important; }
+            .app-wrapper { padding: 0; margin: 0; }
+
+            .document {
+                box-shadow: none;
+                padding: 10mm 12mm;
+                width: 210mm;
+                min-height: 296mm;
+            }
+
+            .doc-field,
+            .items-table input,
+            .signature-row input {
+                border-color: transparent !important;
+                background: transparent !important;
+            }
+
+            .items-table .sum-row td,
+            .project-info {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            @page { size: A4; margin: 6mm; }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media screen and (max-width: 900px) {
+            .app-wrapper { flex-direction: column; padding: 10px; }
+            .sidebar { width: 100%; position: static; }
+            .document { width: 100%; min-height: auto; padding: 16px; }
+            .signatures-grid { grid-template-columns: 1fr; gap: var(--spacing-md); }
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: var(--font-primary);
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all .3s ease;
+            z-index: 999;
+        }
+
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.success { background: #166534; }
+        .toast.error   { background: #991B1B; }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar no-print">
+        <div class="sidebar-card logo-area">
+            <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:22px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI<div style=&quot;font-size:8px;color:#757575;font-weight:400;margin-top:2px&quot;>Sp. z o.o. Sp.k.</div></div>'">
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Akcje</h3>
+            <a href="../index.html" class="btn btn-secondary" style="text-decoration:none;margin-bottom:12px;">← Strona główna</a>
+            <button class="btn btn-primary" onclick="printDoc()">Drukuj / Zapisz PDF</button>
+            <button class="btn btn-secondary" onclick="saveDocument()">Zapisz dokument</button>
+            <button class="btn btn-secondary" onclick="newDocument()">Nowy dokument</button>
+            <button class="btn btn-danger" onclick="clearForm()">Wyczyść formularz</button>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Pozycje w tabeli</h3>
+            <div style="display:flex;gap:6px;">
+                <button class="btn btn-secondary" onclick="addRow()" style="flex:1;text-align:center;">+ Dodaj</button>
+                <button class="btn btn-secondary" onclick="removeRow()" style="flex:1;text-align:center;">− Usuń</button>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Historia dokumentów</h3>
+            <div id="historyList" class="history-list">
+                <div class="history-empty">Brak zapisanych dokumentów</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ===== DOCUMENT ===== -->
+    <main class="page-container">
+        <div class="document" id="document">
+
+            <!-- Header -->
+            <div class="doc-header">
+                <div class="logo">
+                    <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:28px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI</div>'">
+                </div>
+                <h1>Potwierdzenie Dostawy</h1>
+                <div class="logo-placeholder"></div>
+            </div>
+
+            <!-- Document Meta -->
+            <div class="doc-meta">
+                <div class="doc-meta-item">
+                    <label>Nr dokumentu</label>
+                    <span>DD-</span><input type="text" class="doc-field w80" id="docNumber" placeholder="">
+                </div>
+                <div class="doc-meta-item">
+                    <label>Data dostawy</label>
+                    <input type="text" class="doc-field w100" id="deliveryDate" placeholder="">
+                </div>
+            </div>
+
+            <!-- Project Data -->
+            <div class="doc-section">
+                <div class="doc-section-title">Dane Projektu</div>
+                <div class="project-info">
+                    <div class="doc-row">
+                        <label>Projekt / Inwestycja</label>
+                        <input type="text" class="doc-field w300" id="projectName" placeholder="">
+                    </div>
+                    <div class="doc-row">
+                        <label>Adres dostawy</label>
+                        <input type="text" class="doc-field w300" id="deliveryAddress" placeholder="">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contacts -->
+            <div class="doc-section">
+                <div class="doc-section-title">Osoby Kontaktowe</div>
+
+                <div class="doc-row" style="margin-top:8px;">
+                    <b>Odbiór - Klient</b>
+                </div>
+                <div class="doc-row">
+                    <label>Imię i nazwisko</label>
+                    <input type="text" class="doc-field w200" id="clientContactName" placeholder="">
+                    <span class="doc-sep">|</span>
+                    <label>Tel.</label>
+                    <input type="text" class="doc-field w120" id="clientContactPhone" placeholder="">
+                </div>
+
+                <div class="doc-row" style="margin-top:10px;">
+                    <b>Koordynator dostawy - WALABI</b>
+                </div>
+                <div class="doc-row">
+                    <label>Imię i nazwisko</label>
+                    <input type="text" class="doc-field w200" id="walabiContactName" placeholder="">
+                    <span class="doc-sep">|</span>
+                    <label>Tel.</label>
+                    <input type="text" class="doc-field w120" id="walabiContactPhone" placeholder="">
+                </div>
+            </div>
+
+            <hr class="doc-hr">
+
+            <!-- Items Table -->
+            <div class="doc-section">
+                <div class="doc-section-title">Zestawienie Dostarczonych Elementów</div>
+                <table class="items-table" id="itemsTable">
+                    <thead>
+                        <tr>
+                            <th>Lp.</th>
+                            <th class="col-name">Nazwa elementu</th>
+                            <th class="col-desc">Opis / wariant</th>
+                            <th class="col-qty">Ilość</th>
+                            <th class="col-unit">Jedn.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Generated dynamically -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="sum-row">
+                            <td>Σ</td>
+                            <td colspan="2" style="text-align:right;padding-right:10px;">Razem</td>
+                            <td class="col-qty"><span id="totalQty">0</span></td>
+                            <td class="col-unit">szt.</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- Statement -->
+            <div class="statement-box">
+                <p>Dostarczone elementy zostały przekazane w stanie <strong>kompletnym</strong> oraz bez widocznych
+                uszkodzeń mechanicznych powstałych w transporcie.</p>
+                <p>Dokument potwierdza <strong>wyłącznie fakt dostawy mebli</strong> i nie stanowi protokołu
+                odbioru montażu ani prac wykończeniowych.</p>
+            </div>
+
+            <!-- Signatures -->
+            <div class="signatures-section">
+                <div class="doc-section-title">Podpisy</div>
+                <div class="signatures-grid">
+                    <div class="signature-box">
+                        <h4>Odbiór - Klient</h4>
+                        <div class="signature-row">
+                            <label>Imię i nazwisko (czytelnie)</label>
+                            <input type="text" id="clientSignName" placeholder="">
+                        </div>
+                        <div class="signature-row">
+                            <label>Podpis</label>
+                            <div class="signature-line"></div>
+                        </div>
+                        <div class="signature-row">
+                            <label>Data</label>
+                            <input type="text" id="clientSignDate" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="signature-box">
+                        <h4>Przedstawiciel WALABI</h4>
+                        <div class="signature-row">
+                            <label>Imię i nazwisko</label>
+                            <input type="text" id="walabiSignName" placeholder="">
+                        </div>
+                        <div class="signature-row">
+                            <label>Podpis</label>
+                            <div class="signature-line"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="doc-footer">
+                WALABI Sp. z o.o. Sp.k. · ul. Kosynierów Kościuszkowskich 13/4 · 87-100 Toruń · NIP: 8792700696
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+    'use strict';
+
+    const STORAGE_KEY = 'walabi_delivery_confirms';
+    const CURRENT_KEY = 'walabi_delivery_current';
+    let rowCount = 5;
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', function() {
+        buildRows(5);
+        setDefaultDate();
+        setNextDocNumber();
+        renderHistory();
+
+        document.getElementById('itemsTable').addEventListener('input', calculateTotals);
+    });
+
+    // ===== TABLE ROWS =====
+    function buildRows(count) {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        for (let i = 1; i <= count; i++) {
+            tbody.appendChild(createRow(i));
+        }
+        rowCount = count;
+    }
+
+    function createRow(num) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${num}</td>
+            <td><input type="text" id="item${num}_name" placeholder=""></td>
+            <td><input type="text" id="item${num}_desc" placeholder=""></td>
+            <td class="col-qty"><input type="number" id="item${num}_qty" min="0" step="1" placeholder=""></td>
+            <td class="col-unit"><input type="text" id="item${num}_unit" value="szt." style="text-align:center;"></td>`;
+        return tr;
+    }
+
+    window.addRow = function() {
+        rowCount++;
+        const tbody = document.getElementById('tableBody');
+        tbody.appendChild(createRow(rowCount));
+        toast('Dodano pozycję ' + rowCount);
+    };
+
+    window.removeRow = function() {
+        if (rowCount <= 1) return;
+        const tbody = document.getElementById('tableBody');
+        tbody.removeChild(tbody.lastElementChild);
+        rowCount--;
+        calculateTotals();
+        toast('Usunięto pozycję');
+    };
+
+    // ===== CALCULATIONS =====
+    function calculateTotals() {
+        let total = 0;
+        for (let i = 1; i <= rowCount; i++) {
+            const qtyEl = document.getElementById(`item${i}_qty`);
+            if (qtyEl) total += parseInt(qtyEl.value) || 0;
+        }
+        document.getElementById('totalQty').textContent = total || '0';
+    }
+
+    // ===== DATE & NUMBER =====
+    function setDefaultDate() {
+        const d = new Date();
+        const str = String(d.getDate()).padStart(2,'0') + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + d.getFullYear();
+        document.getElementById('deliveryDate').value = str;
+    }
+
+    function setNextDocNumber() {
+        const docs = loadAllDocs();
+        const year = new Date().getFullYear();
+        const count = docs.filter(d => d.number && d.number.includes(year.toString())).length + 1;
+        document.getElementById('docNumber').value = String(count).padStart(3, '0') + '/' + year;
+    }
+
+    // ===== SERIALIZATION =====
+    function collectFormData() {
+        const data = { rowCount: rowCount, fields: {} };
+        document.querySelectorAll('.document input').forEach(input => {
+            if (!input.id) return;
+            data.fields[input.id] = input.value;
+        });
+        return data;
+    }
+
+    function restoreFormData(data) {
+        if (data.rowCount) buildRows(data.rowCount);
+        Object.keys(data.fields).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = data.fields[id];
+        });
+        calculateTotals();
+    }
+
+    // ===== STORAGE =====
+    function loadAllDocs() {
+        try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        } catch { return []; }
+    }
+
+    function saveAllDocs(docs) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(docs));
+    }
+
+    window.saveDocument = function() {
+        const data = collectFormData();
+        const docNr = document.getElementById('docNumber').value || '???';
+        const project = document.getElementById('projectName').value || 'Brak projektu';
+        const date = document.getElementById('deliveryDate').value || '';
+
+        const doc = {
+            id: Date.now(),
+            number: 'DD-' + docNr,
+            project: project,
+            date: date,
+            data: data
+        };
+
+        const docs = loadAllDocs();
+        const currentId = parseInt(localStorage.getItem(CURRENT_KEY));
+        const existingIdx = docs.findIndex(d => d.id === currentId);
+
+        if (existingIdx >= 0) {
+            docs[existingIdx] = { ...docs[existingIdx], number: doc.number, project: doc.project, date: doc.date, data: doc.data };
+        } else {
+            docs.push(doc);
+            localStorage.setItem(CURRENT_KEY, doc.id);
+        }
+
+        saveAllDocs(docs);
+        renderHistory();
+        toast('Dokument zapisany', 'success');
+    };
+
+    window.loadDocument = function(id) {
+        const docs = loadAllDocs();
+        const doc = docs.find(d => d.id === id);
+        if (!doc) return;
+        restoreFormData(doc.data);
+        localStorage.setItem(CURRENT_KEY, id);
+        toast('Wczytano: ' + doc.number);
+    };
+
+    window.deleteDocument = function(id, e) {
+        e.stopPropagation();
+        if (!confirm('Usunąć ten dokument z historii?')) return;
+        let docs = loadAllDocs();
+        docs = docs.filter(d => d.id !== id);
+        saveAllDocs(docs);
+        renderHistory();
+        toast('Dokument usunięty');
+    };
+
+    // ===== HISTORY =====
+    function renderHistory() {
+        const docs = loadAllDocs();
+        const container = document.getElementById('historyList');
+
+        if (!docs.length) {
+            container.innerHTML = '<div class="history-empty">Brak zapisanych dokumentów</div>';
+            return;
+        }
+
+        container.innerHTML = docs.map(doc => `
+            <div class="history-item" onclick="loadDocument(${doc.id})">
+                <div>
+                    <div class="hi-number">${doc.number}</div>
+                    <div class="hi-client">${doc.project} | ${doc.date}</div>
+                </div>
+                <button class="hi-delete" onclick="deleteDocument(${doc.id}, event)" title="Usuń">&times;</button>
+            </div>
+        `).reverse().join('');
+    }
+
+    // ===== ACTIONS =====
+    window.newDocument = function() {
+        if (!confirm('Rozpocząć nowy dokument? Niezapisane dane zostaną utracone.')) return;
+        buildRows(5);
+        document.querySelectorAll('.document input').forEach(input => {
+            if (input.id && input.id.includes('_unit')) {
+                input.value = 'szt.';
+            } else {
+                input.value = '';
+            }
+        });
+        localStorage.removeItem(CURRENT_KEY);
+        setDefaultDate();
+        setNextDocNumber();
+        calculateTotals();
+        toast('Nowy dokument');
+    };
+
+    window.clearForm = function() {
+        if (!confirm('Wyczyścić wszystkie pola formularza?')) return;
+        document.querySelectorAll('.document input').forEach(input => {
+            if (input.id && input.id.includes('_unit')) {
+                input.value = 'szt.';
+            } else {
+                input.value = '';
+            }
+        });
+        setDefaultDate();
+        calculateTotals();
+        toast('Formularz wyczyszczony');
+    };
+
+    window.printDoc = function() {
+        window.print();
+    };
+
+    // ===== TOAST =====
+    function toast(msg, type) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.className = 'toast show ' + (type || '');
+        clearTimeout(el._timer);
+        el._timer = setTimeout(() => { el.className = 'toast'; }, 2500);
+    }
+
+})();
+</script>
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fpConfig = {
+            locale: 'pl',
+            dateFormat: 'd.m.Y',
+            allowInput: true,
+            disableMobile: false
+        };
+
+        flatpickr('#deliveryDate', fpConfig);
+        flatpickr('#clientSignDate', fpConfig);
+    });
+</script>
+</body>
+</html>
