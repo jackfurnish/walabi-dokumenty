@@ -1351,8 +1351,9 @@
     // ===== FORMATOWANIE KWOT =====
     function formatCurrency(value) {
         // Formatuj z spacją jako separatorem tysięcy
-        const formatted = value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ').replace('.', ',');
-        return formatted;
+        const parts = value.toFixed(2).split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        return parts.join(',');
     }
 
     function parseNumber(str) {
@@ -1735,15 +1736,25 @@
             }
             if (priceEl) {
                 priceEl.addEventListener('input', () => calculateSpecRow(i));
+                priceEl.addEventListener('blur', function() {
+                    const val = parseNumber(this.value);
+                    if (val > 0) this.value = formatCurrency(val);
+                });
             }
         }
     }
 
     function calculateSpecRow(num) {
-        const qty = parseNumber(document.getElementById(`spec${num}Qty`).value) || 1;
-        const price = parseNumber(document.getElementById(`spec${num}Price`).value) || 0;
+        const qtyEl = document.getElementById(`spec${num}Qty`);
+        const priceEl = document.getElementById(`spec${num}Price`);
+        const qty = parseNumber(qtyEl.value) || 1;
+        const price = parseNumber(priceEl.value) || 0;
         const total = qty * price;
         document.getElementById(`spec${num}Total`).value = formatCurrency(total);
+        // Formatuj cenę ze spacjami
+        if (price > 0) {
+            priceEl.value = formatCurrency(price);
+        }
         calculateSpecTotals();
     }
 
@@ -1780,13 +1791,20 @@
 
     window.addSpecRow = function() {
         specRowCount++;
+        const rowNum = specRowCount; // zachowaj numer wiersza
         const tbody = document.getElementById('specTableBody');
-        tbody.insertAdjacentHTML('beforeend', createSpecRow(specRowCount));
+        tbody.insertAdjacentHTML('beforeend', createSpecRow(rowNum));
         // Dodaj listenery tylko do nowego wiersza
-        const qtyEl = document.getElementById(`spec${specRowCount}Qty`);
-        const priceEl = document.getElementById(`spec${specRowCount}Price`);
-        if (qtyEl) qtyEl.addEventListener('input', () => calculateSpecRow(specRowCount));
-        if (priceEl) priceEl.addEventListener('input', () => calculateSpecRow(specRowCount));
+        const qtyEl = document.getElementById(`spec${rowNum}Qty`);
+        const priceEl = document.getElementById(`spec${rowNum}Price`);
+        if (qtyEl) qtyEl.addEventListener('input', () => calculateSpecRow(rowNum));
+        if (priceEl) {
+            priceEl.addEventListener('input', () => calculateSpecRow(rowNum));
+            priceEl.addEventListener('blur', function() {
+                const val = parseNumber(this.value);
+                if (val > 0) this.value = formatCurrency(val);
+            });
+        }
         toast('Dodano wiersz ' + specRowCount);
     };
 
