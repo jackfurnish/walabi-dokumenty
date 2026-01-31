@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karta Pomiarowa - WALABI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&subset=latin-ext&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        :root {
+            --color-primary: #2D2E2E;
+            --color-secondary: #757575;
+            --color-accent: #B8860B;
+            --color-border: #E0E0E0;
+            --color-background: #FAFAFA;
+            --color-white: #FFFFFF;
+            --color-highlight: #F7F5F0;
+            --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-size-label: 7pt;
+            --font-weight-label: 400;
+            --color-label: #757575;
+            --font-size-data: 9pt;
+            --font-weight-data: 600;
+            --color-data: #2D2E2E;
+            --font-size-xs: 6.5pt;
+            --font-size-base: 8.5pt;
+            --font-size-lg: 10pt;
+            --font-size-xl: 12pt;
+            --spacing-xs: 3px;
+            --spacing-sm: 6px;
+            --spacing-md: 10px;
+            --spacing-lg: 14px;
+            --spacing-xl: 18px;
+            --line-height: 1.4;
+            --letter-spacing: 0.08em;
+            --border-radius: 2px;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            background: #E8E8E8;
+            color: var(--color-primary);
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .flatpickr-calendar {
+            font-family: var(--font-primary) !important;
+            font-size: 11px !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,.12) !important;
+            border: 1px solid var(--color-border) !important;
+            border-radius: 4px !important;
+        }
+        .flatpickr-day.selected, .flatpickr-day.selected:hover {
+            background: var(--color-primary) !important;
+            border-color: var(--color-primary) !important;
+        }
+
+        .app-wrapper {
+            display: flex;
+            gap: 20px;
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+        }
+
+        .sidebar-card {
+            background: var(--color-white);
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+            border: 1px solid var(--color-border);
+        }
+
+        .sidebar-card h3 {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            margin-bottom: 10px;
+            color: var(--color-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .sidebar .logo-area {
+            text-align: center;
+            padding: 12px 0;
+        }
+
+        .sidebar .logo-area img {
+            max-width: 110px;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            transition: all .2s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .btn:active { transform: scale(.98); }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+        .btn-primary:hover { background: #1a1a1a; }
+
+        .btn-secondary {
+            background: var(--color-background);
+            color: var(--color-primary);
+            border: 1px solid var(--color-border);
+        }
+        .btn-secondary:hover { background: var(--color-highlight); }
+
+        .btn-danger {
+            background: var(--color-white);
+            color: #9A3412;
+            border: 1px solid var(--color-border);
+        }
+        .btn-danger:hover { background: #FEF2F2; }
+
+        /* DOCUMENT */
+        .page-container {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .document {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 12mm 14mm;
+            background: var(--color-white);
+            box-shadow: 0 4px 24px rgba(0,0,0,.08);
+            position: relative;
+        }
+
+        .doc-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .doc-header .logo img {
+            height: 60px;
+            opacity: 0.95;
+        }
+
+        .doc-title {
+            text-align: center;
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            margin: var(--spacing-md) 0;
+            padding: var(--spacing-sm) 0;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--color-primary);
+            border-top: 0.5pt solid var(--color-primary);
+            border-bottom: 0.5pt solid var(--color-primary);
+        }
+
+        .doc-number {
+            text-align: center;
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--color-primary);
+        }
+
+        .doc-number input {
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            font-family: var(--font-primary);
+            text-align: center;
+            width: 100px;
+            color: var(--color-data);
+            background: transparent;
+        }
+
+        .doc-number input:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* INFO SECTION */
+        .info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .info-box {
+            padding: var(--spacing-sm);
+            background: var(--color-highlight);
+            border-radius: var(--border-radius);
+        }
+
+        .info-box-title {
+            font-size: var(--font-size-label);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .info-row {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 3px;
+            font-size: var(--font-size-base);
+        }
+
+        .info-row label {
+            color: var(--color-secondary);
+            min-width: 80px;
+            font-size: var(--font-size-label);
+        }
+
+        .info-row input, .info-row textarea {
+            flex: 1;
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+            padding: 2px 4px;
+        }
+
+        .info-row input:focus, .info-row textarea:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* SECTION */
+        .section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-title {
+            font-size: var(--font-size-data);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 0.5pt solid var(--color-border);
+        }
+
+        /* MEASUREMENTS TABLE */
+        .measure-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-base);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .measure-table th {
+            background: var(--color-highlight);
+            border: 0.5pt solid var(--color-border);
+            padding: 6px 8px;
+            text-align: center;
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-primary);
+        }
+
+        .measure-table td {
+            border: 0.5pt solid var(--color-border);
+            padding: 4px 6px;
+            vertical-align: middle;
+        }
+
+        .measure-table input {
+            width: 100%;
+            border: none;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            text-align: center;
+            background: transparent;
+            color: var(--color-data);
+        }
+
+        .measure-table input:focus {
+            outline: none;
+            background: var(--color-highlight);
+        }
+
+        .measure-table .col-label {
+            width: 140px;
+            font-size: var(--font-size-label);
+            color: var(--color-secondary);
+            text-align: left;
+            padding-left: 8px;
+        }
+
+        .measure-table .col-dim {
+            width: 70px;
+        }
+
+        .measure-table .col-notes {
+            min-width: 120px;
+        }
+
+        /* SKETCH AREA */
+        .sketch-area {
+            border: 1px dashed var(--color-border);
+            border-radius: var(--border-radius);
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-secondary);
+            font-size: var(--font-size-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            margin-bottom: var(--spacing-md);
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 19px,
+                #f0f0f0 19px,
+                #f0f0f0 20px
+            ),
+            repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 19px,
+                #f0f0f0 19px,
+                #f0f0f0 20px
+            );
+        }
+
+        /* CHECKBOXES */
+        .check-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: var(--font-size-base);
+        }
+
+        .check-item input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--color-primary);
+        }
+
+        .check-item label {
+            color: var(--color-primary);
+        }
+
+        /* NOTES */
+        .notes-area {
+            width: 100%;
+            min-height: 60px;
+            border: 0.5pt solid var(--color-border);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            font-family: var(--font-primary);
+            font-size: var(--font-size-data);
+            resize: vertical;
+        }
+
+        .notes-area:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        /* SIGNATURES */
+        .signatures-section {
+            margin-top: var(--spacing-xl);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            page-break-inside: avoid;
+        }
+
+        .signature-box {
+            text-align: center;
+        }
+
+        .signature-box .signature-title {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .signature-box .signature-line {
+            border-top: 1px solid var(--color-border);
+            padding-top: var(--spacing-xs);
+            font-size: var(--font-size-xs);
+            color: var(--color-secondary);
+        }
+
+        /* FOOTER */
+        .doc-footer {
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-md);
+            border-top: 0.5pt solid var(--color-border);
+            font-size: var(--font-size-xs);
+            color: var(--color-primary);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* DECLARATION */
+        .declaration {
+            background: var(--color-highlight);
+            padding: var(--spacing-sm);
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-xs);
+            line-height: 1.5;
+            margin-top: var(--spacing-md);
+            color: var(--color-secondary);
+        }
+
+        /* PRINT */
+        @media print {
+            html, body {
+                background: var(--color-white);
+                margin: 0;
+                padding: 0;
+            }
+
+            .sidebar, .no-print { display: none !important; }
+
+            .app-wrapper {
+                padding: 0;
+                margin: 0;
+            }
+
+            .document {
+                box-shadow: none;
+                padding: 10mm 12mm;
+                width: 210mm;
+                min-height: 296mm;
+            }
+
+            input, textarea {
+                border-color: transparent !important;
+                background: transparent !important;
+            }
+
+            .sketch-area {
+                background: none;
+            }
+
+            @page {
+                size: A4;
+                margin: 6mm;
+            }
+        }
+
+        @media screen and (max-width: 900px) {
+            .app-wrapper {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            .document {
+                width: 100%;
+                min-height: auto;
+                padding: 16px;
+            }
+            .info-section {
+                grid-template-columns: 1fr;
+            }
+            .check-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: var(--font-primary);
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all .3s ease;
+            z-index: 999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success { background: #166534; }
+        .toast.error { background: #991B1B; }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="sidebar no-print">
+        <div class="sidebar-card logo-area">
+            <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:22px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI<div style=&quot;font-size:8px;color:#757575;font-weight:400;margin-top:2px&quot;>Sp. z o.o. Sp.k.</div></div>'">
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Akcje</h3>
+            <a href="../index.html" class="btn btn-secondary" style="text-decoration:none;margin-bottom:12px;">← Strona główna</a>
+            <button class="btn btn-primary" onclick="printDoc()">Drukuj / Zapisz PDF</button>
+            <button class="btn btn-secondary" onclick="sendEmail()">Wyślij mailem</button>
+            <button class="btn btn-danger" onclick="clearForm()">Wyczyść formularz</button>
+        </div>
+    </aside>
+
+    <!-- DOCUMENT -->
+    <main class="page-container">
+        <div class="document" id="document">
+
+            <!-- Header -->
+            <div class="doc-header">
+                <div class="logo">
+                    <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:24px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI</div>'">
+                </div>
+                <div style="text-align:right;font-size:var(--font-size-label);color:var(--color-secondary);">
+                    <div>Data pomiaru:</div>
+                    <input type="text" id="measureDate" style="border:none;border-bottom:1px solid var(--color-border);font-size:var(--font-size-data);font-weight:600;text-align:right;width:90px;">
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="doc-title">Karta Pomiarowa</div>
+            <div class="doc-number">Nr <input type="text" id="docNumber" value="KP-XXX-26"></div>
+
+            <!-- Info Section -->
+            <div class="info-section">
+                <div class="info-box">
+                    <div class="info-box-title">Klient</div>
+                    <div class="info-row">
+                        <label>Nazwa:</label>
+                        <input type="text" id="clientName" placeholder="Imię i nazwisko / Firma">
+                    </div>
+                    <div class="info-row">
+                        <label>Telefon:</label>
+                        <input type="text" id="clientPhone" placeholder="+48">
+                    </div>
+                    <div class="info-row">
+                        <label>E-mail:</label>
+                        <input type="text" id="clientEmail" placeholder="@">
+                    </div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-title">Lokalizacja pomiaru</div>
+                    <div class="info-row">
+                        <label>Adres:</label>
+                        <input type="text" id="locationAddress" placeholder="Ulica, numer">
+                    </div>
+                    <div class="info-row">
+                        <label>Miasto:</label>
+                        <input type="text" id="locationCity" placeholder="Kod, miejscowość">
+                    </div>
+                    <div class="info-row">
+                        <label>Pomieszcz.:</label>
+                        <input type="text" id="locationRoom" placeholder="np. Kuchnia, Salon">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wymiary pomieszczenia -->
+            <div class="section">
+                <div class="section-title">Wymiary pomieszczenia</div>
+                <table class="measure-table">
+                    <thead>
+                        <tr>
+                            <th>Element</th>
+                            <th>Wymiar A (mm)</th>
+                            <th>Wymiar B (mm)</th>
+                            <th>Wymiar C (mm)</th>
+                            <th>Uwagi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-label">Ściana 1 (długość)</td>
+                            <td class="col-dim"><input type="text" id="wall1a"></td>
+                            <td class="col-dim"><input type="text" id="wall1b"></td>
+                            <td class="col-dim"><input type="text" id="wall1c"></td>
+                            <td class="col-notes"><input type="text" id="wall1notes"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Ściana 2 (długość)</td>
+                            <td class="col-dim"><input type="text" id="wall2a"></td>
+                            <td class="col-dim"><input type="text" id="wall2b"></td>
+                            <td class="col-dim"><input type="text" id="wall2c"></td>
+                            <td class="col-notes"><input type="text" id="wall2notes"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Ściana 3 (długość)</td>
+                            <td class="col-dim"><input type="text" id="wall3a"></td>
+                            <td class="col-dim"><input type="text" id="wall3b"></td>
+                            <td class="col-dim"><input type="text" id="wall3c"></td>
+                            <td class="col-notes"><input type="text" id="wall3notes"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Ściana 4 (długość)</td>
+                            <td class="col-dim"><input type="text" id="wall4a"></td>
+                            <td class="col-dim"><input type="text" id="wall4b"></td>
+                            <td class="col-dim"><input type="text" id="wall4c"></td>
+                            <td class="col-notes"><input type="text" id="wall4notes"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Wysokość pomieszczenia</td>
+                            <td class="col-dim"><input type="text" id="heighta"></td>
+                            <td class="col-dim"><input type="text" id="heightb"></td>
+                            <td class="col-dim"><input type="text" id="heightc"></td>
+                            <td class="col-notes"><input type="text" id="heightnotes"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Wysokość do sufitu podw.</td>
+                            <td class="col-dim"><input type="text" id="ceilinga"></td>
+                            <td class="col-dim"><input type="text" id="ceilingb"></td>
+                            <td class="col-dim"><input type="text" id="ceilingc"></td>
+                            <td class="col-notes"><input type="text" id="ceilingnotes"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Kąty ścian -->
+            <div class="section">
+                <div class="section-title">Kąty ścian (odchylenie od 90°)</div>
+                <table class="measure-table">
+                    <thead>
+                        <tr>
+                            <th>Narożnik</th>
+                            <th>Kąt (°)</th>
+                            <th>Odchylenie</th>
+                            <th>Uwagi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-label">Narożnik 1 (Ściana 1-2)</td>
+                            <td class="col-dim"><input type="text" id="angle1"></td>
+                            <td class="col-dim"><input type="text" id="angle1dev" placeholder="mm"></td>
+                            <td class="col-notes"><input type="text" id="angle1notes"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Narożnik 2 (Ściana 2-3)</td>
+                            <td class="col-dim"><input type="text" id="angle2"></td>
+                            <td class="col-dim"><input type="text" id="angle2dev" placeholder="mm"></td>
+                            <td class="col-notes"><input type="text" id="angle2notes"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Narożnik 3 (Ściana 3-4)</td>
+                            <td class="col-dim"><input type="text" id="angle3"></td>
+                            <td class="col-dim"><input type="text" id="angle3dev" placeholder="mm"></td>
+                            <td class="col-notes"><input type="text" id="angle3notes"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Narożnik 4 (Ściana 4-1)</td>
+                            <td class="col-dim"><input type="text" id="angle4"></td>
+                            <td class="col-dim"><input type="text" id="angle4dev" placeholder="mm"></td>
+                            <td class="col-notes"><input type="text" id="angle4notes"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Przyłącza i instalacje -->
+            <div class="section">
+                <div class="section-title">Przyłącza i instalacje</div>
+                <table class="measure-table">
+                    <thead>
+                        <tr>
+                            <th>Typ przyłącza</th>
+                            <th>Od podłogi (mm)</th>
+                            <th>Od ściany (mm)</th>
+                            <th>Średnica / Typ</th>
+                            <th>Uwagi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-label">Woda zimna</td>
+                            <td class="col-dim"><input type="text" id="waterColdH"></td>
+                            <td class="col-dim"><input type="text" id="waterColdW"></td>
+                            <td class="col-dim"><input type="text" id="waterColdType"></td>
+                            <td class="col-notes"><input type="text" id="waterColdNotes"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Woda ciepła</td>
+                            <td class="col-dim"><input type="text" id="waterHotH"></td>
+                            <td class="col-dim"><input type="text" id="waterHotW"></td>
+                            <td class="col-dim"><input type="text" id="waterHotType"></td>
+                            <td class="col-notes"><input type="text" id="waterHotNotes"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Odpływ kanalizacji</td>
+                            <td class="col-dim"><input type="text" id="drainH"></td>
+                            <td class="col-dim"><input type="text" id="drainW"></td>
+                            <td class="col-dim"><input type="text" id="drainType"></td>
+                            <td class="col-notes"><input type="text" id="drainNotes"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Gaz</td>
+                            <td class="col-dim"><input type="text" id="gasH"></td>
+                            <td class="col-dim"><input type="text" id="gasW"></td>
+                            <td class="col-dim"><input type="text" id="gasType"></td>
+                            <td class="col-notes"><input type="text" id="gasNotes"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Gniazdko elektryczne 1</td>
+                            <td class="col-dim"><input type="text" id="elec1H"></td>
+                            <td class="col-dim"><input type="text" id="elec1W"></td>
+                            <td class="col-dim"><input type="text" id="elec1Type"></td>
+                            <td class="col-notes"><input type="text" id="elec1Notes"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Gniazdko elektryczne 2</td>
+                            <td class="col-dim"><input type="text" id="elec2H"></td>
+                            <td class="col-dim"><input type="text" id="elec2W"></td>
+                            <td class="col-dim"><input type="text" id="elec2Type"></td>
+                            <td class="col-notes"><input type="text" id="elec2Notes"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Okap / Wentylacja</td>
+                            <td class="col-dim"><input type="text" id="ventH"></td>
+                            <td class="col-dim"><input type="text" id="ventW"></td>
+                            <td class="col-dim"><input type="text" id="ventType"></td>
+                            <td class="col-notes"><input type="text" id="ventNotes"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Elementy stałe -->
+            <div class="section">
+                <div class="section-title">Elementy stałe / Przeszkody</div>
+                <div class="check-grid">
+                    <div class="check-item">
+                        <input type="checkbox" id="hasWindow">
+                        <label for="hasWindow">Okno</label>
+                    </div>
+                    <div class="check-item">
+                        <input type="checkbox" id="hasDoor">
+                        <label for="hasDoor">Drzwi</label>
+                    </div>
+                    <div class="check-item">
+                        <input type="checkbox" id="hasRadiator">
+                        <label for="hasRadiator">Grzejnik</label>
+                    </div>
+                    <div class="check-item">
+                        <input type="checkbox" id="hasPipe">
+                        <label for="hasPipe">Rura pionowa</label>
+                    </div>
+                    <div class="check-item">
+                        <input type="checkbox" id="hasBeam">
+                        <label for="hasBeam">Belka / Podciąg</label>
+                    </div>
+                    <div class="check-item">
+                        <input type="checkbox" id="hasSlope">
+                        <label for="hasSlope">Skos / Nierówność</label>
+                    </div>
+                </div>
+                <table class="measure-table">
+                    <thead>
+                        <tr>
+                            <th>Element</th>
+                            <th>Szerokość (mm)</th>
+                            <th>Wysokość (mm)</th>
+                            <th>Od podłogi (mm)</th>
+                            <th>Od ściany (mm)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-label">Okno</td>
+                            <td class="col-dim"><input type="text" id="windowW"></td>
+                            <td class="col-dim"><input type="text" id="windowH"></td>
+                            <td class="col-dim"><input type="text" id="windowFloor"></td>
+                            <td class="col-dim"><input type="text" id="windowWall"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Drzwi</td>
+                            <td class="col-dim"><input type="text" id="doorW"></td>
+                            <td class="col-dim"><input type="text" id="doorH"></td>
+                            <td class="col-dim"><input type="text" id="doorFloor"></td>
+                            <td class="col-dim"><input type="text" id="doorWall"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Grzejnik</td>
+                            <td class="col-dim"><input type="text" id="radiatorW"></td>
+                            <td class="col-dim"><input type="text" id="radiatorH"></td>
+                            <td class="col-dim"><input type="text" id="radiatorFloor"></td>
+                            <td class="col-dim"><input type="text" id="radiatorWall"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-label">Inne:</td>
+                            <td class="col-dim"><input type="text" id="otherW"></td>
+                            <td class="col-dim"><input type="text" id="otherH"></td>
+                            <td class="col-dim"><input type="text" id="otherFloor"></td>
+                            <td class="col-dim"><input type="text" id="otherWall"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Szkic -->
+            <div class="section">
+                <div class="section-title">Szkic pomieszczenia z wymiarami</div>
+                <div class="sketch-area">
+                    Miejsce na szkic odręczny
+                </div>
+            </div>
+
+            <!-- Uwagi -->
+            <div class="section">
+                <div class="section-title">Uwagi dodatkowe</div>
+                <textarea class="notes-area" id="additionalNotes" placeholder="Dylatacje, nierówności podłogi, planowane zmiany instalacji, specjalne wymagania klienta..."></textarea>
+            </div>
+
+            <!-- Oświadczenie -->
+            <div class="declaration">
+                <strong>Oświadczenie Klienta:</strong> Potwierdzam, że powyższe wymiary zostały spisane w mojej obecności i odpowiadają stanowi faktycznemu. Przyjmuję do wiadomości, że podane wymiary stanowią podstawę do wykonania projektu i wyceny mebli. W przypadku stwierdzenia rozbieżności między wymiarami a stanem faktycznym po rozpoczęciu produkcji, koszty ewentualnych korekt ponosi Klient.
+            </div>
+
+            <!-- Signatures -->
+            <div class="signatures-section">
+                <div class="signature-box">
+                    <div class="signature-title">Wykonał pomiar:</div>
+                    <div class="signature-line">........................................</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-title">Klient (potwierdzenie):</div>
+                    <div class="signature-line">........................................</div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="doc-footer">
+                <div>WALABI Sp. z o.o. Sp.k. · ul. Kosynierów Kościuszkowskich 13/4 · 87-100 Toruń</div>
+                <div>Tel: +48 501 260 990 · poczta@walabi.pl · www.walabi.pl</div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Flatpickr -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script>
+
+<script>
+    // PRINT
+    function printDoc() {
+        window.print();
+        toast('Otwarto okno drukowania');
+    }
+
+    // EMAIL
+    function sendEmail() {
+        const docNum = document.getElementById('docNumber').value || 'Karta Pomiarowa';
+        const client = document.getElementById('clientName').value || '';
+        const subject = encodeURIComponent(`WALABI - ${docNum}${client ? ' - ' + client : ''}`);
+        const body = encodeURIComponent(`Dzień dobry,\n\nW załączeniu przesyłam ${docNum}.\n\nZ poważaniem,\nWALABI Sp. z o.o. Sp.k.`);
+        window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+        toast('Otwarto klienta email');
+    }
+
+    // CLEAR
+    function clearForm() {
+        if (confirm('Czy na pewno chcesz wyczyścić formularz?')) {
+            document.querySelectorAll('input[type="text"], textarea').forEach(input => {
+                if (input.id !== 'docNumber') {
+                    input.value = '';
+                }
+            });
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            document.getElementById('docNumber').value = 'KP-XXX-26';
+            const fp = document.getElementById('measureDate')._flatpickr;
+            if (fp) fp.setDate(new Date());
+            toast('Formularz wyczyszczony');
+        }
+    }
+
+    // TOAST
+    function toast(msg, type) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.className = 'toast show' + (type ? ' ' + type : '');
+        setTimeout(() => el.className = 'toast', 3000);
+    }
+
+    // INIT
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr.localize(flatpickr.l10ns.pl);
+        flatpickr("#measureDate", {
+            dateFormat: "d.m.Y",
+            defaultDate: new Date()
+        });
+    });
+</script>
+
+</body>
+</html>
