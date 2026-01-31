@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontrola Jakości - WALABI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&subset=latin-ext&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        :root {
+            --color-primary: #2D2E2E;
+            --color-secondary: #757575;
+            --color-accent: #B8860B;
+            --color-border: #E0E0E0;
+            --color-background: #FAFAFA;
+            --color-white: #FFFFFF;
+            --color-highlight: #F7F5F0;
+            --color-success: #166534;
+            --color-success-bg: #DCFCE7;
+            --color-warning: #92400E;
+            --color-warning-bg: #FEF3C7;
+            --color-error: #991B1B;
+            --color-error-bg: #FEE2E2;
+            --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-size-label: 7pt;
+            --font-weight-label: 400;
+            --color-label: #757575;
+            --font-size-data: 9pt;
+            --font-weight-data: 600;
+            --color-data: #2D2E2E;
+            --font-size-xs: 6.5pt;
+            --font-size-base: 8.5pt;
+            --font-size-lg: 10pt;
+            --font-size-xl: 12pt;
+            --spacing-xs: 3px;
+            --spacing-sm: 6px;
+            --spacing-md: 10px;
+            --spacing-lg: 14px;
+            --spacing-xl: 18px;
+            --line-height: 1.4;
+            --letter-spacing: 0.08em;
+            --border-radius: 2px;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            background: #E8E8E8;
+            color: var(--color-primary);
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .flatpickr-calendar {
+            font-family: var(--font-primary) !important;
+            font-size: 11px !important;
+        }
+        .flatpickr-day.selected, .flatpickr-day.selected:hover {
+            background: var(--color-primary) !important;
+            border-color: var(--color-primary) !important;
+        }
+
+        .app-wrapper {
+            display: flex;
+            gap: 20px;
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+        }
+
+        .sidebar-card {
+            background: var(--color-white);
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+            border: 1px solid var(--color-border);
+        }
+
+        .sidebar-card h3 {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            margin-bottom: 10px;
+            color: var(--color-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .sidebar .logo-area {
+            text-align: center;
+            padding: 12px 0;
+        }
+
+        .sidebar .logo-area img {
+            max-width: 110px;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            transition: all .2s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .btn:active { transform: scale(.98); }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+        .btn-primary:hover { background: #1a1a1a; }
+
+        .btn-secondary {
+            background: var(--color-background);
+            color: var(--color-primary);
+            border: 1px solid var(--color-border);
+        }
+        .btn-secondary:hover { background: var(--color-highlight); }
+
+        .btn-success {
+            background: var(--color-success);
+            color: var(--color-white);
+        }
+        .btn-success:hover { background: #14532d; }
+
+        .btn-danger {
+            background: var(--color-white);
+            color: #9A3412;
+            border: 1px solid var(--color-border);
+        }
+        .btn-danger:hover { background: #FEF2F2; }
+
+        /* DOCUMENT */
+        .page-container {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .document {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 12mm 14mm;
+            background: var(--color-white);
+            box-shadow: 0 4px 24px rgba(0,0,0,.08);
+            position: relative;
+        }
+
+        .doc-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .doc-header .logo img {
+            height: 50px;
+            opacity: 0.95;
+        }
+
+        .doc-title {
+            text-align: center;
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            margin: var(--spacing-md) 0;
+            padding: var(--spacing-sm) 0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-primary);
+            border-top: 0.5pt solid var(--color-primary);
+            border-bottom: 0.5pt solid var(--color-primary);
+        }
+
+        .doc-subtitle {
+            text-align: center;
+            font-size: var(--font-size-base);
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* STATUS BADGE */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-badge.pending {
+            background: var(--color-warning-bg);
+            color: var(--color-warning);
+        }
+
+        .status-badge.passed {
+            background: var(--color-success-bg);
+            color: var(--color-success);
+        }
+
+        .status-badge.failed {
+            background: var(--color-error-bg);
+            color: var(--color-error);
+        }
+
+        /* INFO GRID */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-sm);
+            background: var(--color-highlight);
+            border-radius: var(--border-radius);
+        }
+
+        .info-item {
+            font-size: var(--font-size-base);
+        }
+
+        .info-item label {
+            display: block;
+            font-size: var(--font-size-label);
+            color: var(--color-secondary);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            margin-bottom: 2px;
+        }
+
+        .info-item input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+            padding: 2px 0;
+        }
+
+        .info-item input:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* SECTION */
+        .section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-title {
+            font-size: var(--font-size-data);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 0.5pt solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title .norm {
+            font-size: var(--font-size-xs);
+            font-weight: 400;
+            color: var(--color-secondary);
+            text-transform: none;
+        }
+
+        /* CHECKLIST */
+        .checklist {
+            border: 0.5pt solid var(--color-border);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .checklist-item {
+            display: grid;
+            grid-template-columns: 1fr 70px 70px 70px 120px;
+            border-bottom: 0.5pt solid var(--color-border);
+            font-size: var(--font-size-base);
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-item.header {
+            background: var(--color-highlight);
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-primary);
+        }
+
+        .checklist-item > div {
+            padding: 6px 8px;
+            display: flex;
+            align-items: center;
+            border-right: 0.5pt solid var(--color-border);
+        }
+
+        .checklist-item > div:last-child {
+            border-right: none;
+        }
+
+        .checklist-item .item-name {
+            font-weight: 500;
+        }
+
+        .checklist-item .item-check {
+            justify-content: center;
+        }
+
+        .checklist-item .item-check input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--color-primary);
+        }
+
+        .checklist-item .item-notes input {
+            width: 100%;
+            border: none;
+            font-size: var(--font-size-data);
+            font-family: var(--font-primary);
+            background: transparent;
+        }
+
+        .checklist-item .item-notes input:focus {
+            outline: none;
+            background: var(--color-highlight);
+        }
+
+        /* MEASUREMENT ROW */
+        .measure-row {
+            display: grid;
+            grid-template-columns: 1fr 80px 80px 80px 100px;
+            border-bottom: 0.5pt solid var(--color-border);
+            font-size: var(--font-size-base);
+        }
+
+        .measure-row:last-child {
+            border-bottom: none;
+        }
+
+        .measure-row.header {
+            background: var(--color-highlight);
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .measure-row > div {
+            padding: 5px 8px;
+            display: flex;
+            align-items: center;
+            border-right: 0.5pt solid var(--color-border);
+        }
+
+        .measure-row > div:last-child {
+            border-right: none;
+        }
+
+        .measure-row input[type="text"] {
+            width: 100%;
+            border: none;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            text-align: center;
+            background: transparent;
+        }
+
+        .measure-row input[type="text"]:focus {
+            outline: none;
+            background: var(--color-highlight);
+        }
+
+        .measure-row .status-ok {
+            color: var(--color-success);
+            font-weight: 600;
+        }
+
+        .measure-row .status-nok {
+            color: var(--color-error);
+            font-weight: 600;
+        }
+
+        /* NOTES */
+        .notes-area {
+            width: 100%;
+            min-height: 50px;
+            border: 0.5pt solid var(--color-border);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            font-family: var(--font-primary);
+            font-size: var(--font-size-data);
+            resize: vertical;
+        }
+
+        .notes-area:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        /* RESULT BOX */
+        .result-box {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .result-box.pending {
+            background: var(--color-highlight);
+            border: 1px solid var(--color-border);
+        }
+
+        .result-box.passed {
+            background: var(--color-success-bg);
+            border: 1px solid var(--color-success);
+        }
+
+        .result-box.failed {
+            background: var(--color-error-bg);
+            border: 1px solid var(--color-error);
+        }
+
+        .result-box .result-label {
+            font-size: var(--font-size-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-secondary);
+        }
+
+        .result-box .result-value {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+        }
+
+        .result-box.passed .result-value {
+            color: var(--color-success);
+        }
+
+        .result-box.failed .result-value {
+            color: var(--color-error);
+        }
+
+        /* SIGNATURES */
+        .signatures-section {
+            margin-top: var(--spacing-lg);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .signature-box {
+            text-align: center;
+        }
+
+        .signature-box .signature-title {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .signature-box .signature-line {
+            border-top: 1px solid var(--color-border);
+            padding-top: var(--spacing-xs);
+            font-size: var(--font-size-xs);
+            color: var(--color-secondary);
+        }
+
+        /* FOOTER */
+        .doc-footer {
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-md);
+            border-top: 0.5pt solid var(--color-border);
+            font-size: var(--font-size-xs);
+            color: var(--color-secondary);
+            text-align: center;
+        }
+
+        /* INTERNAL STAMP */
+        .internal-stamp {
+            position: absolute;
+            top: 14mm;
+            right: 14mm;
+            padding: 4px 10px;
+            background: var(--color-error-bg);
+            border: 1px solid var(--color-error);
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            color: var(--color-error);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* PRINT */
+        @media print {
+            html, body {
+                background: var(--color-white);
+                margin: 0;
+                padding: 0;
+            }
+
+            .sidebar, .no-print { display: none !important; }
+
+            .app-wrapper {
+                padding: 0;
+                margin: 0;
+            }
+
+            .document {
+                box-shadow: none;
+                padding: 8mm 10mm;
+                width: 210mm;
+                min-height: 296mm;
+            }
+
+            input, textarea {
+                border-color: transparent !important;
+                background: transparent !important;
+            }
+
+            .result-box, .internal-stamp {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            @page {
+                size: A4;
+                margin: 5mm;
+            }
+        }
+
+        @media screen and (max-width: 900px) {
+            .app-wrapper {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            .document {
+                width: 100%;
+                min-height: auto;
+                padding: 16px;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .checklist-item {
+                grid-template-columns: 1fr 50px 50px 50px 80px;
+                font-size: 7pt;
+            }
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: var(--font-primary);
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all .3s ease;
+            z-index: 999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success { background: #166534; }
+        .toast.error { background: #991B1B; }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="sidebar no-print">
+        <div class="sidebar-card logo-area">
+            <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:22px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI<div style=&quot;font-size:8px;color:#757575;font-weight:400;margin-top:2px&quot;>Sp. z o.o. Sp.k.</div></div>'">
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Akcje</h3>
+            <a href="../index.html" class="btn btn-secondary" style="text-decoration:none;margin-bottom:12px;">← Strona główna</a>
+            <button class="btn btn-primary" onclick="printDoc()">Drukuj / Zapisz PDF</button>
+            <button class="btn btn-success" onclick="markAsPassed()">✓ Zatwierdź kontrolę</button>
+            <button class="btn btn-danger" onclick="markAsFailed()">✗ Odrzuć - do poprawy</button>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Pozycje frontów</h3>
+            <div style="display:flex;gap:6px;">
+                <button class="btn btn-secondary" onclick="addFrontRow()" style="flex:1;text-align:center;">+ Dodaj</button>
+                <button class="btn btn-secondary" onclick="removeFrontRow()" style="flex:1;text-align:center;">− Usuń</button>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Formularz</h3>
+            <button class="btn btn-secondary" onclick="clearForm()">Wyczyść formularz</button>
+        </div>
+    </aside>
+
+    <!-- DOCUMENT -->
+    <main class="page-container">
+        <div class="document" id="document">
+
+            <!-- Internal Stamp -->
+            <div class="internal-stamp">Dokument wewnętrzny</div>
+
+            <!-- Header -->
+            <div class="doc-header">
+                <div class="logo">
+                    <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:20px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI</div>'">
+                </div>
+                <div style="text-align:right;">
+                    <div id="statusBadge" class="status-badge pending">W trakcie kontroli</div>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="doc-title">Checklista Kontroli Jakości</div>
+            <div class="doc-subtitle">Protokół kontroli przed wydaniem mebli</div>
+
+            <!-- Info Grid -->
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Nr zamówienia / Umowy</label>
+                    <input type="text" id="orderNumber" placeholder="P-XXX-26">
+                </div>
+                <div class="info-item">
+                    <label>Klient</label>
+                    <input type="text" id="clientName" placeholder="Nazwa klienta">
+                </div>
+                <div class="info-item">
+                    <label>Rodzaj mebli</label>
+                    <input type="text" id="furnitureType" placeholder="np. Kuchnia, Szafa">
+                </div>
+                <div class="info-item">
+                    <label>Data kontroli</label>
+                    <input type="text" id="controlDate">
+                </div>
+                <div class="info-item">
+                    <label>Kontrolujący</label>
+                    <input type="text" id="inspector" placeholder="Imię i nazwisko">
+                </div>
+                <div class="info-item">
+                    <label>Nr protokołu</label>
+                    <input type="text" id="protocolNumber" placeholder="KJ-XXX-26">
+                </div>
+            </div>
+
+            <!-- Szczeliny frontów -->
+            <div class="section">
+                <div class="section-title">
+                    Szczeliny frontów
+                    <span class="norm">Norma: 2,0 – 2,5 mm</span>
+                </div>
+                <div class="checklist" style="border:none;">
+                    <div class="measure-row header">
+                        <div>Lokalizacja frontu</div>
+                        <div style="justify-content:center;">Góra (mm)</div>
+                        <div style="justify-content:center;">Dół (mm)</div>
+                        <div style="justify-content:center;">Boki (mm)</div>
+                        <div style="justify-content:center;">Status</div>
+                    </div>
+                    <tbody id="frontsTableBody">
+                    </tbody>
+                </div>
+            </div>
+
+            <!-- Regulacja okuć -->
+            <div class="section">
+                <div class="section-title">Regulacja okuć i mechanizmów</div>
+                <div class="checklist">
+                    <div class="checklist-item header">
+                        <div>Element kontroli</div>
+                        <div style="justify-content:center;">OK</div>
+                        <div style="justify-content:center;">NOK</div>
+                        <div style="justify-content:center;">N/D</div>
+                        <div>Uwagi</div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Zawiasy – płynność otwierania</div>
+                        <div class="item-check"><input type="radio" name="hinges1" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="hinges1" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="hinges1" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Zawiasy – docisk / domykanie</div>
+                        <div class="item-check"><input type="radio" name="hinges2" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="hinges2" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="hinges2" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Zawiasy – regulacja 3D (pion/poziom/głębia)</div>
+                        <div class="item-check"><input type="radio" name="hinges3" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="hinges3" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="hinges3" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Prowadnice szuflad – płynność wysuwu</div>
+                        <div class="item-check"><input type="radio" name="drawers1" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="drawers1" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="drawers1" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Prowadnice szuflad – domykanie (soft-close)</div>
+                        <div class="item-check"><input type="radio" name="drawers2" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="drawers2" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="drawers2" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Prowadnice szuflad – regulacja frontu</div>
+                        <div class="item-check"><input type="radio" name="drawers3" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="drawers3" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="drawers3" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Podnośniki (aventos) – siła i płynność</div>
+                        <div class="item-check"><input type="radio" name="lifters" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="lifters" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="lifters" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Uchwyty / Systemy bezuchwytowe</div>
+                        <div class="item-check"><input type="radio" name="handles" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="handles" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="handles" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Zamki / Blokady</div>
+                        <div class="item-check"><input type="radio" name="locks" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="locks" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="locks" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jakość wykonania -->
+            <div class="section">
+                <div class="section-title">Jakość wykonania powierzchni</div>
+                <div class="checklist">
+                    <div class="checklist-item header">
+                        <div>Element kontroli</div>
+                        <div style="justify-content:center;">OK</div>
+                        <div style="justify-content:center;">NOK</div>
+                        <div style="justify-content:center;">N/D</div>
+                        <div>Uwagi</div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Fronty – brak rys i uszkodzeń</div>
+                        <div class="item-check"><input type="radio" name="surface1" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="surface1" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="surface1" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Korpusy – brak uszkodzeń</div>
+                        <div class="item-check"><input type="radio" name="surface2" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="surface2" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="surface2" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Obrzeża – jakość przyklejenia</div>
+                        <div class="item-check"><input type="radio" name="surface3" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="surface3" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="surface3" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Blat – brak uszkodzeń / obróbka krawędzi</div>
+                        <div class="item-check"><input type="radio" name="surface4" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="surface4" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="surface4" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Czystość – brak zabrudzeń / śladów kleju</div>
+                        <div class="item-check"><input type="radio" name="surface5" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="surface5" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="surface5" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kompletność -->
+            <div class="section">
+                <div class="section-title">Kompletność zamówienia</div>
+                <div class="checklist">
+                    <div class="checklist-item header">
+                        <div>Element kontroli</div>
+                        <div style="justify-content:center;">OK</div>
+                        <div style="justify-content:center;">NOK</div>
+                        <div style="justify-content:center;">N/D</div>
+                        <div>Uwagi</div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Wszystkie elementy zgodne ze specyfikacją</div>
+                        <div class="item-check"><input type="radio" name="complete1" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="complete1" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="complete1" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Akcesoria i okucia kompletne</div>
+                        <div class="item-check"><input type="radio" name="complete2" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="complete2" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="complete2" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Elementy montażowe (śruby, kołki, konfirmaty)</div>
+                        <div class="item-check"><input type="radio" name="complete3" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="complete3" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="complete3" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                    <div class="checklist-item">
+                        <div class="item-name">Oznaczenie elementów do montażu</div>
+                        <div class="item-check"><input type="radio" name="complete4" value="ok"></div>
+                        <div class="item-check"><input type="radio" name="complete4" value="nok"></div>
+                        <div class="item-check"><input type="radio" name="complete4" value="na"></div>
+                        <div class="item-notes"><input type="text" placeholder="—"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Uwagi i niezgodności -->
+            <div class="section">
+                <div class="section-title">Uwagi i stwierdzone niezgodności</div>
+                <textarea class="notes-area" id="defectsNotes" placeholder="Opis stwierdzonych niezgodności, wymaganych poprawek lub dodatkowych uwag..."></textarea>
+            </div>
+
+            <!-- Wynik kontroli -->
+            <div class="section">
+                <div class="section-title">Wynik kontroli</div>
+                <div id="resultBox" class="result-box pending">
+                    <div>
+                        <div class="result-label">Status kontroli</div>
+                        <div class="result-value" id="resultValue">Oczekuje na zatwierdzenie</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div class="result-label">Data zatwierdzenia</div>
+                        <div id="approvalDate" style="font-weight:600;">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Signatures -->
+            <div class="signatures-section">
+                <div class="signature-box">
+                    <div class="signature-title">Kontrolujący:</div>
+                    <div class="signature-line">........................................</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-title">Kierownik produkcji:</div>
+                    <div class="signature-line">........................................</div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="doc-footer">
+                Dokument wewnętrzny WALABI · Kontrola jakości przed wydaniem
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Flatpickr -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script>
+
+<script>
+    // PRINT
+    function printDoc() {
+        window.print();
+        toast('Otwarto okno drukowania');
+    }
+
+    // MARK AS PASSED
+    function markAsPassed() {
+        const resultBox = document.getElementById('resultBox');
+        const resultValue = document.getElementById('resultValue');
+        const statusBadge = document.getElementById('statusBadge');
+        const approvalDate = document.getElementById('approvalDate');
+
+        resultBox.className = 'result-box passed';
+        resultValue.textContent = 'KONTROLA POZYTYWNA – Dopuszczono do wydania';
+        statusBadge.className = 'status-badge passed';
+        statusBadge.textContent = 'Zatwierdzone';
+        approvalDate.textContent = new Date().toLocaleDateString('pl-PL');
+
+        toast('Kontrola zatwierdzona', 'success');
+    }
+
+    // MARK AS FAILED
+    function markAsFailed() {
+        const resultBox = document.getElementById('resultBox');
+        const resultValue = document.getElementById('resultValue');
+        const statusBadge = document.getElementById('statusBadge');
+        const approvalDate = document.getElementById('approvalDate');
+
+        resultBox.className = 'result-box failed';
+        resultValue.textContent = 'KONTROLA NEGATYWNA – Wymaga poprawek';
+        statusBadge.className = 'status-badge failed';
+        statusBadge.textContent = 'Do poprawy';
+        approvalDate.textContent = new Date().toLocaleDateString('pl-PL');
+
+        toast('Oznaczono do poprawy', 'error');
+    }
+
+    // CLEAR
+    function clearForm() {
+        if (confirm('Czy na pewno chcesz wyczyścić formularz?')) {
+            document.querySelectorAll('input[type="text"], textarea').forEach(input => {
+                input.value = '';
+            });
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+
+            // Reset status
+            document.getElementById('resultBox').className = 'result-box pending';
+            document.getElementById('resultValue').textContent = 'Oczekuje na zatwierdzenie';
+            document.getElementById('statusBadge').className = 'status-badge pending';
+            document.getElementById('statusBadge').textContent = 'W trakcie kontroli';
+            document.getElementById('approvalDate').textContent = '—';
+
+            // Reset date
+            const fp = document.getElementById('controlDate')._flatpickr;
+            if (fp) fp.setDate(new Date());
+
+            // Reset fronts
+            frontRowCount = 4;
+            buildFrontRows(4);
+
+            toast('Formularz wyczyszczony');
+        }
+    }
+
+    // TOAST
+    function toast(msg, type) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.className = 'toast show' + (type ? ' ' + type : '');
+        setTimeout(() => el.className = 'toast', 3000);
+    }
+
+    // FRONTS TABLE
+    let frontRowCount = 4;
+
+    function buildFrontRows(count) {
+        const container = document.getElementById('frontsTableBody');
+        container.innerHTML = '';
+        for (let i = 1; i <= count; i++) {
+            container.insertAdjacentHTML('beforeend', createFrontRow(i));
+        }
+        attachFrontListeners();
+    }
+
+    function createFrontRow(num) {
+        return `
+            <div class="measure-row" data-row="${num}">
+                <div><input type="text" id="front${num}Name" placeholder="np. Górna lewa" style="text-align:left;"></div>
+                <div><input type="text" id="front${num}Top" placeholder="—" onchange="checkGap(this)"></div>
+                <div><input type="text" id="front${num}Bottom" placeholder="—" onchange="checkGap(this)"></div>
+                <div><input type="text" id="front${num}Sides" placeholder="—" onchange="checkGap(this)"></div>
+                <div style="justify-content:center;" id="front${num}Status">—</div>
+            </div>
+        `;
+    }
+
+    function attachFrontListeners() {
+        // Listeners are attached via onchange in HTML
+    }
+
+    window.checkGap = function(input) {
+        const row = input.closest('.measure-row');
+        const rowNum = row.dataset.row;
+        const statusEl = document.getElementById(`front${rowNum}Status`);
+
+        const top = parseFloat(document.getElementById(`front${rowNum}Top`).value.replace(',', '.')) || 0;
+        const bottom = parseFloat(document.getElementById(`front${rowNum}Bottom`).value.replace(',', '.')) || 0;
+        const sides = parseFloat(document.getElementById(`front${rowNum}Sides`).value.replace(',', '.')) || 0;
+
+        // Check if any value is filled
+        if (top === 0 && bottom === 0 && sides === 0) {
+            statusEl.textContent = '—';
+            statusEl.className = '';
+            return;
+        }
+
+        // Check if all values are in range 2.0-2.5
+        const inRange = (val) => val === 0 || (val >= 2.0 && val <= 2.5);
+
+        if (inRange(top) && inRange(bottom) && inRange(sides)) {
+            statusEl.textContent = 'OK';
+            statusEl.className = 'status-ok';
+        } else {
+            statusEl.textContent = 'NOK';
+            statusEl.className = 'status-nok';
+        }
+    };
+
+    window.addFrontRow = function() {
+        frontRowCount++;
+        const container = document.getElementById('frontsTableBody');
+        container.insertAdjacentHTML('beforeend', createFrontRow(frontRowCount));
+        toast('Dodano wiersz ' + frontRowCount);
+    };
+
+    window.removeFrontRow = function() {
+        if (frontRowCount <= 1) {
+            toast('Musi pozostać minimum 1 wiersz', 'error');
+            return;
+        }
+        const container = document.getElementById('frontsTableBody');
+        const lastRow = container.querySelector(`[data-row="${frontRowCount}"]`);
+        if (lastRow) {
+            lastRow.remove();
+            frontRowCount--;
+            toast('Usunięto wiersz');
+        }
+    };
+
+    // INIT
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr.localize(flatpickr.l10ns.pl);
+        flatpickr("#controlDate", {
+            dateFormat: "d.m.Y",
+            defaultDate: new Date()
+        });
+
+        // Build fronts table
+        buildFrontRows(4);
+    });
+</script>
+
+</body>
+</html>
