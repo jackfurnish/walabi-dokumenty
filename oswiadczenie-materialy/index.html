@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oświadczenie o Wyborze Materiałów - WALABI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&subset=latin-ext&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        :root {
+            --color-primary: #2D2E2E;
+            --color-secondary: #757575;
+            --color-accent: #B8860B;
+            --color-border: #E0E0E0;
+            --color-background: #FAFAFA;
+            --color-white: #FFFFFF;
+            --color-highlight: #F7F5F0;
+            --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-size-label: 7pt;
+            --font-weight-label: 400;
+            --color-label: #757575;
+            --font-size-data: 9pt;
+            --font-weight-data: 600;
+            --color-data: #2D2E2E;
+            --font-size-xs: 6.5pt;
+            --font-size-base: 8.5pt;
+            --font-size-lg: 10pt;
+            --font-size-xl: 12pt;
+            --spacing-xs: 3px;
+            --spacing-sm: 6px;
+            --spacing-md: 10px;
+            --spacing-lg: 14px;
+            --spacing-xl: 18px;
+            --line-height: 1.4;
+            --letter-spacing: 0.08em;
+            --border-radius: 2px;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            background: #E8E8E8;
+            color: var(--color-primary);
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .flatpickr-calendar {
+            font-family: var(--font-primary) !important;
+            font-size: 11px !important;
+        }
+        .flatpickr-day.selected, .flatpickr-day.selected:hover {
+            background: var(--color-primary) !important;
+            border-color: var(--color-primary) !important;
+        }
+
+        .app-wrapper {
+            display: flex;
+            gap: 20px;
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+        }
+
+        .sidebar-card {
+            background: var(--color-white);
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+            border: 1px solid var(--color-border);
+        }
+
+        .sidebar-card h3 {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            margin-bottom: 10px;
+            color: var(--color-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .sidebar .logo-area {
+            text-align: center;
+            padding: 12px 0;
+        }
+
+        .sidebar .logo-area img {
+            max-width: 110px;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            transition: all .2s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .btn:active { transform: scale(.98); }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+        .btn-primary:hover { background: #1a1a1a; }
+
+        .btn-secondary {
+            background: var(--color-background);
+            color: var(--color-primary);
+            border: 1px solid var(--color-border);
+        }
+        .btn-secondary:hover { background: var(--color-highlight); }
+
+        .btn-danger {
+            background: var(--color-white);
+            color: #9A3412;
+            border: 1px solid var(--color-border);
+        }
+        .btn-danger:hover { background: #FEF2F2; }
+
+        /* DOCUMENT */
+        .page-container {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .document {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 14mm 14mm;
+            background: var(--color-white);
+            box-shadow: 0 4px 24px rgba(0,0,0,.08);
+            position: relative;
+        }
+
+        .doc-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .doc-header .logo img {
+            height: 60px;
+            opacity: 0.95;
+        }
+
+        .doc-title {
+            text-align: center;
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            margin: var(--spacing-md) 0;
+            padding: var(--spacing-sm) 0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-primary);
+            border-top: 0.5pt solid var(--color-primary);
+            border-bottom: 0.5pt solid var(--color-primary);
+        }
+
+        .doc-number {
+            text-align: center;
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--color-primary);
+        }
+
+        .doc-number input {
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            font-family: var(--font-primary);
+            text-align: center;
+            width: 100px;
+            color: var(--color-data);
+            background: transparent;
+        }
+
+        .doc-number input:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* INFO SECTION */
+        .info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .info-box {
+            padding: var(--spacing-sm);
+            background: var(--color-highlight);
+            border-radius: var(--border-radius);
+        }
+
+        .info-box-title {
+            font-size: var(--font-size-label);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .info-row {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 3px;
+            font-size: var(--font-size-base);
+        }
+
+        .info-row label {
+            color: var(--color-secondary);
+            min-width: 70px;
+            font-size: var(--font-size-label);
+        }
+
+        .info-row input {
+            flex: 1;
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+            padding: 2px 4px;
+        }
+
+        .info-row input:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* SECTION */
+        .section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-title {
+            font-size: var(--font-size-data);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 0.5pt solid var(--color-border);
+        }
+
+        .section-intro {
+            font-size: var(--font-size-base);
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-md);
+            line-height: 1.5;
+        }
+
+        /* MATERIALS TABLE */
+        .materials-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-base);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .materials-table th {
+            background: var(--color-highlight);
+            border: 0.5pt solid var(--color-border);
+            padding: 6px 8px;
+            text-align: center;
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-primary);
+        }
+
+        .materials-table td {
+            border: 0.5pt solid var(--color-border);
+            padding: 5px 6px;
+            vertical-align: middle;
+        }
+
+        .materials-table input {
+            width: 100%;
+            border: none;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+        }
+
+        .materials-table input:focus {
+            outline: none;
+            background: var(--color-highlight);
+        }
+
+        .materials-table input::placeholder {
+            color: var(--color-secondary);
+            font-weight: 400;
+        }
+
+        .materials-table .col-nr {
+            width: 30px;
+            text-align: center;
+            font-size: var(--font-size-label);
+            color: var(--color-secondary);
+        }
+
+        .materials-table .col-element {
+            width: 25%;
+        }
+
+        .materials-table .col-material {
+            width: 20%;
+        }
+
+        .materials-table .col-decor {
+            width: 25%;
+        }
+
+        .materials-table .col-sample {
+            width: 70px;
+            text-align: center;
+        }
+
+        .materials-table .col-sample input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--color-primary);
+        }
+
+        /* SAMPLE BOX */
+        .sample-box {
+            border: 1px dashed var(--color-border);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-secondary);
+            font-size: var(--font-size-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            margin-bottom: var(--spacing-sm);
+            background: var(--color-background);
+        }
+
+        /* DECLARATIONS */
+        .declaration-box {
+            background: var(--color-highlight);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .declaration-box p {
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .declaration-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .declaration-box strong {
+            color: var(--color-primary);
+        }
+
+        .declaration-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: var(--spacing-sm);
+            font-size: var(--font-size-base);
+            line-height: 1.5;
+        }
+
+        .declaration-item input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            margin-top: 2px;
+            accent-color: var(--color-primary);
+            flex-shrink: 0;
+        }
+
+        /* NOTES */
+        .notes-area {
+            width: 100%;
+            min-height: 50px;
+            border: 0.5pt solid var(--color-border);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            font-family: var(--font-primary);
+            font-size: var(--font-size-data);
+            resize: vertical;
+        }
+
+        .notes-area:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        /* SIGNATURES */
+        .signatures-section {
+            margin-top: var(--spacing-xl);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            page-break-inside: avoid;
+        }
+
+        .signature-box {
+            text-align: center;
+        }
+
+        .signature-box .signature-title {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .signature-box .signature-line {
+            border-top: 1px solid var(--color-border);
+            padding-top: var(--spacing-xs);
+            font-size: var(--font-size-xs);
+            color: var(--color-secondary);
+        }
+
+        /* FOOTER */
+        .doc-footer {
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-md);
+            border-top: 0.5pt solid var(--color-border);
+            font-size: var(--font-size-xs);
+            color: var(--color-primary);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* WARNING BOX */
+        .warning-box {
+            background: #FEF3C7;
+            border: 1px solid #F59E0B;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-xs);
+            color: #92400E;
+        }
+
+        .warning-box strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* PRINT */
+        @media print {
+            html, body {
+                background: var(--color-white);
+                margin: 0;
+                padding: 0;
+            }
+
+            .sidebar, .no-print { display: none !important; }
+
+            .app-wrapper {
+                padding: 0;
+                margin: 0;
+            }
+
+            .document {
+                box-shadow: none;
+                padding: 10mm 12mm;
+                width: 210mm;
+                min-height: 296mm;
+            }
+
+            input, textarea {
+                border-color: transparent !important;
+                background: transparent !important;
+            }
+
+            @page {
+                size: A4;
+                margin: 6mm;
+            }
+        }
+
+        @media screen and (max-width: 900px) {
+            .app-wrapper {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            .document {
+                width: 100%;
+                min-height: auto;
+                padding: 16px;
+            }
+            .info-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: var(--font-primary);
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all .3s ease;
+            z-index: 999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success { background: #166534; }
+        .toast.error { background: #991B1B; }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="sidebar no-print">
+        <div class="sidebar-card logo-area">
+            <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:22px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI<div style=&quot;font-size:8px;color:#757575;font-weight:400;margin-top:2px&quot;>Sp. z o.o. Sp.k.</div></div>'">
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Akcje</h3>
+            <a href="../index.html" class="btn btn-secondary" style="text-decoration:none;margin-bottom:12px;">← Strona główna</a>
+            <button class="btn btn-primary" onclick="printDoc()">Drukuj / Zapisz PDF</button>
+            <button class="btn btn-secondary" onclick="sendEmail()">Wyślij mailem</button>
+            <button class="btn btn-danger" onclick="clearForm()">Wyczyść formularz</button>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Materiały</h3>
+            <div style="display:flex;gap:6px;">
+                <button class="btn btn-secondary" onclick="addMaterialRow()" style="flex:1;text-align:center;">+ Dodaj</button>
+                <button class="btn btn-secondary" onclick="removeMaterialRow()" style="flex:1;text-align:center;">− Usuń</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- DOCUMENT -->
+    <main class="page-container">
+        <div class="document" id="document">
+
+            <!-- Header -->
+            <div class="doc-header">
+                <div class="logo">
+                    <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:24px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI</div>'">
+                </div>
+                <div style="text-align:right;font-size:var(--font-size-label);color:var(--color-secondary);">
+                    <div>Data:</div>
+                    <input type="text" id="docDate" style="border:none;border-bottom:1px solid var(--color-border);font-size:var(--font-size-data);font-weight:600;text-align:right;width:90px;">
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="doc-title">Oświadczenie o Wyborze Materiałów</div>
+            <div class="doc-number">Do umowy nr <input type="text" id="contractNumber" value="P-XXX-26"></div>
+
+            <!-- Info Section -->
+            <div class="info-section">
+                <div class="info-box">
+                    <div class="info-box-title">Zamawiający</div>
+                    <div class="info-row">
+                        <label>Nazwa:</label>
+                        <input type="text" id="clientName" placeholder="Imię i nazwisko / Firma">
+                    </div>
+                    <div class="info-row">
+                        <label>Telefon:</label>
+                        <input type="text" id="clientPhone" placeholder="+48">
+                    </div>
+                    <div class="info-row">
+                        <label>E-mail:</label>
+                        <input type="text" id="clientEmail" placeholder="@">
+                    </div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-title">Projekt</div>
+                    <div class="info-row">
+                        <label>Rodzaj:</label>
+                        <input type="text" id="projectType" placeholder="np. Kuchnia, Szafa, Meble łazienkowe">
+                    </div>
+                    <div class="info-row">
+                        <label>Adres:</label>
+                        <input type="text" id="projectAddress" placeholder="Adres montażu">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Materiały -->
+            <div class="section">
+                <div class="section-title">Wybrane materiały i dekory</div>
+                <div class="section-intro">
+                    Poniższa tabela zawiera zestawienie wszystkich materiałów i dekorów wybranych przez Zamawiającego do realizacji zamówienia. Kolumna "Próbka" potwierdza, że Zamawiający zapoznał się z fizyczną próbką materiału.
+                </div>
+                <table class="materials-table">
+                    <thead>
+                        <tr>
+                            <th>L.P.</th>
+                            <th>Element mebla</th>
+                            <th>Materiał</th>
+                            <th>Dekor / Kolor / Nr katalogowy</th>
+                            <th>Próbka</th>
+                        </tr>
+                    </thead>
+                    <tbody id="materialsTableBody">
+                        <!-- Wiersze generowane przez JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Miejsce na próbki -->
+            <div class="section">
+                <div class="section-title">Próbki materiałów (do wklejenia lub opisania)</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--spacing-sm);">
+                    <div class="sample-box">Próbka 1</div>
+                    <div class="sample-box">Próbka 2</div>
+                    <div class="sample-box">Próbka 3</div>
+                    <div class="sample-box">Próbka 4</div>
+                    <div class="sample-box">Próbka 5</div>
+                    <div class="sample-box">Próbka 6</div>
+                </div>
+            </div>
+
+            <!-- Ostrzeżenie -->
+            <div class="warning-box">
+                <strong>Ważna informacja dotycząca materiałów:</strong>
+                Odcień drewna naturalnego, forniru oraz niektórych dekorów może nieznacznie różnić się między partiami produkcyjnymi. Wyświetlanie kolorów na monitorze komputera lub wydruku nie oddaje w pełni rzeczywistego wyglądu materiału. Zalecamy podjęcie decyzji na podstawie fizycznej próbki materiału.
+            </div>
+
+            <!-- Oświadczenia -->
+            <div class="section">
+                <div class="section-title">Oświadczenia Zamawiającego</div>
+                <div class="declaration-box">
+                    <div class="declaration-item">
+                        <input type="checkbox" id="decl1">
+                        <label for="decl1">Potwierdzam, że <strong>zapoznałem/am się z fizycznymi próbkami</strong> wszystkich wybranych materiałów i dekorów oznaczonych w tabeli powyżej.</label>
+                    </div>
+                    <div class="declaration-item">
+                        <input type="checkbox" id="decl2">
+                        <label for="decl2">Akceptuję wybrane materiały i dekory jako <strong>ostateczne</strong> i zgodne z moimi oczekiwaniami. Rozumiem, że po rozpoczęciu produkcji zmiana materiałów może być niemożliwa lub wiązać się z dodatkowymi kosztami.</label>
+                    </div>
+                    <div class="declaration-item">
+                        <input type="checkbox" id="decl3">
+                        <label for="decl3">Przyjmuję do wiadomości, że <strong>naturalne materiały</strong> (drewno, fornir, kamień) mogą wykazywać niejednorodność struktury, słojów i odcienia, co jest cechą charakterystyczną, a nie wadą produktu.</label>
+                    </div>
+                    <div class="declaration-item">
+                        <input type="checkbox" id="decl4">
+                        <label for="decl4">Zostałem/am poinformowany/a o <strong>właściwościach i zasadach pielęgnacji</strong> wybranych materiałów oraz akceptuję ewentualne ograniczenia w ich użytkowaniu.</label>
+                    </div>
+                    <div class="declaration-item">
+                        <input type="checkbox" id="decl5">
+                        <label for="decl5">Rozumiem, że <strong>reklamacje dotyczące wyboru dekoru, odcienia lub tekstury</strong> materiału nie będą uwzględniane, jeżeli wykonanie jest zgodne z niniejszym oświadczeniem.</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Uwagi -->
+            <div class="section">
+                <div class="section-title">Uwagi dodatkowe</div>
+                <textarea class="notes-area" id="additionalNotes" placeholder="Dodatkowe ustalenia dotyczące materiałów, kierunku słojów, łączenia dekorów itp."></textarea>
+            </div>
+
+            <!-- Signatures -->
+            <div class="signatures-section">
+                <div class="signature-box">
+                    <div class="signature-title">Wykonawca (WALABI):</div>
+                    <div class="signature-line">........................................</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-title">Zamawiający:</div>
+                    <div class="signature-line">........................................</div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="doc-footer">
+                <div>WALABI Sp. z o.o. Sp.k. · ul. Kosynierów Kościuszkowskich 13/4 · 87-100 Toruń</div>
+                <div>Tel: +48 501 260 990 · poczta@walabi.pl · www.walabi.pl</div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Flatpickr -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script>
+
+<script>
+    // PRINT
+    function printDoc() {
+        window.print();
+        toast('Otwarto okno drukowania');
+    }
+
+    // EMAIL
+    function sendEmail() {
+        const contractNum = document.getElementById('contractNumber').value || '';
+        const client = document.getElementById('clientName').value || '';
+        const subject = encodeURIComponent(`WALABI - Oświadczenie o wyborze materiałów${contractNum ? ' do umowy ' + contractNum : ''}${client ? ' - ' + client : ''}`);
+        const body = encodeURIComponent(`Dzień dobry,\n\nW załączeniu przesyłam Oświadczenie o Wyborze Materiałów.\n\nZ poważaniem,\nWALABI Sp. z o.o. Sp.k.`);
+        window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+        toast('Otwarto klienta email');
+    }
+
+    // CLEAR
+    function clearForm() {
+        if (confirm('Czy na pewno chcesz wyczyścić formularz?')) {
+            document.querySelectorAll('input[type="text"], textarea').forEach(input => {
+                if (input.id !== 'contractNumber') {
+                    input.value = '';
+                }
+            });
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            document.getElementById('contractNumber').value = 'P-XXX-26';
+            const fp = document.getElementById('docDate')._flatpickr;
+            if (fp) fp.setDate(new Date());
+            materialRowCount = 5;
+            buildMaterialRows(5);
+            toast('Formularz wyczyszczony');
+        }
+    }
+
+    // TOAST
+    function toast(msg, type) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.className = 'toast show' + (type ? ' ' + type : '');
+        setTimeout(() => el.className = 'toast', 3000);
+    }
+
+    // MATERIALS TABLE
+    let materialRowCount = 5;
+
+    function buildMaterialRows(count) {
+        const tbody = document.getElementById('materialsTableBody');
+        tbody.innerHTML = '';
+        for (let i = 1; i <= count; i++) {
+            tbody.innerHTML += createMaterialRow(i);
+        }
+    }
+
+    function createMaterialRow(num) {
+        return `
+            <tr data-row="${num}">
+                <td class="col-nr">${num}</td>
+                <td class="col-element"><input type="text" id="mat${num}Element" placeholder="np. Fronty górne"></td>
+                <td class="col-material"><input type="text" id="mat${num}Material" placeholder="np. Płyta laminowana"></td>
+                <td class="col-decor"><input type="text" id="mat${num}Decor" placeholder="np. Dąb Halifax H1180"></td>
+                <td class="col-sample"><input type="checkbox" id="mat${num}Sample" title="Zapoznano się z próbką"></td>
+            </tr>
+        `;
+    }
+
+    window.addMaterialRow = function() {
+        materialRowCount++;
+        const tbody = document.getElementById('materialsTableBody');
+        tbody.insertAdjacentHTML('beforeend', createMaterialRow(materialRowCount));
+        toast('Dodano wiersz ' + materialRowCount);
+    };
+
+    window.removeMaterialRow = function() {
+        if (materialRowCount <= 1) {
+            toast('Musi pozostać minimum 1 wiersz', 'error');
+            return;
+        }
+        const tbody = document.getElementById('materialsTableBody');
+        const lastRow = tbody.querySelector(`tr[data-row="${materialRowCount}"]`);
+        if (lastRow) {
+            lastRow.remove();
+            materialRowCount--;
+            toast('Usunięto wiersz');
+        }
+    };
+
+    // INIT
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr.localize(flatpickr.l10ns.pl);
+        flatpickr("#docDate", {
+            dateFormat: "d.m.Y",
+            defaultDate: new Date()
+        });
+
+        // Buduj tabelę materiałów
+        buildMaterialRows(5);
+    });
+</script>
+
+</body>
+</html>
