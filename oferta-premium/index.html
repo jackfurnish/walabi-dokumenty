@@ -312,7 +312,7 @@
 
         .hero-image {
             width: 100%;
-            height: 160px;
+            min-height: 120px;
             background: linear-gradient(135deg, var(--color-highlight) 0%, var(--color-background) 100%);
             border: 1px dashed var(--color-border);
             border-radius: var(--border-radius);
@@ -330,13 +330,14 @@
 
         .hero-image.has-image {
             border-style: solid;
+            min-height: auto;
         }
 
         .hero-image img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
+            height: auto;
+            display: block;
+            position: relative;
         }
 
         .hero-image .placeholder {
@@ -349,6 +350,33 @@
 
         .hero-image input[type="file"] {
             display: none;
+        }
+
+        .hero-image .remove-image {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 28px;
+            height: 28px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            line-height: 1;
+            z-index: 2;
+        }
+
+        .hero-image.has-image .remove-image {
+            display: flex;
+        }
+
+        .hero-image .remove-image:hover {
+            background: rgba(153, 27, 27, 0.9);
         }
 
         .hero-description {
@@ -752,6 +780,24 @@
                 -webkit-print-color-adjust: exact;
             }
 
+            .hero-image {
+                border: 1px solid var(--color-border) !important;
+            }
+
+            .hero-image .remove-image {
+                display: none !important;
+            }
+
+            .hero-image:not(.has-image) {
+                min-height: 100px;
+                border-style: dashed !important;
+            }
+
+            .hero-image img {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
             @page {
                 size: A4;
                 margin: 6mm;
@@ -926,14 +972,15 @@
             <div class="hero-section">
                 <div class="hero-title" id="heroTitle">Szafa wnękowa na wymiar</div>
                 <div class="hero-subtitle">"Twoje wymarzone wnętrze zaczyna się tutaj"</div>
-                <label class="hero-image" id="heroImageBox">
+                <div class="hero-image" id="heroImageBox">
                     <input type="file" id="heroImageInput" accept="image/*">
                     <div class="placeholder">
                         <div style="font-size:32px;margin-bottom:8px;">🖼️</div>
                         <div>Kliknij, aby dodać wizualizację / render mebla</div>
                     </div>
                     <img id="heroImagePreview" src="" alt="">
-                </label>
+                    <button type="button" class="remove-image" id="removeHeroImage">×</button>
+                </div>
                 <div class="hero-description">
                     <textarea id="heroDesc" placeholder="Elegancka szafa wnękowa zaprojektowana specjalnie dla Państwa przestrzeni. Połączenie funkcjonalności z nowoczesnym designem, które odmieni charakter całego pomieszczenia.">Elegancka szafa wnękowa zaprojektowana specjalnie dla Państwa przestrzeni. Połączenie funkcjonalności z nowoczesnym designem, które odmieni charakter całego pomieszczenia.</textarea>
                 </div>
@@ -1322,13 +1369,21 @@
         const input = document.getElementById('heroImageInput');
         const preview = document.getElementById('heroImagePreview');
         const box = document.getElementById('heroImageBox');
+        const removeBtn = document.getElementById('removeHeroImage');
+
+        // Kliknięcie na box otwiera wybór pliku
+        box.addEventListener('click', function(e) {
+            if (e.target !== removeBtn && !removeBtn.contains(e.target)) {
+                input.click();
+            }
+        });
 
         input.addEventListener('change', function() {
             const file = this.files[0];
             if (!file) return;
 
-            if (file.size > 5 * 1024 * 1024) {
-                toast('Plik jest za duży (max 5MB)', 'error');
+            if (file.size > 10 * 1024 * 1024) {
+                toast('Plik jest za duży (max 10MB)', 'error');
                 this.value = '';
                 return;
             }
@@ -1346,6 +1401,16 @@
                 toast('Dodano wizualizację', 'success');
             };
             reader.readAsDataURL(file);
+        });
+
+        // Usuwanie zdjęcia
+        removeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            preview.src = '';
+            input.value = '';
+            box.classList.remove('has-image');
+            toast('Usunięto wizualizację');
         });
     }
 
