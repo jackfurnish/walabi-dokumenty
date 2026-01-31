@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zgłoszenie Reklamacyjne / Serwisowe - WALABI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&subset=latin-ext&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        :root {
+            --color-primary: #2D2E2E;
+            --color-secondary: #757575;
+            --color-accent: #B8860B;
+            --color-border: #E0E0E0;
+            --color-background: #FAFAFA;
+            --color-white: #FFFFFF;
+            --color-highlight: #F7F5F0;
+            --color-success: #166534;
+            --color-success-bg: #DCFCE7;
+            --color-warning: #92400E;
+            --color-warning-bg: #FEF3C7;
+            --color-error: #991B1B;
+            --color-error-bg: #FEE2E2;
+            --color-info: #1E40AF;
+            --color-info-bg: #DBEAFE;
+            --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-size-label: 7pt;
+            --font-weight-label: 400;
+            --color-label: #757575;
+            --font-size-data: 9pt;
+            --font-weight-data: 600;
+            --color-data: #2D2E2E;
+            --font-size-xs: 6.5pt;
+            --font-size-base: 8.5pt;
+            --font-size-lg: 10pt;
+            --font-size-xl: 12pt;
+            --spacing-xs: 3px;
+            --spacing-sm: 6px;
+            --spacing-md: 10px;
+            --spacing-lg: 14px;
+            --spacing-xl: 18px;
+            --line-height: 1.4;
+            --letter-spacing: 0.08em;
+            --border-radius: 2px;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            background: #E8E8E8;
+            color: var(--color-primary);
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .flatpickr-calendar {
+            font-family: var(--font-primary) !important;
+            font-size: 11px !important;
+        }
+        .flatpickr-day.selected, .flatpickr-day.selected:hover {
+            background: var(--color-primary) !important;
+            border-color: var(--color-primary) !important;
+        }
+
+        .app-wrapper {
+            display: flex;
+            gap: 20px;
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+        }
+
+        .sidebar-card {
+            background: var(--color-white);
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+            border: 1px solid var(--color-border);
+        }
+
+        .sidebar-card h3 {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            margin-bottom: 10px;
+            color: var(--color-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .sidebar .logo-area {
+            text-align: center;
+            padding: 12px 0;
+        }
+
+        .sidebar .logo-area img {
+            max-width: 110px;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            transition: all .2s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .btn:active { transform: scale(.98); }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+        .btn-primary:hover { background: #1a1a1a; }
+
+        .btn-secondary {
+            background: var(--color-background);
+            color: var(--color-primary);
+            border: 1px solid var(--color-border);
+        }
+        .btn-secondary:hover { background: var(--color-highlight); }
+
+        .btn-danger {
+            background: var(--color-white);
+            color: #9A3412;
+            border: 1px solid var(--color-border);
+        }
+        .btn-danger:hover { background: #FEF2F2; }
+
+        /* DOCUMENT */
+        .page-container {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .document {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 12mm 14mm;
+            background: var(--color-white);
+            box-shadow: 0 4px 24px rgba(0,0,0,.08);
+            position: relative;
+        }
+
+        .doc-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .doc-header .logo img {
+            height: 60px;
+            opacity: 0.95;
+        }
+
+        .doc-title {
+            text-align: center;
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            margin: var(--spacing-md) 0;
+            padding: var(--spacing-sm) 0;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-primary);
+            border-top: 0.5pt solid var(--color-primary);
+            border-bottom: 0.5pt solid var(--color-primary);
+        }
+
+        .doc-number {
+            text-align: center;
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--color-primary);
+        }
+
+        .doc-number input {
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            font-family: var(--font-primary);
+            text-align: center;
+            width: 110px;
+            color: var(--color-data);
+            background: transparent;
+        }
+
+        .doc-number input:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* STATUS BADGE */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-badge.new { background: var(--color-info-bg); color: var(--color-info); }
+        .status-badge.in-progress { background: var(--color-warning-bg); color: var(--color-warning); }
+        .status-badge.completed { background: var(--color-success-bg); color: var(--color-success); }
+        .status-badge.rejected { background: var(--color-error-bg); color: var(--color-error); }
+
+        /* INFO SECTION */
+        .info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .info-box {
+            padding: var(--spacing-sm);
+            background: var(--color-highlight);
+            border-radius: var(--border-radius);
+        }
+
+        .info-box-title {
+            font-size: var(--font-size-label);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .info-row {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 3px;
+            font-size: var(--font-size-base);
+        }
+
+        .info-row label {
+            color: var(--color-secondary);
+            min-width: 90px;
+            font-size: var(--font-size-label);
+        }
+
+        .info-row input, .info-row select {
+            flex: 1;
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+            padding: 2px 4px;
+        }
+
+        .info-row input:focus, .info-row select:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* SECTION */
+        .section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-title {
+            font-size: var(--font-size-data);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 0.5pt solid var(--color-border);
+        }
+
+        /* TYPE SELECTION */
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .type-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: var(--spacing-sm);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .type-option:hover {
+            background: var(--color-highlight);
+        }
+
+        .type-option.selected {
+            border-color: var(--color-primary);
+            background: var(--color-highlight);
+        }
+
+        .type-option input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--color-primary);
+        }
+
+        .type-option .type-label {
+            font-size: var(--font-size-data);
+            font-weight: 500;
+        }
+
+        .type-option .type-desc {
+            font-size: var(--font-size-xs);
+            color: var(--color-secondary);
+        }
+
+        /* PRIORITY */
+        .priority-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .priority-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: var(--spacing-sm);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--font-size-data);
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .priority-option:hover {
+            background: var(--color-highlight);
+        }
+
+        .priority-option input[type="radio"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--color-primary);
+        }
+
+        .priority-option.low { border-color: var(--color-success); }
+        .priority-option.low.selected { background: var(--color-success-bg); }
+
+        .priority-option.medium { border-color: var(--color-warning); }
+        .priority-option.medium.selected { background: var(--color-warning-bg); }
+
+        .priority-option.high { border-color: var(--color-error); }
+        .priority-option.high.selected { background: var(--color-error-bg); }
+
+        /* DEFECTS TABLE */
+        .defects-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-base);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .defects-table th {
+            background: var(--color-highlight);
+            border: 0.5pt solid var(--color-border);
+            padding: 6px 8px;
+            text-align: center;
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-primary);
+        }
+
+        .defects-table td {
+            border: 0.5pt solid var(--color-border);
+            padding: 5px 6px;
+            vertical-align: middle;
+        }
+
+        .defects-table input, .defects-table select {
+            width: 100%;
+            border: none;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+        }
+
+        .defects-table input:focus, .defects-table select:focus {
+            outline: none;
+            background: var(--color-highlight);
+        }
+
+        .defects-table .col-nr {
+            width: 30px;
+            text-align: center;
+            font-size: var(--font-size-label);
+            color: var(--color-secondary);
+        }
+
+        .defects-table .col-element {
+            width: 25%;
+        }
+
+        .defects-table .col-desc {
+            width: 40%;
+        }
+
+        .defects-table .col-type {
+            width: 20%;
+        }
+
+        /* PHOTO AREA */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .photo-box {
+            aspect-ratio: 1;
+            border: 1px dashed var(--color-border);
+            border-radius: var(--border-radius);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-secondary);
+            font-size: var(--font-size-xs);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            background: var(--color-background);
+        }
+
+        .photo-box span {
+            margin-top: 4px;
+        }
+
+        /* NOTES */
+        .notes-area {
+            width: 100%;
+            min-height: 60px;
+            border: 0.5pt solid var(--color-border);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            font-family: var(--font-primary);
+            font-size: var(--font-size-data);
+            resize: vertical;
+        }
+
+        .notes-area:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        /* TIMELINE */
+        .timeline {
+            border: 0.5pt solid var(--color-border);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .timeline-header {
+            display: grid;
+            grid-template-columns: 100px 100px 1fr 120px;
+            background: var(--color-highlight);
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-primary);
+        }
+
+        .timeline-header > div {
+            padding: 6px 8px;
+            border-right: 0.5pt solid var(--color-border);
+        }
+
+        .timeline-header > div:last-child {
+            border-right: none;
+        }
+
+        .timeline-row {
+            display: grid;
+            grid-template-columns: 100px 100px 1fr 120px;
+            border-top: 0.5pt solid var(--color-border);
+            font-size: var(--font-size-base);
+        }
+
+        .timeline-row > div {
+            padding: 5px 8px;
+            border-right: 0.5pt solid var(--color-border);
+            display: flex;
+            align-items: center;
+        }
+
+        .timeline-row > div:last-child {
+            border-right: none;
+        }
+
+        .timeline-row input {
+            width: 100%;
+            border: none;
+            font-size: var(--font-size-data);
+            font-family: var(--font-primary);
+            background: transparent;
+        }
+
+        .timeline-row input:focus {
+            outline: none;
+            background: var(--color-highlight);
+        }
+
+        /* WARRANTY INFO */
+        .warranty-box {
+            background: var(--color-info-bg);
+            border: 1px solid var(--color-info);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-base);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .warranty-box .warranty-label {
+            font-size: var(--font-size-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-info);
+        }
+
+        .warranty-box .warranty-status {
+            font-weight: 600;
+            color: var(--color-info);
+        }
+
+        .warranty-box input {
+            border: none;
+            border-bottom: 1px solid var(--color-info);
+            background: transparent;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            width: 100px;
+            text-align: center;
+        }
+
+        .warranty-box input:focus {
+            outline: none;
+        }
+
+        /* SIGNATURES */
+        .signatures-section {
+            margin-top: var(--spacing-xl);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .signature-box {
+            text-align: center;
+        }
+
+        .signature-box .signature-title {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .signature-box .signature-line {
+            border-top: 1px solid var(--color-border);
+            padding-top: var(--spacing-xs);
+            font-size: var(--font-size-xs);
+            color: var(--color-secondary);
+        }
+
+        /* FOOTER */
+        .doc-footer {
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-md);
+            border-top: 0.5pt solid var(--color-border);
+            font-size: var(--font-size-xs);
+            color: var(--color-primary);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* PRINT */
+        @media print {
+            html, body {
+                background: var(--color-white);
+                margin: 0;
+                padding: 0;
+            }
+
+            .sidebar, .no-print { display: none !important; }
+
+            .app-wrapper {
+                padding: 0;
+                margin: 0;
+            }
+
+            .document {
+                box-shadow: none;
+                padding: 10mm 12mm;
+                width: 210mm;
+                min-height: 296mm;
+            }
+
+            input, textarea, select {
+                border-color: transparent !important;
+                background: transparent !important;
+            }
+
+            .type-option, .priority-option, .warranty-box, .status-badge {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            @page {
+                size: A4;
+                margin: 6mm;
+            }
+        }
+
+        @media screen and (max-width: 900px) {
+            .app-wrapper {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            .document {
+                width: 100%;
+                min-height: auto;
+                padding: 16px;
+            }
+            .info-section {
+                grid-template-columns: 1fr;
+            }
+            .type-grid {
+                grid-template-columns: 1fr;
+            }
+            .photo-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: var(--font-primary);
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all .3s ease;
+            z-index: 999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success { background: #166534; }
+        .toast.error { background: #991B1B; }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="sidebar no-print">
+        <div class="sidebar-card logo-area">
+            <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:22px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI<div style=&quot;font-size:8px;color:#757575;font-weight:400;margin-top:2px&quot;>Sp. z o.o. Sp.k.</div></div>'">
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Akcje</h3>
+            <a href="../index.html" class="btn btn-secondary" style="text-decoration:none;margin-bottom:12px;">← Strona główna</a>
+            <button class="btn btn-primary" onclick="printDoc()">Drukuj / Zapisz PDF</button>
+            <button class="btn btn-secondary" onclick="sendEmail()">Wyślij mailem</button>
+            <button class="btn btn-danger" onclick="clearForm()">Wyczyść formularz</button>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Status zgłoszenia</h3>
+            <button class="btn btn-secondary" onclick="setStatus('new')">Nowe</button>
+            <button class="btn btn-secondary" onclick="setStatus('in-progress')">W realizacji</button>
+            <button class="btn btn-secondary" onclick="setStatus('completed')" style="color:#166534;">Zakończone</button>
+            <button class="btn btn-secondary" onclick="setStatus('rejected')" style="color:#991B1B;">Odrzucone</button>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Usterki</h3>
+            <div style="display:flex;gap:6px;">
+                <button class="btn btn-secondary" onclick="addDefectRow()" style="flex:1;text-align:center;">+ Dodaj</button>
+                <button class="btn btn-secondary" onclick="removeDefectRow()" style="flex:1;text-align:center;">− Usuń</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- DOCUMENT -->
+    <main class="page-container">
+        <div class="document" id="document">
+
+            <!-- Header -->
+            <div class="doc-header">
+                <div class="logo">
+                    <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:24px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI</div>'">
+                </div>
+                <div style="text-align:right;">
+                    <div id="statusBadge" class="status-badge new">Nowe zgłoszenie</div>
+                    <div style="margin-top:6px;font-size:var(--font-size-label);color:var(--color-secondary);">
+                        Data zgłoszenia:<br>
+                        <input type="text" id="reportDate" style="border:none;border-bottom:1px solid var(--color-border);font-size:var(--font-size-data);font-weight:600;text-align:right;width:90px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="doc-title">Zgłoszenie Reklamacyjne / Serwisowe</div>
+            <div class="doc-number">Nr zgłoszenia: <input type="text" id="reportNumber" value="RK-XXX-26"></div>
+
+            <!-- Info Section -->
+            <div class="info-section">
+                <div class="info-box">
+                    <div class="info-box-title">Zgłaszający</div>
+                    <div class="info-row">
+                        <label>Imię i nazwisko:</label>
+                        <input type="text" id="clientName" placeholder="Pełne dane">
+                    </div>
+                    <div class="info-row">
+                        <label>Telefon:</label>
+                        <input type="text" id="clientPhone" placeholder="+48">
+                    </div>
+                    <div class="info-row">
+                        <label>E-mail:</label>
+                        <input type="text" id="clientEmail" placeholder="@">
+                    </div>
+                    <div class="info-row">
+                        <label>Adres montażu:</label>
+                        <input type="text" id="clientAddress" placeholder="Ulica, miejscowość">
+                    </div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-title">Dane zamówienia</div>
+                    <div class="info-row">
+                        <label>Nr umowy:</label>
+                        <input type="text" id="contractNumber" placeholder="P-XXX-XX">
+                    </div>
+                    <div class="info-row">
+                        <label>Data montażu:</label>
+                        <input type="text" id="installDate" placeholder="DD.MM.RRRR">
+                    </div>
+                    <div class="info-row">
+                        <label>Rodzaj mebli:</label>
+                        <input type="text" id="furnitureType" placeholder="np. Kuchnia, Szafa">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Warranty Status -->
+            <div class="warranty-box">
+                <div>
+                    <div class="warranty-label">Status gwarancji</div>
+                    <div class="warranty-status">Okres gwarancji do:</div>
+                </div>
+                <input type="text" id="warrantyEnd" placeholder="DD.MM.RRRR">
+                <div style="flex:1;">
+                    <select id="warrantyStatus" style="border:none;background:transparent;font-size:var(--font-size-data);font-weight:600;color:var(--color-info);">
+                        <option value="active">W okresie gwarancji</option>
+                        <option value="expired">Po gwarancji</option>
+                        <option value="checking">Do weryfikacji</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Typ zgłoszenia -->
+            <div class="section">
+                <div class="section-title">Typ zgłoszenia</div>
+                <div class="type-grid">
+                    <label class="type-option" onclick="selectType(this)">
+                        <input type="radio" name="reportType" value="warranty">
+                        <div>
+                            <div class="type-label">Reklamacja gwarancyjna</div>
+                            <div class="type-desc">Wada fabryczna, usterka w okresie gwarancji</div>
+                        </div>
+                    </label>
+                    <label class="type-option" onclick="selectType(this)">
+                        <input type="radio" name="reportType" value="service">
+                        <div>
+                            <div class="type-label">Serwis płatny</div>
+                            <div class="type-desc">Naprawa po gwarancji lub uszkodzenie użytkownika</div>
+                        </div>
+                    </label>
+                    <label class="type-option" onclick="selectType(this)">
+                        <input type="radio" name="reportType" value="adjustment">
+                        <div>
+                            <div class="type-label">Regulacja / Konserwacja</div>
+                            <div class="type-desc">Regulacja zawiasów, prowadnic, drobne poprawki</div>
+                        </div>
+                    </label>
+                    <label class="type-option" onclick="selectType(this)">
+                        <input type="radio" name="reportType" value="complaint">
+                        <div>
+                            <div class="type-label">Reklamacja montażu</div>
+                            <div class="type-desc">Usterka powstała podczas montażu</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Priorytet -->
+            <div class="section">
+                <div class="section-title">Priorytet</div>
+                <div class="priority-grid">
+                    <label class="priority-option low" onclick="selectPriority(this)">
+                        <input type="radio" name="priority" value="low">
+                        Niski
+                    </label>
+                    <label class="priority-option medium" onclick="selectPriority(this)">
+                        <input type="radio" name="priority" value="medium">
+                        Normalny
+                    </label>
+                    <label class="priority-option high" onclick="selectPriority(this)">
+                        <input type="radio" name="priority" value="high">
+                        Pilny
+                    </label>
+                </div>
+            </div>
+
+            <!-- Opis usterek -->
+            <div class="section">
+                <div class="section-title">Zgłoszone usterki / problemy</div>
+                <table class="defects-table">
+                    <thead>
+                        <tr>
+                            <th>L.P.</th>
+                            <th>Element mebla</th>
+                            <th>Opis problemu</th>
+                            <th>Rodzaj usterki</th>
+                        </tr>
+                    </thead>
+                    <tbody id="defectsTableBody">
+                        <!-- Wiersze generowane przez JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Dokumentacja fotograficzna -->
+            <div class="section">
+                <div class="section-title">Dokumentacja fotograficzna</div>
+                <div class="photo-grid">
+                    <div class="photo-box">
+                        <div style="font-size:20px;">📷</div>
+                        <span>Zdjęcie 1</span>
+                    </div>
+                    <div class="photo-box">
+                        <div style="font-size:20px;">📷</div>
+                        <span>Zdjęcie 2</span>
+                    </div>
+                    <div class="photo-box">
+                        <div style="font-size:20px;">📷</div>
+                        <span>Zdjęcie 3</span>
+                    </div>
+                    <div class="photo-box">
+                        <div style="font-size:20px;">📷</div>
+                        <span>Zdjęcie 4</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Opis szczegółowy -->
+            <div class="section">
+                <div class="section-title">Szczegółowy opis problemu</div>
+                <textarea class="notes-area" id="problemDescription" placeholder="Dokładny opis problemu, okoliczności powstania, kiedy zauważono usterkę..."></textarea>
+            </div>
+
+            <!-- Historia obsługi -->
+            <div class="section">
+                <div class="section-title">Historia obsługi zgłoszenia</div>
+                <div class="timeline">
+                    <div class="timeline-header">
+                        <div>Data</div>
+                        <div>Osoba</div>
+                        <div>Działanie / Uwagi</div>
+                        <div>Status</div>
+                    </div>
+                    <div class="timeline-row">
+                        <div><input type="text" id="hist1Date" placeholder="DD.MM.RR"></div>
+                        <div><input type="text" id="hist1Person" placeholder="Imię"></div>
+                        <div><input type="text" id="hist1Action" placeholder="Przyjęcie zgłoszenia"></div>
+                        <div><input type="text" id="hist1Status" placeholder="Nowe"></div>
+                    </div>
+                    <div class="timeline-row">
+                        <div><input type="text" id="hist2Date" placeholder="DD.MM.RR"></div>
+                        <div><input type="text" id="hist2Person" placeholder="—"></div>
+                        <div><input type="text" id="hist2Action" placeholder="—"></div>
+                        <div><input type="text" id="hist2Status" placeholder="—"></div>
+                    </div>
+                    <div class="timeline-row">
+                        <div><input type="text" id="hist3Date" placeholder="DD.MM.RR"></div>
+                        <div><input type="text" id="hist3Person" placeholder="—"></div>
+                        <div><input type="text" id="hist3Action" placeholder="—"></div>
+                        <div><input type="text" id="hist3Status" placeholder="—"></div>
+                    </div>
+                    <div class="timeline-row">
+                        <div><input type="text" id="hist4Date" placeholder="DD.MM.RR"></div>
+                        <div><input type="text" id="hist4Person" placeholder="—"></div>
+                        <div><input type="text" id="hist4Action" placeholder="—"></div>
+                        <div><input type="text" id="hist4Status" placeholder="—"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rozwiązanie -->
+            <div class="section">
+                <div class="section-title">Podjęte działania / Rozwiązanie</div>
+                <textarea class="notes-area" id="resolution" placeholder="Opis wykonanych prac naprawczych, wymienionych elementów, ustaleń z klientem..."></textarea>
+            </div>
+
+            <!-- Signatures -->
+            <div class="signatures-section">
+                <div class="signature-box">
+                    <div class="signature-title">Przyjmujący zgłoszenie:</div>
+                    <div class="signature-line">........................................</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-title">Klient (potwierdzenie):</div>
+                    <div class="signature-line">........................................</div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="doc-footer">
+                <div>WALABI Sp. z o.o. Sp.k. · ul. Kosynierów Kościuszkowskich 13/4 · 87-100 Toruń</div>
+                <div>Tel: +48 501 260 990 · poczta@walabi.pl · www.walabi.pl</div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Flatpickr -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script>
+
+<script>
+    // PRINT
+    function printDoc() {
+        window.print();
+        toast('Otwarto okno drukowania');
+    }
+
+    // EMAIL
+    function sendEmail() {
+        const reportNum = document.getElementById('reportNumber').value || 'Zgłoszenie';
+        const client = document.getElementById('clientName').value || '';
+        const subject = encodeURIComponent(`WALABI - ${reportNum}${client ? ' - ' + client : ''}`);
+        const body = encodeURIComponent(`Dzień dobry,\n\nW załączeniu przesyłam zgłoszenie reklamacyjne/serwisowe ${reportNum}.\n\nZ poważaniem,\nWALABI Sp. z o.o. Sp.k.`);
+        window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+        toast('Otwarto klienta email');
+    }
+
+    // STATUS
+    function setStatus(status) {
+        const badge = document.getElementById('statusBadge');
+        const statusTexts = {
+            'new': 'Nowe zgłoszenie',
+            'in-progress': 'W realizacji',
+            'completed': 'Zakończone',
+            'rejected': 'Odrzucone'
+        };
+        badge.className = 'status-badge ' + status;
+        badge.textContent = statusTexts[status];
+        toast('Status zmieniony: ' + statusTexts[status]);
+    }
+
+    // CLEAR
+    function clearForm() {
+        if (confirm('Czy na pewno chcesz wyczyścić formularz?')) {
+            document.querySelectorAll('input[type="text"], textarea').forEach(input => {
+                if (input.id !== 'reportNumber') {
+                    input.value = '';
+                }
+            });
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+            document.querySelectorAll('.type-option, .priority-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            document.getElementById('reportNumber').value = 'RK-XXX-26';
+            document.getElementById('statusBadge').className = 'status-badge new';
+            document.getElementById('statusBadge').textContent = 'Nowe zgłoszenie';
+            document.getElementById('warrantyStatus').value = 'active';
+
+            const fp = document.getElementById('reportDate')._flatpickr;
+            if (fp) fp.setDate(new Date());
+
+            defectRowCount = 3;
+            buildDefectRows(3);
+
+            toast('Formularz wyczyszczony');
+        }
+    }
+
+    // TOAST
+    function toast(msg, type) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.className = 'toast show' + (type ? ' ' + type : '');
+        setTimeout(() => el.className = 'toast', 3000);
+    }
+
+    // TYPE SELECTION
+    function selectType(el) {
+        document.querySelectorAll('.type-option').forEach(opt => opt.classList.remove('selected'));
+        el.classList.add('selected');
+    }
+
+    // PRIORITY SELECTION
+    function selectPriority(el) {
+        document.querySelectorAll('.priority-option').forEach(opt => opt.classList.remove('selected'));
+        el.classList.add('selected');
+    }
+
+    // DEFECTS TABLE
+    let defectRowCount = 3;
+
+    function buildDefectRows(count) {
+        const tbody = document.getElementById('defectsTableBody');
+        tbody.innerHTML = '';
+        for (let i = 1; i <= count; i++) {
+            tbody.innerHTML += createDefectRow(i);
+        }
+    }
+
+    function createDefectRow(num) {
+        return `
+            <tr data-row="${num}">
+                <td class="col-nr">${num}</td>
+                <td class="col-element"><input type="text" id="defect${num}Element" placeholder="np. Front dolny lewy"></td>
+                <td class="col-desc"><input type="text" id="defect${num}Desc" placeholder="Opis usterki"></td>
+                <td class="col-type">
+                    <select id="defect${num}Type" style="font-weight:400;">
+                        <option value="">— wybierz —</option>
+                        <option value="scratch">Rysa / Zarysowanie</option>
+                        <option value="chip">Odprysk / Uszkodzenie</option>
+                        <option value="gap">Szczelina / Niedopasowanie</option>
+                        <option value="hinge">Zawias / Prowadnica</option>
+                        <option value="edge">Obrzeże / Okleinowanie</option>
+                        <option value="color">Kolor / Odcień</option>
+                        <option value="dimension">Wymiar / Dopasowanie</option>
+                        <option value="other">Inne</option>
+                    </select>
+                </td>
+            </tr>
+        `;
+    }
+
+    window.addDefectRow = function() {
+        defectRowCount++;
+        const tbody = document.getElementById('defectsTableBody');
+        tbody.insertAdjacentHTML('beforeend', createDefectRow(defectRowCount));
+        toast('Dodano wiersz ' + defectRowCount);
+    };
+
+    window.removeDefectRow = function() {
+        if (defectRowCount <= 1) {
+            toast('Musi pozostać minimum 1 wiersz', 'error');
+            return;
+        }
+        const tbody = document.getElementById('defectsTableBody');
+        const lastRow = tbody.querySelector(`tr[data-row="${defectRowCount}"]`);
+        if (lastRow) {
+            lastRow.remove();
+            defectRowCount--;
+            toast('Usunięto wiersz');
+        }
+    };
+
+    // INIT
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr.localize(flatpickr.l10ns.pl);
+        flatpickr("#reportDate", {
+            dateFormat: "d.m.Y",
+            defaultDate: new Date()
+        });
+        flatpickr("#installDate", {
+            dateFormat: "d.m.Y"
+        });
+        flatpickr("#warrantyEnd", {
+            dateFormat: "d.m.Y"
+        });
+
+        // Build defects table
+        buildDefectRows(3);
+    });
+</script>
+
+</body>
+</html>
