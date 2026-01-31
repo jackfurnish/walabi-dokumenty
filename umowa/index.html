@@ -1350,7 +1350,9 @@
 
     // ===== FORMATOWANIE KWOT =====
     function formatCurrency(value) {
-        return value.toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        // Formatuj z spacją jako separatorem tysięcy
+        const formatted = value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ').replace('.', ',');
+        return formatted;
     }
 
     function parseNumber(str) {
@@ -1779,8 +1781,12 @@
     window.addSpecRow = function() {
         specRowCount++;
         const tbody = document.getElementById('specTableBody');
-        tbody.innerHTML += createSpecRow(specRowCount);
-        attachSpecRowListeners();
+        tbody.insertAdjacentHTML('beforeend', createSpecRow(specRowCount));
+        // Dodaj listenery tylko do nowego wiersza
+        const qtyEl = document.getElementById(`spec${specRowCount}Qty`);
+        const priceEl = document.getElementById(`spec${specRowCount}Price`);
+        if (qtyEl) qtyEl.addEventListener('input', () => calculateSpecRow(specRowCount));
+        if (priceEl) priceEl.addEventListener('input', () => calculateSpecRow(specRowCount));
         toast('Dodano wiersz ' + specRowCount);
     };
 
