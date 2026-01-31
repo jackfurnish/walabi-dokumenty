@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karta Techniczna Wyrobu (BOM) - WALABI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&subset=latin-ext&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #2D2E2E;
+            --color-secondary: #757575;
+            --color-accent: #B8860B;
+            --color-border: #E0E0E0;
+            --color-background: #FAFAFA;
+            --color-white: #FFFFFF;
+            --color-highlight: #F7F5F0;
+            --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-size-label: 7pt;
+            --font-weight-label: 400;
+            --color-label: #757575;
+            --font-size-data: 9pt;
+            --font-weight-data: 600;
+            --color-data: #2D2E2E;
+            --font-size-xs: 6.5pt;
+            --font-size-base: 8.5pt;
+            --font-size-lg: 10pt;
+            --font-size-xl: 12pt;
+            --spacing-xs: 3px;
+            --spacing-sm: 6px;
+            --spacing-md: 10px;
+            --spacing-lg: 14px;
+            --spacing-xl: 18px;
+            --line-height: 1.4;
+            --letter-spacing: 0.08em;
+            --border-radius: 2px;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            background: #E8E8E8;
+            color: var(--color-primary);
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-wrapper {
+            display: flex;
+            gap: 20px;
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+        }
+
+        .sidebar-card {
+            background: var(--color-white);
+            border-radius: 6px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+            border: 1px solid var(--color-border);
+        }
+
+        .sidebar-card h3 {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            margin-bottom: 10px;
+            color: var(--color-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .sidebar .logo-area {
+            text-align: center;
+            padding: 12px 0;
+        }
+
+        .sidebar .logo-area img {
+            max-width: 110px;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            transition: all .2s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .btn:active { transform: scale(.98); }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+        .btn-primary:hover { background: #1a1a1a; }
+
+        .btn-secondary {
+            background: var(--color-background);
+            color: var(--color-primary);
+            border: 1px solid var(--color-border);
+        }
+        .btn-secondary:hover { background: var(--color-highlight); }
+
+        .btn-danger {
+            background: var(--color-white);
+            color: #9A3412;
+            border: 1px solid var(--color-border);
+        }
+        .btn-danger:hover { background: #FEF2F2; }
+
+        /* DOCUMENT */
+        .page-container {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .document {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 10mm 12mm;
+            background: var(--color-white);
+            box-shadow: 0 4px 24px rgba(0,0,0,.08);
+            position: relative;
+        }
+
+        .doc-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .doc-header .logo img {
+            height: 50px;
+            opacity: 0.95;
+        }
+
+        .doc-title {
+            text-align: center;
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            margin: var(--spacing-sm) 0;
+            padding: var(--spacing-xs) 0;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-primary);
+            border-top: 0.5pt solid var(--color-primary);
+            border-bottom: 0.5pt solid var(--color-primary);
+        }
+
+        /* INFO SECTION */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .info-box {
+            padding: var(--spacing-sm);
+            background: var(--color-highlight);
+            border-radius: var(--border-radius);
+        }
+
+        .info-box-title {
+            font-size: var(--font-size-label);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .info-row {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 2px;
+            font-size: var(--font-size-base);
+        }
+
+        .info-row label {
+            color: var(--color-secondary);
+            min-width: 70px;
+            font-size: var(--font-size-label);
+        }
+
+        .info-row input, .info-row select {
+            flex: 1;
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--font-size-data);
+            font-weight: var(--font-weight-data);
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+            padding: 1px 4px;
+        }
+
+        .info-row input:focus, .info-row select:focus {
+            outline: none;
+            border-bottom-color: var(--color-primary);
+        }
+
+        /* SECTION */
+        .section {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .section-title {
+            font-size: var(--font-size-data);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-xs);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 0.5pt solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-title .badge {
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            padding: 2px 8px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 10px;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        /* BOM TABLE */
+        .bom-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-xs);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .bom-table th {
+            background: var(--color-highlight);
+            border: 0.5pt solid var(--color-border);
+            padding: 4px 5px;
+            text-align: center;
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: var(--color-primary);
+        }
+
+        .bom-table td {
+            border: 0.5pt solid var(--color-border);
+            padding: 3px 4px;
+            vertical-align: middle;
+        }
+
+        .bom-table input, .bom-table select {
+            width: 100%;
+            border: none;
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+            padding: 1px 2px;
+        }
+
+        .bom-table input:focus, .bom-table select:focus {
+            outline: none;
+            background: var(--color-highlight);
+        }
+
+        .bom-table .col-nr { width: 24px; text-align: center; font-size: var(--font-size-label); color: var(--color-secondary); }
+        .bom-table .col-name { width: 22%; }
+        .bom-table .col-material { width: 18%; }
+        .bom-table .col-dim { width: 60px; text-align: center; }
+        .bom-table .col-qty { width: 35px; text-align: center; }
+        .bom-table .col-edge { width: 70px; text-align: center; font-size: var(--font-size-label); }
+        .bom-table .col-notes { width: 15%; }
+
+        .bom-table input.dim-input { text-align: center; }
+        .bom-table input.qty-input { text-align: center; font-weight: 700; }
+
+        /* HARDWARE TABLE */
+        .hardware-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-xs);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .hardware-table th {
+            background: var(--color-highlight);
+            border: 0.5pt solid var(--color-border);
+            padding: 4px 5px;
+            text-align: center;
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: var(--color-primary);
+        }
+
+        .hardware-table td {
+            border: 0.5pt solid var(--color-border);
+            padding: 3px 4px;
+            vertical-align: middle;
+        }
+
+        .hardware-table input, .hardware-table select {
+            width: 100%;
+            border: none;
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            font-family: var(--font-primary);
+            background: transparent;
+            color: var(--color-data);
+            padding: 1px 2px;
+        }
+
+        .hardware-table input:focus, .hardware-table select:focus {
+            outline: none;
+            background: var(--color-highlight);
+        }
+
+        .hardware-table .col-nr { width: 24px; text-align: center; font-size: var(--font-size-label); color: var(--color-secondary); }
+        .hardware-table .col-cat { width: 15%; }
+        .hardware-table .col-brand { width: 12%; }
+        .hardware-table .col-name { width: 28%; }
+        .hardware-table .col-code { width: 15%; }
+        .hardware-table .col-qty { width: 40px; text-align: center; }
+        .hardware-table .col-notes { width: 18%; }
+
+        .hardware-table input.qty-input { text-align: center; font-weight: 700; }
+
+        /* SUMMARY */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .summary-box {
+            padding: var(--spacing-sm);
+            border: 0.5pt solid var(--color-border);
+            border-radius: var(--border-radius);
+        }
+
+        .summary-box h4 {
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-base);
+            margin-bottom: 2px;
+        }
+
+        .summary-row span:first-child {
+            color: var(--color-secondary);
+        }
+
+        .summary-row span:last-child {
+            font-weight: 600;
+            color: var(--color-data);
+        }
+
+        /* NOTES */
+        .notes-area {
+            width: 100%;
+            min-height: 50px;
+            border: 0.5pt solid var(--color-border);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            font-family: var(--font-primary);
+            font-size: var(--font-size-data);
+            resize: vertical;
+        }
+
+        .notes-area:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        /* SIGNATURES */
+        .signatures-section {
+            margin-top: var(--spacing-lg);
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+        }
+
+        .signature-box {
+            text-align: center;
+        }
+
+        .signature-box .signature-title {
+            font-size: var(--font-size-label);
+            font-weight: var(--font-weight-label);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-label);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .signature-box .signature-line {
+            border-top: 1px solid var(--color-border);
+            padding-top: var(--spacing-xs);
+            font-size: var(--font-size-xs);
+            color: var(--color-secondary);
+        }
+
+        /* FOOTER */
+        .doc-footer {
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-sm);
+            border-top: 0.5pt solid var(--color-border);
+            font-size: var(--font-size-xs);
+            color: var(--color-primary);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* PRINT */
+        @media print {
+            html, body {
+                background: var(--color-white);
+                margin: 0;
+                padding: 0;
+            }
+
+            .sidebar, .no-print { display: none !important; }
+
+            .app-wrapper {
+                padding: 0;
+                margin: 0;
+            }
+
+            .document {
+                box-shadow: none;
+                padding: 8mm 10mm;
+                width: 210mm;
+                min-height: 296mm;
+            }
+
+            input, textarea, select {
+                border-color: transparent !important;
+                background: transparent !important;
+            }
+
+            .info-box, .summary-box {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .bom-table th, .hardware-table th {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            @page {
+                size: A4;
+                margin: 5mm;
+            }
+        }
+
+        @media screen and (max-width: 900px) {
+            .app-wrapper {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            .document {
+                width: 100%;
+                min-height: auto;
+                padding: 16px;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: var(--font-primary);
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all .3s ease;
+            z-index: 999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success { background: #166534; }
+        .toast.error { background: #991B1B; }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="sidebar no-print">
+        <div class="sidebar-card logo-area">
+            <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:22px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI<div style=&quot;font-size:8px;color:#757575;font-weight:400;margin-top:2px&quot;>Sp. z o.o. Sp.k.</div></div>'">
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Akcje</h3>
+            <a href="../index.html" class="btn btn-secondary" style="text-decoration:none;margin-bottom:12px;">← Strona główna</a>
+            <button class="btn btn-primary" onclick="printDoc()">Drukuj / Zapisz PDF</button>
+            <button class="btn btn-secondary" onclick="sendEmail()">Wyślij mailem</button>
+            <button class="btn btn-danger" onclick="clearForm()">Wyczyść formularz</button>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Elementy płytowe</h3>
+            <div style="display:flex;gap:6px;">
+                <button class="btn btn-secondary" onclick="addBomRow()" style="flex:1;text-align:center;">+ Dodaj</button>
+                <button class="btn btn-secondary" onclick="removeBomRow()" style="flex:1;text-align:center;">− Usuń</button>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Okucia</h3>
+            <div style="display:flex;gap:6px;">
+                <button class="btn btn-secondary" onclick="addHardwareRow()" style="flex:1;text-align:center;">+ Dodaj</button>
+                <button class="btn btn-secondary" onclick="removeHardwareRow()" style="flex:1;text-align:center;">− Usuń</button>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Szybkie okucia</h3>
+            <button class="btn btn-secondary" onclick="addQuickHardware('zawias', 'Blum', 'Clip Top Blumotion 110°', '71B3550')">+ Zawias Blum 110°</button>
+            <button class="btn btn-secondary" onclick="addQuickHardware('zawias', 'Hettich', 'Sensys 110° TH52', '9071204')">+ Zawias Hettich 110°</button>
+            <button class="btn btn-secondary" onclick="addQuickHardware('prowadnica', 'Blum', 'Tandembox Antaro 500mm', '578.5001B')">+ Szuflada Blum 500</button>
+            <button class="btn btn-secondary" onclick="addQuickHardware('prowadnica', 'Hettich', 'ArciTech 500mm H94', '9150619')">+ Szuflada Hettich 500</button>
+            <button class="btn btn-secondary" onclick="addQuickHardware('podnośnik', 'Blum', 'Aventos HK-S', '20K2B00')">+ Aventos HK-S</button>
+        </div>
+    </aside>
+
+    <!-- DOCUMENT -->
+    <main class="page-container">
+        <div class="document" id="document">
+
+            <!-- Header -->
+            <div class="doc-header">
+                <div class="logo">
+                    <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:20px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI</div>'">
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:var(--font-size-label);color:var(--color-secondary);">
+                        Nr karty:<br>
+                        <input type="text" id="cardNumber" value="BOM-XXX-26" style="border:none;border-bottom:1px solid var(--color-border);font-size:var(--font-size-data);font-weight:600;text-align:right;width:100px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="doc-title">Karta Techniczna Wyrobu (BOM)</div>
+
+            <!-- Info Section -->
+            <div class="info-grid">
+                <div class="info-box">
+                    <div class="info-box-title">Zamówienie</div>
+                    <div class="info-row">
+                        <label>Nr umowy:</label>
+                        <input type="text" id="contractNumber" placeholder="P-XXX-XX">
+                    </div>
+                    <div class="info-row">
+                        <label>Klient:</label>
+                        <input type="text" id="clientName" placeholder="Nazwisko / Firma">
+                    </div>
+                    <div class="info-row">
+                        <label>Data:</label>
+                        <input type="text" id="orderDate" placeholder="DD.MM.RRRR">
+                    </div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-title">Wyrób</div>
+                    <div class="info-row">
+                        <label>Typ:</label>
+                        <select id="productType">
+                            <option value="">— wybierz —</option>
+                            <option value="kitchen">Zabudowa kuchenna</option>
+                            <option value="wardrobe">Szafa wnękowa</option>
+                            <option value="closet">Garderoba</option>
+                            <option value="bathroom">Meble łazienkowe</option>
+                            <option value="living">Meble pokojowe</option>
+                            <option value="office">Meble biurowe</option>
+                            <option value="other">Inne</option>
+                        </select>
+                    </div>
+                    <div class="info-row">
+                        <label>Nazwa:</label>
+                        <input type="text" id="productName" placeholder="np. Kuchnia dolna">
+                    </div>
+                    <div class="info-row">
+                        <label>Wymiary:</label>
+                        <input type="text" id="productDimensions" placeholder="SxWxG mm">
+                    </div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-title">Produkcja</div>
+                    <div class="info-row">
+                        <label>Termin:</label>
+                        <input type="text" id="productionDate" placeholder="DD.MM.RRRR">
+                    </div>
+                    <div class="info-row">
+                        <label>Priorytet:</label>
+                        <select id="priority">
+                            <option value="normal">Normalny</option>
+                            <option value="high">Pilny</option>
+                            <option value="urgent">Ekspres</option>
+                        </select>
+                    </div>
+                    <div class="info-row">
+                        <label>Wersja:</label>
+                        <input type="text" id="version" placeholder="1.0" style="width:40px;text-align:center;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOM - Elementy płytowe -->
+            <div class="section">
+                <div class="section-title">
+                    Elementy płytowe
+                    <span class="badge" id="bomCount">0 szt.</span>
+                </div>
+                <table class="bom-table">
+                    <thead>
+                        <tr>
+                            <th>L.P.</th>
+                            <th>Nazwa elementu</th>
+                            <th>Materiał / Dekor</th>
+                            <th>Dł. [mm]</th>
+                            <th>Szer. [mm]</th>
+                            <th>Gr. [mm]</th>
+                            <th>Szt.</th>
+                            <th>Obrzeże (D1/D2/S1/S2)</th>
+                            <th>Uwagi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bomTableBody">
+                        <!-- Rows generated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Okucia -->
+            <div class="section">
+                <div class="section-title">
+                    Okucia i akcesoria
+                    <span class="badge" id="hardwareCount">0 szt.</span>
+                </div>
+                <table class="hardware-table">
+                    <thead>
+                        <tr>
+                            <th>L.P.</th>
+                            <th>Kategoria</th>
+                            <th>Producent</th>
+                            <th>Nazwa / Model</th>
+                            <th>Nr katalogowy</th>
+                            <th>Szt.</th>
+                            <th>Uwagi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hardwareTableBody">
+                        <!-- Rows generated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Podsumowanie -->
+            <div class="summary-grid">
+                <div class="summary-box">
+                    <h4>Podsumowanie materiałów</h4>
+                    <div class="summary-row">
+                        <span>Elementy płytowe:</span>
+                        <span id="totalBomPcs">0 szt.</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Obrzeże łącznie:</span>
+                        <span id="totalEdge">0 mb</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Powierzchnia płyt:</span>
+                        <span id="totalArea">0.00 m²</span>
+                    </div>
+                </div>
+                <div class="summary-box">
+                    <h4>Podsumowanie okuć</h4>
+                    <div class="summary-row">
+                        <span>Zawiasy:</span>
+                        <span id="totalHinges">0 szt.</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Prowadnice/Szuflady:</span>
+                        <span id="totalDrawers">0 szt.</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Inne okucia:</span>
+                        <span id="totalOther">0 szt.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Uwagi technologiczne -->
+            <div class="section">
+                <div class="section-title">Uwagi technologiczne / Specjalne instrukcje</div>
+                <textarea class="notes-area" id="techNotes" placeholder="Szczególne wymagania dotyczące obróbki, montażu, wykończenia..."></textarea>
+            </div>
+
+            <!-- Signatures -->
+            <div class="signatures-section">
+                <div class="signature-box">
+                    <div class="signature-title">Sporządził:</div>
+                    <div class="signature-line">........................................</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-title">Zatwierdził:</div>
+                    <div class="signature-line">........................................</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-title">Produkcja:</div>
+                    <div class="signature-line">........................................</div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="doc-footer">
+                <div>WALABI Sp. z o.o. Sp.k. · ul. Kosynierów Kościuszkowskich 13/4 · 87-100 Toruń</div>
+                <div>Tel: +48 501 260 990 · poczta@walabi.pl · www.walabi.pl</div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script>
+    // PRINT
+    function printDoc() {
+        window.print();
+        toast('Otwarto okno drukowania');
+    }
+
+    // EMAIL
+    function sendEmail() {
+        const cardNum = document.getElementById('cardNumber').value || 'BOM';
+        const client = document.getElementById('clientName').value || '';
+        const product = document.getElementById('productName').value || '';
+        const subject = encodeURIComponent(`WALABI - ${cardNum}${client ? ' - ' + client : ''}${product ? ' - ' + product : ''}`);
+        const body = encodeURIComponent(`Dzień dobry,\n\nW załączeniu przesyłam Kartę Techniczną Wyrobu ${cardNum}.\n\nZ poważaniem,\nWALABI Sp. z o.o. Sp.k.`);
+        window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+        toast('Otwarto klienta email');
+    }
+
+    // CLEAR
+    function clearForm() {
+        if (confirm('Czy na pewno chcesz wyczyścić formularz?')) {
+            document.querySelectorAll('input[type="text"], textarea').forEach(input => {
+                if (input.id !== 'cardNumber') {
+                    input.value = '';
+                }
+            });
+            document.querySelectorAll('select').forEach(sel => sel.selectedIndex = 0);
+            document.getElementById('cardNumber').value = 'BOM-XXX-26';
+            bomRowCount = 8;
+            hardwareRowCount = 6;
+            buildBomRows(8);
+            buildHardwareRows(6);
+            updateSummary();
+            toast('Formularz wyczyszczony');
+        }
+    }
+
+    // TOAST
+    function toast(msg, type) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.className = 'toast show' + (type ? ' ' + type : '');
+        setTimeout(() => el.className = 'toast', 3000);
+    }
+
+    // BOM TABLE
+    let bomRowCount = 8;
+
+    function createBomRow(num) {
+        return `
+            <tr data-row="${num}">
+                <td class="col-nr">${num}</td>
+                <td class="col-name"><input type="text" id="bom${num}Name" placeholder="np. Bok L"></td>
+                <td class="col-material"><input type="text" id="bom${num}Material" placeholder="Egger U702 PM"></td>
+                <td class="col-dim"><input type="text" class="dim-input" id="bom${num}L" placeholder="0" onchange="updateSummary()"></td>
+                <td class="col-dim"><input type="text" class="dim-input" id="bom${num}W" placeholder="0" onchange="updateSummary()"></td>
+                <td class="col-dim"><input type="text" class="dim-input" id="bom${num}T" placeholder="18"></td>
+                <td class="col-qty"><input type="text" class="qty-input" id="bom${num}Qty" value="1" onchange="updateSummary()"></td>
+                <td class="col-edge"><input type="text" id="bom${num}Edge" placeholder="1/1/0/0"></td>
+                <td class="col-notes"><input type="text" id="bom${num}Notes" placeholder="—"></td>
+            </tr>
+        `;
+    }
+
+    function buildBomRows(count) {
+        const tbody = document.getElementById('bomTableBody');
+        tbody.innerHTML = '';
+        for (let i = 1; i <= count; i++) {
+            tbody.insertAdjacentHTML('beforeend', createBomRow(i));
+        }
+    }
+
+    window.addBomRow = function() {
+        bomRowCount++;
+        const tbody = document.getElementById('bomTableBody');
+        tbody.insertAdjacentHTML('beforeend', createBomRow(bomRowCount));
+        toast('Dodano wiersz ' + bomRowCount);
+    };
+
+    window.removeBomRow = function() {
+        if (bomRowCount <= 1) {
+            toast('Musi pozostać minimum 1 wiersz', 'error');
+            return;
+        }
+        const tbody = document.getElementById('bomTableBody');
+        const lastRow = tbody.querySelector(`tr[data-row="${bomRowCount}"]`);
+        if (lastRow) {
+            lastRow.remove();
+            bomRowCount--;
+            updateSummary();
+            toast('Usunięto wiersz');
+        }
+    };
+
+    // HARDWARE TABLE
+    let hardwareRowCount = 6;
+
+    function createHardwareRow(num, preset) {
+        const cat = preset?.cat || '';
+        const brand = preset?.brand || '';
+        const name = preset?.name || '';
+        const code = preset?.code || '';
+        const qty = preset?.qty || '1';
+
+        return `
+            <tr data-hw-row="${num}">
+                <td class="col-nr">${num}</td>
+                <td class="col-cat">
+                    <select id="hw${num}Cat" onchange="updateSummary()">
+                        <option value="">— wybierz —</option>
+                        <option value="zawias" ${cat==='zawias'?'selected':''}>Zawias</option>
+                        <option value="prowadnica" ${cat==='prowadnica'?'selected':''}>Prowadnica/Szuflada</option>
+                        <option value="podnośnik" ${cat==='podnośnik'?'selected':''}>Podnośnik</option>
+                        <option value="uchwyt" ${cat==='uchwyt'?'selected':''}>Uchwyt</option>
+                        <option value="noga" ${cat==='noga'?'selected':''}>Noga/Cokół</option>
+                        <option value="oswietlenie" ${cat==='oswietlenie'?'selected':''}>Oświetlenie</option>
+                        <option value="lacznik" ${cat==='lacznik'?'selected':''}>Łącznik/Złącze</option>
+                        <option value="inne" ${cat==='inne'?'selected':''}>Inne</option>
+                    </select>
+                </td>
+                <td class="col-brand">
+                    <select id="hw${num}Brand">
+                        <option value="">—</option>
+                        <option value="Blum" ${brand==='Blum'?'selected':''}>Blum</option>
+                        <option value="Hettich" ${brand==='Hettich'?'selected':''}>Hettich</option>
+                        <option value="Hafele" ${brand==='Hafele'?'selected':''}>Häfele</option>
+                        <option value="GTV" ${brand==='GTV'?'selected':''}>GTV</option>
+                        <option value="Gamet" ${brand==='Gamet'?'selected':''}>Gamet</option>
+                        <option value="Starax" ${brand==='Starax'?'selected':''}>Starax</option>
+                        <option value="Inne" ${brand==='Inne'?'selected':''}>Inne</option>
+                    </select>
+                </td>
+                <td class="col-name"><input type="text" id="hw${num}Name" placeholder="Nazwa / Model" value="${name}"></td>
+                <td class="col-code"><input type="text" id="hw${num}Code" placeholder="Nr kat." value="${code}"></td>
+                <td class="col-qty"><input type="text" class="qty-input" id="hw${num}Qty" value="${qty}" onchange="updateSummary()"></td>
+                <td class="col-notes"><input type="text" id="hw${num}Notes" placeholder="—"></td>
+            </tr>
+        `;
+    }
+
+    function buildHardwareRows(count) {
+        const tbody = document.getElementById('hardwareTableBody');
+        tbody.innerHTML = '';
+        for (let i = 1; i <= count; i++) {
+            tbody.insertAdjacentHTML('beforeend', createHardwareRow(i));
+        }
+    }
+
+    window.addHardwareRow = function() {
+        hardwareRowCount++;
+        const tbody = document.getElementById('hardwareTableBody');
+        tbody.insertAdjacentHTML('beforeend', createHardwareRow(hardwareRowCount));
+        toast('Dodano wiersz ' + hardwareRowCount);
+    };
+
+    window.removeHardwareRow = function() {
+        if (hardwareRowCount <= 1) {
+            toast('Musi pozostać minimum 1 wiersz', 'error');
+            return;
+        }
+        const tbody = document.getElementById('hardwareTableBody');
+        const lastRow = tbody.querySelector(`tr[data-hw-row="${hardwareRowCount}"]`);
+        if (lastRow) {
+            lastRow.remove();
+            hardwareRowCount--;
+            updateSummary();
+            toast('Usunięto wiersz');
+        }
+    };
+
+    window.addQuickHardware = function(cat, brand, name, code) {
+        hardwareRowCount++;
+        const tbody = document.getElementById('hardwareTableBody');
+        tbody.insertAdjacentHTML('beforeend', createHardwareRow(hardwareRowCount, { cat, brand, name, code, qty: '1' }));
+        updateSummary();
+        toast('Dodano: ' + name);
+    };
+
+    // UPDATE SUMMARY
+    function updateSummary() {
+        let totalPcs = 0;
+        let totalArea = 0;
+        let totalEdgeLength = 0;
+
+        // BOM summary
+        for (let i = 1; i <= bomRowCount; i++) {
+            const qtyEl = document.getElementById(`bom${i}Qty`);
+            const lEl = document.getElementById(`bom${i}L`);
+            const wEl = document.getElementById(`bom${i}W`);
+            const edgeEl = document.getElementById(`bom${i}Edge`);
+
+            if (qtyEl && lEl && wEl) {
+                const qty = parseInt(qtyEl.value) || 0;
+                const l = parseFloat(lEl.value) || 0;
+                const w = parseFloat(wEl.value) || 0;
+
+                totalPcs += qty;
+                totalArea += (l * w * qty) / 1000000; // mm² to m²
+
+                // Calculate edge length
+                if (edgeEl && edgeEl.value) {
+                    const edges = edgeEl.value.split('/').map(e => parseInt(e) || 0);
+                    const d1 = edges[0] || 0; // długość 1
+                    const d2 = edges[1] || 0; // długość 2
+                    const s1 = edges[2] || 0; // szerokość 1
+                    const s2 = edges[3] || 0; // szerokość 2
+                    totalEdgeLength += ((d1 + d2) * l + (s1 + s2) * w) * qty / 1000; // mm to m
+                }
+            }
+        }
+
+        document.getElementById('bomCount').textContent = totalPcs + ' szt.';
+        document.getElementById('totalBomPcs').textContent = totalPcs + ' szt.';
+        document.getElementById('totalArea').textContent = totalArea.toFixed(2) + ' m²';
+        document.getElementById('totalEdge').textContent = totalEdgeLength.toFixed(1) + ' mb';
+
+        // Hardware summary
+        let totalHinges = 0;
+        let totalDrawers = 0;
+        let totalOther = 0;
+        let totalHardware = 0;
+
+        for (let i = 1; i <= hardwareRowCount; i++) {
+            const catEl = document.getElementById(`hw${i}Cat`);
+            const qtyEl = document.getElementById(`hw${i}Qty`);
+
+            if (catEl && qtyEl) {
+                const cat = catEl.value;
+                const qty = parseInt(qtyEl.value) || 0;
+
+                totalHardware += qty;
+
+                if (cat === 'zawias') {
+                    totalHinges += qty;
+                } else if (cat === 'prowadnica') {
+                    totalDrawers += qty;
+                } else if (cat) {
+                    totalOther += qty;
+                }
+            }
+        }
+
+        document.getElementById('hardwareCount').textContent = totalHardware + ' szt.';
+        document.getElementById('totalHinges').textContent = totalHinges + ' szt.';
+        document.getElementById('totalDrawers').textContent = totalDrawers + ' szt.';
+        document.getElementById('totalOther').textContent = totalOther + ' szt.';
+    }
+
+    // INIT
+    document.addEventListener('DOMContentLoaded', function() {
+        buildBomRows(8);
+        buildHardwareRows(6);
+        updateSummary();
+    });
+</script>
+
+</body>
+</html>
