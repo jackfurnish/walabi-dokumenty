@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oferta Premium - WALABI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&subset=latin-ext&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        :root {
+            /* WALABI Brand Colors */
+            --color-primary: #2D2E2E;
+            --color-orange: #E07B39;
+            --color-orange-dark: #C66A2E;
+            --color-gray: #757575;
+            --color-gray-light: #9E9E9E;
+            --color-border: #E0E0E0;
+            --color-background: #FAFAFA;
+            --color-white: #FFFFFF;
+            --color-highlight: #FEF7F3;
+            --color-success: #166534;
+            --color-success-bg: #DCFCE7;
+            --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-size-label: 7pt;
+            --font-size-data: 9pt;
+            --font-size-base: 8.5pt;
+            --font-size-lg: 10pt;
+            --font-size-xl: 12pt;
+            --font-size-xxl: 16pt;
+            --spacing-xs: 3px;
+            --spacing-sm: 6px;
+            --spacing-md: 10px;
+            --spacing-lg: 14px;
+            --spacing-xl: 18px;
+            --line-height: 1.4;
+            --letter-spacing: 0.05em;
+            --border-radius: 3px;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            background: #E8E8E8;
+            color: var(--color-primary);
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .flatpickr-calendar {
+            font-family: var(--font-primary) !important;
+        }
+        .flatpickr-day.selected {
+            background: var(--color-orange) !important;
+            border-color: var(--color-orange) !important;
+        }
+
+        .app-wrapper {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+        }
+
+        .sidebar-card {
+            background: var(--color-white);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.06);
+            border: 1px solid var(--color-border);
+        }
+
+        .sidebar-card h3 {
+            font-size: var(--font-size-label);
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: var(--color-gray);
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .sidebar .logo-area {
+            text-align: center;
+            padding: 16px 0;
+        }
+
+        .sidebar .logo-area img {
+            max-width: 120px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 11px 14px;
+            margin-bottom: 6px;
+            font-size: var(--font-size-data);
+            font-weight: 600;
+            font-family: var(--font-primary);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: left;
+            transition: all .2s ease;
+        }
+
+        .btn:active { transform: scale(.98); }
+
+        .btn-primary {
+            background: var(--color-orange);
+            color: var(--color-white);
+        }
+        .btn-primary:hover { background: var(--color-orange-dark); }
+
+        .btn-secondary {
+            background: var(--color-background);
+            color: var(--color-primary);
+            border: 1px solid var(--color-border);
+        }
+        .btn-secondary:hover { background: var(--color-highlight); }
+
+        .btn-danger {
+            background: var(--color-white);
+            color: #9A3412;
+            border: 1px solid var(--color-border);
+        }
+        .btn-danger:hover { background: #FEF2F2; }
+
+        /* DIMENSION INPUTS */
+        .dim-group {
+            margin-bottom: 12px;
+        }
+
+        .dim-group label {
+            display: block;
+            font-size: var(--font-size-label);
+            color: var(--color-gray);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+        }
+
+        .dim-group input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            font-size: var(--font-size-data);
+            font-weight: 600;
+            font-family: var(--font-primary);
+        }
+
+        .dim-group input:focus {
+            outline: none;
+            border-color: var(--color-orange);
+        }
+
+        .dim-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+
+        /* DOCUMENT */
+        .page-container {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .document {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 12mm 14mm;
+            background: var(--color-white);
+            box-shadow: 0 4px 24px rgba(0,0,0,.08);
+            position: relative;
+        }
+
+        /* HEADER */
+        .doc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-bottom: var(--spacing-md);
+            border-bottom: 2px solid var(--color-orange);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .doc-header .logo img {
+            height: 55px;
+        }
+
+        .doc-header .company-info {
+            text-align: right;
+            font-size: var(--font-size-label);
+            color: var(--color-gray);
+            line-height: 1.6;
+        }
+
+        .offer-badge {
+            background: var(--color-orange);
+            color: var(--color-white);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .offer-id {
+            font-size: var(--font-size-data);
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .offer-date {
+            font-size: var(--font-size-label);
+            color: var(--color-gray);
+        }
+
+        /* CLIENT INFO */
+        .client-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .client-box {
+            padding: var(--spacing-md);
+            background: var(--color-background);
+            border-radius: var(--border-radius);
+        }
+
+        .client-box-title {
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-orange);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .client-row {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+
+        .client-row label {
+            min-width: 70px;
+            font-size: var(--font-size-label);
+            color: var(--color-gray);
+        }
+
+        .client-row input {
+            flex: 1;
+            border: none;
+            border-bottom: 1px solid var(--color-border);
+            font-size: var(--font-size-data);
+            font-weight: 600;
+            font-family: var(--font-primary);
+            background: transparent;
+            padding: 2px 4px;
+        }
+
+        .client-row input:focus {
+            outline: none;
+            border-bottom-color: var(--color-orange);
+        }
+
+        /* HERO SECTION */
+        .hero-section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .hero-title {
+            font-size: var(--font-size-xxl);
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .hero-subtitle {
+            font-size: var(--font-size-lg);
+            color: var(--color-gray);
+            font-style: italic;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, var(--color-highlight) 0%, var(--color-background) 100%);
+            border: 1px dashed var(--color-border);
+            border-radius: var(--border-radius);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-gray);
+            font-size: var(--font-size-base);
+            margin-bottom: var(--spacing-sm);
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-image.has-image {
+            border-style: solid;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+        }
+
+        .hero-image .placeholder {
+            text-align: center;
+        }
+
+        .hero-image.has-image .placeholder {
+            display: none;
+        }
+
+        .hero-image input[type="file"] {
+            display: none;
+        }
+
+        .hero-description {
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            color: var(--color-primary);
+            padding: var(--spacing-sm);
+            background: var(--color-highlight);
+            border-left: 3px solid var(--color-orange);
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+
+        .hero-description textarea {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: var(--font-primary);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            resize: none;
+            min-height: 50px;
+        }
+
+        .hero-description textarea:focus {
+            outline: none;
+        }
+
+        /* TECHNICAL DRAWING */
+        .technical-section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-title {
+            font-size: var(--font-size-data);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .accent {
+            color: var(--color-orange);
+        }
+
+        .drawing-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+            background: var(--color-background);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+        }
+
+        .drawing-box {
+            background: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm);
+            text-align: center;
+        }
+
+        .drawing-box h4 {
+            font-size: var(--font-size-label);
+            text-transform: uppercase;
+            color: var(--color-gray);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .drawing-svg {
+            width: 100%;
+            height: 140px;
+        }
+
+        /* CONFIGURATION TABLE */
+        .config-section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--font-size-base);
+        }
+
+        .config-table th {
+            background: var(--color-primary);
+            color: var(--color-white);
+            padding: 10px 12px;
+            text-align: left;
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .config-table th:first-child {
+            border-radius: var(--border-radius) 0 0 0;
+        }
+
+        .config-table th:last-child {
+            border-radius: 0 var(--border-radius) 0 0;
+        }
+
+        .config-table th.economy {
+            background: var(--color-gray);
+        }
+
+        .config-table th.premium {
+            background: var(--color-orange);
+        }
+
+        .config-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--color-border);
+            vertical-align: top;
+        }
+
+        .config-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .config-table tr:nth-child(even) {
+            background: var(--color-background);
+        }
+
+        .config-table .category {
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .config-table .economy-cell {
+            color: var(--color-gray);
+        }
+
+        .config-table .premium-cell {
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .config-table .premium-cell .highlight {
+            background: var(--color-highlight);
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: var(--color-orange);
+            font-weight: 600;
+        }
+
+        /* BOM SECTION */
+        .bom-section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .bom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .bom-box {
+            background: var(--color-background);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+        }
+
+        .bom-box h4 {
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: var(--letter-spacing);
+            color: var(--color-orange);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .bom-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: var(--font-size-base);
+            border-bottom: 1px dotted var(--color-border);
+        }
+
+        .bom-row:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-top: var(--spacing-xs);
+            padding-top: var(--spacing-xs);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .bom-row span:first-child {
+            color: var(--color-gray);
+        }
+
+        .bom-row span:last-child {
+            font-weight: 500;
+            color: var(--color-primary);
+        }
+
+        /* PRICING */
+        .pricing-section {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .pricing-box {
+            border: 2px solid var(--color-border);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .pricing-box.recommended {
+            border-color: var(--color-orange);
+        }
+
+        .pricing-header {
+            background: var(--color-gray);
+            color: var(--color-white);
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: center;
+        }
+
+        .pricing-box.recommended .pricing-header {
+            background: var(--color-orange);
+        }
+
+        .pricing-header h4 {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .pricing-header .tag {
+            font-size: var(--font-size-label);
+            opacity: 0.9;
+        }
+
+        .pricing-body {
+            padding: var(--spacing-md);
+            text-align: center;
+        }
+
+        .pricing-amount {
+            font-size: 24pt;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .pricing-box.recommended .pricing-amount {
+            color: var(--color-orange);
+        }
+
+        .pricing-currency {
+            font-size: var(--font-size-lg);
+            color: var(--color-gray);
+        }
+
+        .pricing-note {
+            font-size: var(--font-size-label);
+            color: var(--color-gray);
+            margin-top: var(--spacing-xs);
+        }
+
+        .pricing-input {
+            width: 120px;
+            border: none;
+            border-bottom: 2px solid var(--color-border);
+            font-size: 24pt;
+            font-weight: 700;
+            text-align: center;
+            font-family: var(--font-primary);
+            background: transparent;
+        }
+
+        .pricing-input:focus {
+            outline: none;
+            border-bottom-color: var(--color-orange);
+        }
+
+        /* CTA SECTION */
+        .cta-section {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1a1a1a 100%);
+            color: var(--color-white);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-lg);
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .cta-subtitle {
+            font-size: var(--font-size-base);
+            opacity: 0.9;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .cta-contact {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-xl);
+            font-size: var(--font-size-data);
+        }
+
+        .cta-contact a {
+            color: var(--color-orange);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* FOOTER */
+        .doc-footer {
+            border-top: 1px solid var(--color-border);
+            padding-top: var(--spacing-md);
+        }
+
+        .footer-legal {
+            font-size: var(--font-size-label);
+            color: var(--color-gray);
+            line-height: 1.7;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .footer-legal strong {
+            color: var(--color-primary);
+        }
+
+        .footer-badges {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .footer-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--color-success-bg);
+            border-radius: 20px;
+            font-size: var(--font-size-label);
+            font-weight: 600;
+            color: var(--color-success);
+        }
+
+        .footer-company {
+            text-align: center;
+            font-size: var(--font-size-label);
+            color: var(--color-gray);
+        }
+
+        /* PRINT */
+        @media print {
+            html, body {
+                background: var(--color-white);
+                margin: 0;
+                padding: 0;
+            }
+
+            .sidebar, .no-print { display: none !important; }
+
+            .app-wrapper {
+                padding: 0;
+                margin: 0;
+            }
+
+            .document {
+                box-shadow: none;
+                padding: 10mm 12mm;
+                width: 210mm;
+                min-height: 296mm;
+            }
+
+            input, textarea {
+                border-color: transparent !important;
+            }
+
+            .offer-badge, .pricing-header, .cta-section, .footer-badge {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .config-table th {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            @page {
+                size: A4;
+                margin: 6mm;
+            }
+        }
+
+        @media screen and (max-width: 900px) {
+            .app-wrapper {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            .document {
+                width: 100%;
+                min-height: auto;
+                padding: 16px;
+            }
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: var(--font-primary);
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all .3s ease;
+            z-index: 999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success { background: #166534; }
+        .toast.error { background: #991B1B; }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="sidebar no-print">
+        <div class="sidebar-card logo-area">
+            <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:24px;font-weight:700;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI<div style=&quot;font-size:9px;color:#757575;font-weight:400;margin-top:2px&quot;>Meble na zamówienie</div></div>'">
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Akcje</h3>
+            <a href="../index.html" class="btn btn-secondary" style="text-decoration:none;margin-bottom:12px;">← Strona główna</a>
+            <button class="btn btn-primary" onclick="printDoc()">Generuj PDF / Drukuj</button>
+            <button class="btn btn-secondary" onclick="sendEmail()">Wyślij mailem</button>
+            <button class="btn btn-danger" onclick="clearForm()">Wyczyść formularz</button>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Wymiary gabarytowe [mm]</h3>
+            <div class="dim-row">
+                <div class="dim-group">
+                    <label>Szerokość (S)</label>
+                    <input type="number" id="dimWidth" value="2400" onchange="recalculate()">
+                </div>
+                <div class="dim-group">
+                    <label>Wysokość (W)</label>
+                    <input type="number" id="dimHeight" value="2200" onchange="recalculate()">
+                </div>
+                <div class="dim-group">
+                    <label>Głębokość (G)</label>
+                    <input type="number" id="dimDepth" value="600" onchange="recalculate()">
+                </div>
+            </div>
+            <button class="btn btn-secondary" onclick="recalculate()" style="margin-top:8px;">Przelicz BOM</button>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Typ mebla</h3>
+            <select id="furnitureType" style="width:100%;padding:8px;border:1px solid var(--color-border);border-radius:4px;font-family:var(--font-primary);" onchange="updateFurnitureType()">
+                <option value="wardrobe">Szafa wnękowa</option>
+                <option value="kitchen">Zabudowa kuchenna</option>
+                <option value="closet">Garderoba</option>
+                <option value="bathroom">Meble łazienkowe</option>
+                <option value="living">Meble pokojowe</option>
+            </select>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Parametry techniczne</h3>
+            <div class="dim-group">
+                <label>Szczelina frontów [mm]</label>
+                <input type="number" id="gapFront" value="2.0" step="0.1" style="width:100%;">
+            </div>
+            <div class="dim-group">
+                <label>Cofnięcie pleców HDF [mm]</label>
+                <input type="number" id="backOffset" value="12" style="width:100%;">
+            </div>
+            <div class="dim-group">
+                <label>Odpad technologiczny [%]</label>
+                <input type="number" id="wastePercent" value="12" style="width:100%;">
+            </div>
+        </div>
+    </aside>
+
+    <!-- DOCUMENT -->
+    <main class="page-container">
+        <div class="document" id="document">
+
+            <!-- HEADER -->
+            <div class="doc-header">
+                <div class="logo">
+                    <img src="../list-przewozowy/logo.png" alt="WALABI" onerror="this.outerHTML='<div style=&quot;font-size:26px;font-weight:700;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI</div>'">
+                </div>
+                <div style="text-align:center;">
+                    <div class="offer-badge">OFERTA INDYWIDUALNA</div>
+                    <div class="offer-id">Nr: <input type="text" id="offerId" value="OF-2026-001" style="border:none;font-weight:600;width:100px;text-align:center;font-family:var(--font-primary);"></div>
+                    <div class="offer-date">Ważna do: <input type="text" id="offerValidDate" style="border:none;width:80px;text-align:center;font-family:var(--font-primary);color:var(--color-gray);"></div>
+                </div>
+                <div class="company-info">
+                    WALABI Sp. z o.o. Sp.k.<br>
+                    ul. Kosynierów Kościuszkowskich 13/4<br>
+                    87-100 Toruń<br>
+                    <strong style="color:var(--color-orange);">+48 501 260 990</strong>
+                </div>
+            </div>
+
+            <!-- CLIENT INFO -->
+            <div class="client-section">
+                <div class="client-box">
+                    <div class="client-box-title">Dane Klienta</div>
+                    <div class="client-row">
+                        <label>Imię i nazwisko:</label>
+                        <input type="text" id="clientName" placeholder="Jan Kowalski">
+                    </div>
+                    <div class="client-row">
+                        <label>Telefon:</label>
+                        <input type="text" id="clientPhone" placeholder="+48 ">
+                    </div>
+                    <div class="client-row">
+                        <label>E-mail:</label>
+                        <input type="text" id="clientEmail" placeholder="@">
+                    </div>
+                </div>
+                <div class="client-box">
+                    <div class="client-box-title">Adres realizacji</div>
+                    <div class="client-row">
+                        <label>Ulica:</label>
+                        <input type="text" id="projectStreet" placeholder="ul. Przykładowa 1">
+                    </div>
+                    <div class="client-row">
+                        <label>Miasto:</label>
+                        <input type="text" id="projectCity" placeholder="Toruń">
+                    </div>
+                    <div class="client-row">
+                        <label>Kod:</label>
+                        <input type="text" id="projectZip" placeholder="87-100">
+                    </div>
+                </div>
+            </div>
+
+            <!-- HERO SECTION -->
+            <div class="hero-section">
+                <div class="hero-title" id="heroTitle">Szafa wnękowa na wymiar</div>
+                <div class="hero-subtitle">"Twoje wymarzone wnętrze zaczyna się tutaj"</div>
+                <label class="hero-image" id="heroImageBox">
+                    <input type="file" id="heroImageInput" accept="image/*">
+                    <div class="placeholder">
+                        <div style="font-size:32px;margin-bottom:8px;">🖼️</div>
+                        <div>Kliknij, aby dodać wizualizację / render mebla</div>
+                    </div>
+                    <img id="heroImagePreview" src="" alt="">
+                </label>
+                <div class="hero-description">
+                    <textarea id="heroDesc" placeholder="Elegancka szafa wnękowa zaprojektowana specjalnie dla Państwa przestrzeni. Połączenie funkcjonalności z nowoczesnym designem, które odmieni charakter całego pomieszczenia.">Elegancka szafa wnękowa zaprojektowana specjalnie dla Państwa przestrzeni. Połączenie funkcjonalności z nowoczesnym designem, które odmieni charakter całego pomieszczenia.</textarea>
+                </div>
+            </div>
+
+            <!-- TECHNICAL DRAWING -->
+            <div class="technical-section">
+                <div class="section-title"><span class="accent">▣</span> Rysunek techniczny</div>
+                <div class="drawing-container">
+                    <div class="drawing-box">
+                        <h4>Widok z przodu (Front)</h4>
+                        <svg class="drawing-svg" id="svgFront" viewBox="0 0 200 150">
+                            <!-- Generated by JavaScript -->
+                        </svg>
+                    </div>
+                    <div class="drawing-box">
+                        <h4>Widok z boku (Profil)</h4>
+                        <svg class="drawing-svg" id="svgSide" viewBox="0 0 200 150">
+                            <!-- Generated by JavaScript -->
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONFIGURATION TABLE -->
+            <div class="config-section">
+                <div class="section-title"><span class="accent">▣</span> Konfiguracja - porównanie wariantów</div>
+                <table class="config-table">
+                    <thead>
+                        <tr>
+                            <th style="width:25%;">Komponent</th>
+                            <th class="economy" style="width:37.5%;">Wariant ECONOMY</th>
+                            <th class="premium" style="width:37.5%;">Wariant PREMIUM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="category">Zawiasy</td>
+                            <td class="economy-cell">GTV Prestige 110°<br><small>Ciche domykanie</small></td>
+                            <td class="premium-cell"><span class="highlight">Blum Clip Top Blumotion</span><br><small>110° z hamulcem zintegrowanym</small></td>
+                        </tr>
+                        <tr>
+                            <td class="category">System szuflad</td>
+                            <td class="economy-cell">GTV Modernbox<br><small>Pełny wysuw, H86</small></td>
+                            <td class="premium-cell"><span class="highlight">Blum Tandembox Antaro</span><br><small>Pełny wysuw, Blumotion</small></td>
+                        </tr>
+                        <tr>
+                            <td class="category">Podnośniki</td>
+                            <td class="economy-cell">GTV Lift-up<br><small>Pneumatyczny</small></td>
+                            <td class="premium-cell"><span class="highlight">Blum Aventos HK-S</span><br><small>Servo-Drive opcjonalnie</small></td>
+                        </tr>
+                        <tr>
+                            <td class="category">Oświetlenie</td>
+                            <td class="economy-cell">LED taśma 12V<br><small>Biała neutralna 4000K</small></td>
+                            <td class="premium-cell"><span class="highlight">Häfele Loox5</span><br><small>Czujnik ruchu, ściemnianie</small></td>
+                        </tr>
+                        <tr>
+                            <td class="category">System uchwytów</td>
+                            <td class="economy-cell">Uchwyty wpuszczane<br><small>Aluminium anodowane</small></td>
+                            <td class="premium-cell"><span class="highlight">Profil GOLA</span><br><small>Bezuchwytowy, zintegrowany</small></td>
+                        </tr>
+                        <tr>
+                            <td class="category">Płyta korpusu</td>
+                            <td class="economy-cell">LMDP 18mm<br><small>Klasa E1, standard</small></td>
+                            <td class="premium-cell"><span class="highlight">LMDP 18mm Egger</span><br><small>Klasa E0, antyślad palców</small></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- BOM SECTION -->
+            <div class="bom-section">
+                <div class="section-title"><span class="accent">▣</span> Kalkulacja materiałowa (BOM)</div>
+                <div class="bom-grid">
+                    <div class="bom-box">
+                        <h4>Materiały płytowe</h4>
+                        <div class="bom-row">
+                            <span>Powierzchnia netto:</span>
+                            <span id="bomAreaNet">0.00 m²</span>
+                        </div>
+                        <div class="bom-row">
+                            <span>Odpad technologiczny (<span id="wasteDisplay">12</span>%):</span>
+                            <span id="bomAreaWaste">0.00 m²</span>
+                        </div>
+                        <div class="bom-row">
+                            <span>Powierzchnia brutto:</span>
+                            <span id="bomAreaGross">0.00 m²</span>
+                        </div>
+                    </div>
+                    <div class="bom-box">
+                        <h4>Obrzeża ABS 0.8mm</h4>
+                        <div class="bom-row">
+                            <span>Długość netto:</span>
+                            <span id="bomEdgeNet">0.00 mb</span>
+                        </div>
+                        <div class="bom-row">
+                            <span>Odpad (<span id="wasteDisplay2">12</span>%):</span>
+                            <span id="bomEdgeWaste">0.00 mb</span>
+                        </div>
+                        <div class="bom-row">
+                            <span>Długość brutto:</span>
+                            <span id="bomEdgeGross">0.00 mb</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRICING -->
+            <div class="pricing-section">
+                <div class="section-title"><span class="accent">▣</span> Cena końcowa</div>
+                <div class="pricing-grid">
+                    <div class="pricing-box">
+                        <div class="pricing-header">
+                            <h4>Economy</h4>
+                            <div class="tag">Solidna jakość w dobrej cenie</div>
+                        </div>
+                        <div class="pricing-body">
+                            <div class="pricing-amount">
+                                <input type="text" class="pricing-input" id="priceEconomy" value="8 900" style="color:var(--color-gray);">
+                                <span class="pricing-currency">PLN</span>
+                            </div>
+                            <div class="pricing-note">brutto, montaż w cenie</div>
+                        </div>
+                    </div>
+                    <div class="pricing-box recommended">
+                        <div class="pricing-header">
+                            <h4>Premium</h4>
+                            <div class="tag">Rekomendowany wybór</div>
+                        </div>
+                        <div class="pricing-body">
+                            <div class="pricing-amount">
+                                <input type="text" class="pricing-input" id="pricePremium" value="12 400">
+                                <span class="pricing-currency">PLN</span>
+                            </div>
+                            <div class="pricing-note">brutto, montaż + 5 lat gwarancji</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="cta-section">
+                <div class="cta-title">Gotowy na realizację swojego projektu?</div>
+                <div class="cta-subtitle">Skontaktuj się z nami, aby omówić szczegóły i umówić pomiar</div>
+                <div class="cta-contact">
+                    <span>📞 <a href="tel:+48501260990">+48 501 260 990</a></span>
+                    <span>✉️ <a href="mailto:poczta@walabi.pl">poczta@walabi.pl</a></span>
+                    <span>🌐 <a href="https://walabi.pl">walabi.pl</a></span>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="doc-footer">
+                <div class="footer-badges">
+                    <div class="footer-badge">✓ 5 lat gwarancji na okucia Premium</div>
+                    <div class="footer-badge">✓ Norma EN 14749</div>
+                    <div class="footer-badge">✓ Certyfikat FSC</div>
+                </div>
+                <div class="footer-legal">
+                    <strong>Warunki oferty:</strong> Ceny obejmują produkcję, dostawę i montaż na terenie Torunia i okolic (do 30 km).
+                    Transport na większe odległości wyceniany indywidualnie. Termin realizacji: 4-6 tygodni od wpłaty zaliczki (50%).
+                    Gwarancja 24 miesiące na produkt, 5 lat na okucia Premium (Blum, Hettich).
+                    Meble wykonane zgodnie z normą <strong>EN 14749</strong> (wymagania wytrzymałościowe i bezpieczeństwa).
+                    Oferta ważna 30 dni od daty wystawienia.
+                </div>
+                <div class="footer-company">
+                    WALABI Sp. z o.o. Sp.k. · NIP: 8792700696 · KRS: 0000123456<br>
+                    ul. Kosynierów Kościuszkowskich 13/4 · 87-100 Toruń
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Flatpickr -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script>
+
+<script>
+    // FURNITURE TYPE NAMES
+    const furnitureNames = {
+        'wardrobe': 'Szafa wnękowa na wymiar',
+        'kitchen': 'Zabudowa kuchenna na wymiar',
+        'closet': 'Garderoba na wymiar',
+        'bathroom': 'Meble łazienkowe na wymiar',
+        'living': 'Meble pokojowe na wymiar'
+    };
+
+    // FORMAT NUMBER
+    function formatNumber(num, decimals = 2) {
+        return num.toFixed(decimals).replace('.', ',');
+    }
+
+    // RECALCULATE BOM
+    function recalculate() {
+        const width = parseFloat(document.getElementById('dimWidth').value) || 0;
+        const height = parseFloat(document.getElementById('dimHeight').value) || 0;
+        const depth = parseFloat(document.getElementById('dimDepth').value) || 0;
+        const wastePercent = parseFloat(document.getElementById('wastePercent').value) || 12;
+        const gapFront = parseFloat(document.getElementById('gapFront').value) || 2.0;
+        const backOffset = parseFloat(document.getElementById('backOffset').value) || 12;
+
+        // Update waste display
+        document.getElementById('wasteDisplay').textContent = wastePercent;
+        document.getElementById('wasteDisplay2').textContent = wastePercent;
+
+        // Calculate plate area (simplified BOM estimation)
+        // 2x sides + 2x top/bottom + 1x back + shelves estimate
+        const sideArea = 2 * (height * depth); // 2 boki
+        const topBottomArea = 2 * (width * depth); // góra + dół
+        const backArea = width * height; // plecy (pomniejszone później)
+        const shelvesArea = 3 * (width * (depth - backOffset)); // ~3 półki
+
+        const totalAreaNet = (sideArea + topBottomArea + backArea + shelvesArea) / 1000000; // mm² to m²
+        const wasteArea = totalAreaNet * (wastePercent / 100);
+        const totalAreaGross = totalAreaNet + wasteArea;
+
+        // Calculate edge length
+        // Obrzeża na widocznych krawędziach
+        const edgeLength = (
+            4 * height + // krawędzie pionowe boków (przód)
+            4 * width +  // krawędzie poziome góra/dół (przód)
+            6 * width +  // półki (przód)
+            6 * depth    // półki (boki)
+        ) / 1000; // mm to m
+
+        const edgeWaste = edgeLength * (wastePercent / 100);
+        const edgeGross = edgeLength + edgeWaste;
+
+        // Update display
+        document.getElementById('bomAreaNet').textContent = formatNumber(totalAreaNet) + ' m²';
+        document.getElementById('bomAreaWaste').textContent = formatNumber(wasteArea) + ' m²';
+        document.getElementById('bomAreaGross').textContent = formatNumber(totalAreaGross) + ' m²';
+
+        document.getElementById('bomEdgeNet').textContent = formatNumber(edgeLength, 1) + ' mb';
+        document.getElementById('bomEdgeWaste').textContent = formatNumber(edgeWaste, 1) + ' mb';
+        document.getElementById('bomEdgeGross').textContent = formatNumber(edgeGross, 1) + ' mb';
+
+        // Update SVG drawings
+        updateDrawings(width, height, depth);
+
+        toast('Przeliczono BOM', 'success');
+    }
+
+    // UPDATE SVG DRAWINGS
+    function updateDrawings(width, height, depth) {
+        // Front view
+        const svgFront = document.getElementById('svgFront');
+        const scaleF = Math.min(160 / width, 120 / height);
+        const fW = width * scaleF;
+        const fH = height * scaleF;
+        const fX = (200 - fW) / 2;
+        const fY = (150 - fH) / 2 - 5;
+
+        svgFront.innerHTML = `
+            <!-- Obrys -->
+            <rect x="${fX}" y="${fY}" width="${fW}" height="${fH}" fill="none" stroke="#2D2E2E" stroke-width="1.5"/>
+
+            <!-- Podział na sekcje (przykład 3 kolumny) -->
+            <line x1="${fX + fW/3}" y1="${fY}" x2="${fX + fW/3}" y2="${fY + fH}" stroke="#E0E0E0" stroke-width="0.5"/>
+            <line x1="${fX + 2*fW/3}" y1="${fY}" x2="${fX + 2*fW/3}" y2="${fY + fH}" stroke="#E0E0E0" stroke-width="0.5"/>
+
+            <!-- Półki -->
+            <line x1="${fX}" y1="${fY + fH*0.3}" x2="${fX + fW}" y2="${fY + fH*0.3}" stroke="#E0E0E0" stroke-width="0.5"/>
+            <line x1="${fX}" y1="${fY + fH*0.6}" x2="${fX + fW}" y2="${fY + fH*0.6}" stroke="#E0E0E0" stroke-width="0.5"/>
+
+            <!-- Wymiar szerokość -->
+            <line x1="${fX}" y1="${fY + fH + 15}" x2="${fX + fW}" y2="${fY + fH + 15}" stroke="#E07B39" stroke-width="1"/>
+            <line x1="${fX}" y1="${fY + fH + 10}" x2="${fX}" y2="${fY + fH + 20}" stroke="#E07B39" stroke-width="1"/>
+            <line x1="${fX + fW}" y1="${fY + fH + 10}" x2="${fX + fW}" y2="${fY + fH + 20}" stroke="#E07B39" stroke-width="1"/>
+            <text x="${fX + fW/2}" y="${fY + fH + 25}" text-anchor="middle" font-size="9" font-family="Plus Jakarta Sans" fill="#E07B39" font-weight="600">${width} mm</text>
+
+            <!-- Wymiar wysokość -->
+            <line x1="${fX - 15}" y1="${fY}" x2="${fX - 15}" y2="${fY + fH}" stroke="#E07B39" stroke-width="1"/>
+            <line x1="${fX - 20}" y1="${fY}" x2="${fX - 10}" y2="${fY}" stroke="#E07B39" stroke-width="1"/>
+            <line x1="${fX - 20}" y1="${fY + fH}" x2="${fX - 10}" y2="${fY + fH}" stroke="#E07B39" stroke-width="1"/>
+            <text x="${fX - 20}" y="${fY + fH/2}" text-anchor="middle" font-size="9" font-family="Plus Jakarta Sans" fill="#E07B39" font-weight="600" transform="rotate(-90, ${fX - 20}, ${fY + fH/2})">${height} mm</text>
+        `;
+
+        // Side view
+        const svgSide = document.getElementById('svgSide');
+        const scaleS = Math.min(160 / depth, 120 / height);
+        const sW = depth * scaleS;
+        const sH = height * scaleS;
+        const sX = (200 - sW) / 2;
+        const sY = (150 - sH) / 2 - 5;
+
+        svgSide.innerHTML = `
+            <!-- Obrys -->
+            <rect x="${sX}" y="${sY}" width="${sW}" height="${sH}" fill="none" stroke="#2D2E2E" stroke-width="1.5"/>
+
+            <!-- Plecy (cofnięte) -->
+            <rect x="${sX + sW - 8}" y="${sY + 2}" width="6" height="${sH - 4}" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="0.5"/>
+
+            <!-- Półki -->
+            <line x1="${sX}" y1="${sY + sH*0.3}" x2="${sX + sW - 8}" y2="${sY + sH*0.3}" stroke="#E0E0E0" stroke-width="0.5"/>
+            <line x1="${sX}" y1="${sY + sH*0.6}" x2="${sX + sW - 8}" y2="${sY + sH*0.6}" stroke="#E0E0E0" stroke-width="0.5"/>
+
+            <!-- Drążek na ubrania -->
+            <circle cx="${sX + sW/2}" cy="${sY + sH*0.15}" r="3" fill="none" stroke="#757575" stroke-width="1"/>
+
+            <!-- Wymiar głębokość -->
+            <line x1="${sX}" y1="${sY + sH + 15}" x2="${sX + sW}" y2="${sY + sH + 15}" stroke="#E07B39" stroke-width="1"/>
+            <line x1="${sX}" y1="${sY + sH + 10}" x2="${sX}" y2="${sY + sH + 20}" stroke="#E07B39" stroke-width="1"/>
+            <line x1="${sX + sW}" y1="${sY + sH + 10}" x2="${sX + sW}" y2="${sY + sH + 20}" stroke="#E07B39" stroke-width="1"/>
+            <text x="${sX + sW/2}" y="${sY + sH + 25}" text-anchor="middle" font-size="9" font-family="Plus Jakarta Sans" fill="#E07B39" font-weight="600">${depth} mm</text>
+
+            <!-- Wymiar wysokość -->
+            <line x1="${sX + sW + 15}" y1="${sY}" x2="${sX + sW + 15}" y2="${sY + sH}" stroke="#E07B39" stroke-width="1"/>
+            <line x1="${sX + sW + 10}" y1="${sY}" x2="${sX + sW + 20}" y2="${sY}" stroke="#E07B39" stroke-width="1"/>
+            <line x1="${sX + sW + 10}" y1="${sY + sH}" x2="${sX + sW + 20}" y2="${sY + sH}" stroke="#E07B39" stroke-width="1"/>
+            <text x="${sX + sW + 25}" y="${sY + sH/2}" text-anchor="middle" font-size="9" font-family="Plus Jakarta Sans" fill="#E07B39" font-weight="600" transform="rotate(90, ${sX + sW + 25}, ${sY + sH/2})">${height} mm</text>
+        `;
+    }
+
+    // UPDATE FURNITURE TYPE
+    function updateFurnitureType() {
+        const type = document.getElementById('furnitureType').value;
+        document.getElementById('heroTitle').textContent = furnitureNames[type] || 'Meble na wymiar';
+    }
+
+    // PRINT
+    function printDoc() {
+        window.print();
+        toast('Otwarto okno drukowania');
+    }
+
+    // EMAIL
+    function sendEmail() {
+        const offerId = document.getElementById('offerId').value || 'Oferta';
+        const client = document.getElementById('clientName').value || '';
+        const subject = encodeURIComponent(`WALABI - ${offerId}${client ? ' dla ' + client : ''}`);
+        const body = encodeURIComponent(`Dzień dobry,\n\nW załączeniu przesyłam ofertę ${offerId} na meble na wymiar.\n\nSerdecznie zapraszam do kontaktu w razie pytań.\n\nZ poważaniem,\nWALABI Sp. z o.o. Sp.k.\nTel: +48 501 260 990`);
+        window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+        toast('Otwarto klienta email');
+    }
+
+    // CLEAR
+    function clearForm() {
+        if (confirm('Czy na pewno chcesz wyczyścić formularz?')) {
+            document.querySelectorAll('input[type="text"], textarea').forEach(input => {
+                if (!['offerId', 'dimWidth', 'dimHeight', 'dimDepth', 'gapFront', 'backOffset', 'wastePercent'].includes(input.id)) {
+                    input.value = '';
+                }
+            });
+            document.getElementById('offerId').value = 'OF-2026-001';
+            document.getElementById('heroDesc').value = 'Elegancka szafa wnękowa zaprojektowana specjalnie dla Państwa przestrzeni. Połączenie funkcjonalności z nowoczesnym designem, które odmieni charakter całego pomieszczenia.';
+            document.getElementById('priceEconomy').value = '8 900';
+            document.getElementById('pricePremium').value = '12 400';
+            document.getElementById('furnitureType').value = 'wardrobe';
+            updateFurnitureType();
+
+            // Clear image
+            const heroBox = document.getElementById('heroImageBox');
+            const heroPreview = document.getElementById('heroImagePreview');
+            heroPreview.src = '';
+            heroBox.classList.remove('has-image');
+
+            // Reset valid date
+            const validDatePicker = document.getElementById('offerValidDate')._flatpickr;
+            if (validDatePicker) {
+                const newDate = new Date();
+                newDate.setDate(newDate.getDate() + 30);
+                validDatePicker.setDate(newDate);
+            }
+
+            recalculate();
+            toast('Formularz wyczyszczony');
+        }
+    }
+
+    // TOAST
+    function toast(msg, type) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.className = 'toast show' + (type ? ' ' + type : '');
+        setTimeout(() => el.className = 'toast', 3000);
+    }
+
+    // HERO IMAGE UPLOAD
+    function setupHeroImage() {
+        const input = document.getElementById('heroImageInput');
+        const preview = document.getElementById('heroImagePreview');
+        const box = document.getElementById('heroImageBox');
+
+        input.addEventListener('change', function() {
+            const file = this.files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                toast('Plik jest za duży (max 5MB)', 'error');
+                this.value = '';
+                return;
+            }
+
+            if (!file.type.startsWith('image/')) {
+                toast('Wybierz plik graficzny', 'error');
+                this.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                box.classList.add('has-image');
+                toast('Dodano wizualizację', 'success');
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // INIT
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr.localize(flatpickr.l10ns.pl);
+
+        // Valid date (30 days from now)
+        const validDate = new Date();
+        validDate.setDate(validDate.getDate() + 30);
+
+        flatpickr("#offerValidDate", {
+            dateFormat: "d.m.Y",
+            defaultDate: validDate
+        });
+
+        // Setup hero image
+        setupHeroImage();
+
+        // Initial calculation
+        recalculate();
+    });
+</script>
+
+</body>
+</html>
