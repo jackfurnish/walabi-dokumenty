@@ -1700,6 +1700,12 @@
         toast('Nowy dokument');
     };
 
+    // ===== AUTO RESIZE TEXTAREA =====
+    window.autoResizeTextarea = function(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    };
+
     // ===== SPECYFIKACJA MEBLI - WIERSZE =====
     let specRowCount = 1;
 
@@ -1716,13 +1722,13 @@
     function createSpecRow(num) {
         return `
             <tr data-row="${num}">
-                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;">${num}</td>
-                <td style="border: 0.5pt solid var(--color-border); padding: 6px;"><input type="text" id="spec${num}Desc" placeholder="Opis mebla" style="border:none;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
-                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;"><input type="text" id="spec${num}Dim" placeholder="-" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
-                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;"><input type="text" id="spec${num}Qty" value="1" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
-                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center;"><input type="text" id="spec${num}Unit" value="kpl" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
-                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;"><input type="text" id="spec${num}Price" placeholder="0,00" style="border:none;text-align:right;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);" onchange="calculateSpecRow(${num})"></td>
-                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;"><input type="text" id="spec${num}Total" placeholder="0,00" style="border:none;text-align:right;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);" readonly></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; vertical-align: top;">${num}</td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: left; vertical-align: top;"><textarea id="spec${num}Desc" placeholder="Opis mebla" style="border:none;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);text-align:left;resize:none;overflow:hidden;min-height:20px;line-height:1.4;" oninput="autoResizeTextarea(this)"></textarea></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; vertical-align: top;"><input type="text" id="spec${num}Dim" placeholder="-" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; vertical-align: top;"><input type="text" id="spec${num}Qty" value="1" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; vertical-align: top;"><input type="text" id="spec${num}Unit" value="kpl" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right; vertical-align: top;"><input type="text" id="spec${num}Price" placeholder="0,00" style="border:none;text-align:right;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);" onchange="calculateSpecRow(${num})"></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right; vertical-align: top;"><input type="text" id="spec${num}Total" placeholder="0,00" style="border:none;text-align:right;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);" readonly></td>
             </tr>
         `;
     }
