@@ -611,6 +611,10 @@
             <button class="btn btn-secondary" onclick="saveDocument()">Zapisz dokument</button>
             <button class="btn btn-secondary" onclick="newDocument()">Nowy dokument</button>
             <button class="btn btn-danger" onclick="clearForm()">Wyczyść formularz</button>
+            <hr style="margin:12px 0;border:none;border-top:1px solid #ddd;">
+            <button class="btn btn-secondary" onclick="exportToJSON()">📥 Eksportuj dane (JSON)</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Importuj dane (JSON)</button>
+            <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importFromJSON(event)">
         </div>
 
         <div class="sidebar-card">
@@ -1816,6 +1820,60 @@
         localStorage.removeItem(CURRENT_KEY);
         syncDocNumbers();
         toast('Nowy dokument');
+    };
+
+    // ===== EKSPORT/IMPORT JSON =====
+    window.exportToJSON = function() {
+        const data = collectFormData();
+        const docNum = document.getElementById('docNumber').value || 'umowa';
+        const client = document.getElementById('clientName').value || 'klient';
+
+        const exportData = {
+            type: 'umowa',
+            version: '1.0',
+            exportDate: new Date().toISOString(),
+            docNumber: docNum,
+            client: client,
+            formData: data
+        };
+
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${docNum.replace(/\//g, '-')}_${client.replace(/\s+/g, '_')}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        toast('Dane wyeksportowane do pliku JSON', 'success');
+    };
+
+    window.importFromJSON = function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const importData = JSON.parse(e.target.result);
+
+                if (importData.formData) {
+                    restoreFormData(importData.formData);
+                    toast('Dane zaimportowane pomyślnie', 'success');
+                } else if (importData.data) {
+                    // Stary format
+                    restoreFormData(importData.data);
+                    toast('Dane zaimportowane pomyślnie', 'success');
+                } else {
+                    toast('Nieprawidłowy format pliku', 'error');
+                }
+            } catch (err) {
+                toast('Błąd wczytywania pliku: ' + err.message, 'error');
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = ''; // Reset input
     };
 
     // ===== AUTO RESIZE TEXTAREA =====
