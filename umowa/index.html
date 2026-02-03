@@ -811,8 +811,11 @@
                         <li>Wartość brutto: <input type="text" id="priceBrutto" class="w-120" placeholder="[Wartość brutto]"> zł</li>
                         <li>Słownie brutto: <input type="text" id="priceBruttoWords" class="w-auto" placeholder="[Słownie brutto]"></li>
                         <li>Koszty transportu:
-                            <label style="margin-left:10px;"><input type="radio" name="transportCost" id="transportSeparate" value="separate"> transport rozliczany osobno</label>
-                            <label style="margin-left:10px;"><input type="radio" name="transportCost" id="transportIncluded" value="included"> transport wliczony w cenę</label>
+                            <select id="transportCost" style="margin-left:10px; padding:2px 5px;">
+                                <option value="">-- wybierz --</option>
+                                <option value="separate">transport rozliczany osobno</option>
+                                <option value="included">transport wliczony w cenę</option>
+                            </select>
                         </li>
                     </ul>
                     <p style="margin-top: var(--spacing-md);">Wynagrodzenie płatne będzie w następujących transzach:</p>
@@ -1091,7 +1094,7 @@
                 <div class="paragraph-title" style="margin-top: var(--spacing-md);">Warunki gwarancji</div>
                 <div class="paragraph-content">
                     <ol>
-                        <li>Gwarant zapewnia należytą jakość mebli przy zachowaniu zasad ich użytkowania zgodnie z przeznaczeniem w okresie 24 miesięcy od daty ich sprzedaży.</li>
+                        <li>Gwarant zapewnia należytą jakość mebli przy zachowaniu zasad ich użytkowania zgodnie z przeznaczeniem.</li>
                         <li>Reklamacje na wady objęte gwarancją Kupujący składa w formie pisemnej w terminie nie dłuższym niż 14 dni od daty ujawnienia wady.</li>
                         <li>Rozpatrzenie reklamacji nastąpi w terminie do 14 dni od daty zgłoszenia reklamacji Gwarantowi.</li>
                         <li>Realizacja reklamacji w drodze nieodpłatnej naprawy nastąpi do 30 dni od daty jej rozpatrzenia.</li>
@@ -1612,7 +1615,6 @@
             document.getElementById('payment3Amount').value = formatCurrency(payment3Amount);
 
             // Aktualizuj załącznik nr 1 - podsumowanie kosztów
-            document.getElementById('sumMebli').textContent = formatCurrency(netto);
             document.getElementById('sumNettoSpec').textContent = formatCurrency(netto);
             document.getElementById('sumVatSpec').textContent = formatCurrency(vat);
             document.getElementById('sumBruttoSpec').textContent = formatCurrency(brutto);
