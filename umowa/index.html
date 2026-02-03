@@ -384,6 +384,7 @@
         }
 
         .party-details .w-full { width: 100%; }
+        .party-details .w-220 { width: 220px; }
         .party-details .w-200 { width: 200px; }
         .party-details .w-150 { width: 150px; }
         .party-details .w-120 { width: 120px; }
@@ -444,8 +445,10 @@
         .paragraph-content .w-60 { width: 60px; }
         .paragraph-content .w-80 { width: 80px; }
         .paragraph-content .w-100 { width: 100px; }
+        .paragraph-content .w-120 { width: 120px; }
         .paragraph-content .w-150 { width: 150px; }
         .paragraph-content .w-200 { width: 200px; }
+        .paragraph-content .w-220 { width: 220px; }
         .paragraph-content .w-full { width: 100%; }
         .paragraph-content .w-auto {
             width: auto;
@@ -679,7 +682,7 @@
                         NIP <input type="text" id="clientNIP" class="w-120" placeholder="[NIP Zamawiającego]">
                     </div>
                     <div class="field-row">
-                        tel.: <input type="text" id="clientPhone" class="w-120" placeholder="[Telefon]">, e-mail: <input type="text" id="clientEmail" class="w-150" placeholder="[E-mail]">
+                        tel.: <input type="text" id="clientPhone" class="w-120" placeholder="[Telefon]">, e-mail: <input type="text" id="clientEmail" class="w-220" placeholder="[E-mail]">
                     </div>
                     <p>zwanym dalej <strong>„Zamawiającym"</strong>,</p>
                 </div>
@@ -692,7 +695,7 @@
                 <div class="paragraph-title">§1. Przedmiot Umowy</div>
                 <div class="paragraph-content">
                     <ol>
-                        <li>Zamawiający zleca, a Wykonawca przyjmuje do realizacji zamówienie obejmujące produkcję, dostawę i montaż <input type="text" id="furnitureType" class="w-auto" placeholder="[Opis Rodzaju Mebli/Zestawu Meblowego]"> (zwanych dalej "Meblami") według specyfikacji stanowiącej Załącznik nr 1 do niniejszej Umowy oraz projektu/koncepcji stanowiącego Załącznik nr 2.</li>
+                        <li>Zamawiający zleca, a Wykonawca przyjmuje do realizacji zamówienie obejmujące <input type="text" id="scopeOfWork" class="w-auto" value="produkcję, dostawę i montaż" style="min-width:180px;"> <input type="text" id="furnitureType" class="w-auto" placeholder="[Opis Rodzaju Mebli/Zestawu Meblowego]"> (zwanych dalej "Meblami") według specyfikacji stanowiącej Załącznik nr 1 do niniejszej Umowy oraz projektu/koncepcji stanowiącego Załącznik nr 2.</li>
                         <li>Meble zostaną wykonane i zamontowane w lokalizacji: <input type="text" id="installationAddress" class="w-auto" placeholder="[Lokalizacja Montażu: Pełny Adres]"></li>
                         <li>Podstawę realizacji zamówienia stanowią:
                             <ol>
@@ -712,7 +715,8 @@
                 <div class="paragraph-title">§2. Terminy Realizacji</div>
                 <div class="paragraph-content">
                     <ol>
-                        <li>Termin realizacji przedmiotu umowy ustala się na: <input type="text" id="termWeeksFrom" class="w-60" placeholder="[Liczba]"> do <input type="text" id="termWeeksTo" class="w-60" placeholder="[Liczba]"> tygodni od daty podpisania umowy.</li>
+                        <li>Termin realizacji przedmiotu umowy ustala się na: <input type="text" id="termWeeksFrom" style="width:30px;text-align:center;" placeholder="8"> do <input type="text" id="termWeeksTo" style="width:30px;text-align:center;" placeholder="10"> tygodni od daty podpisania umowy.</li>
+                        <li style="text-align:left;"><input type="text" id="termAdditionalInfo" style="width:100%;box-sizing:border-box;text-align:left;" placeholder="Dodatkowe informacje o terminie..."></li>
                         <li>Przez realizację przedmiotu umowy rozumie się wykonanie i montaż wszystkich Mebli wymienionych w Załączniku nr 1.</li>
                         <li>Termin realizacji może ulec zmianie w przypadku:
                             <ol>
@@ -722,76 +726,107 @@
                                 <li>Wystąpienia okoliczności niezależnych od Wykonawcy, których nie mógł on przewidzieć przy dochowaniu należytej staranności.</li>
                             </ol>
                         </li>
+                        <li>W przypadku zaistnienia okoliczności wymienionych w ust. 3, Wykonawca poinformuje Zamawiającego o nowym terminie realizacji zamówienia.</li>
                     </ol>
                 </div>
             </div>
 
-            <!-- §3. WYNAGRODZENIE -->
+            <!-- §3. OBOWIĄZKI STRON -->
             <div class="paragraph-section">
-                <div class="paragraph-title">§3. Wynagrodzenie</div>
+                <div class="paragraph-title">§3. Obowiązki Stron</div>
                 <div class="paragraph-content">
                     <ol>
-                        <li>Całkowite wynagrodzenie za wykonanie przedmiotu Umowy wynosi: <input type="text" id="priceNetto" class="w-100" placeholder="[Kwota]"> zł netto (słownie: <input type="text" id="priceNettoWords" class="w-auto" placeholder="[słownie]"> złotych), co stanowi <input type="text" id="priceBrutto" class="w-100" placeholder="[Kwota]"> zł brutto (słownie: <input type="text" id="priceBruttoWords" class="w-auto" placeholder="[słownie]"> złotych) z uwzględnieniem podatku VAT 23%.</li>
-                        <li>Wynagrodzenie obejmuje: produkcję mebli, transport, wniesienie oraz montaż w miejscu wskazanym w §1 ust. 2.</li>
-                        <li>Wynagrodzenie płatne będzie w następujących transzach:
-                            <ol>
-                                <li>Pierwsza płatność w wysokości <input type="text" id="payment1Percent" class="w-40" placeholder="[%]">% wartości brutto, tj. <input type="text" id="payment1Amount" class="w-100" placeholder="[Kwota]"> zł brutto, płatna 3 dni po podpisaniu umowy;</li>
-                                <li>Druga płatność w wysokości <input type="text" id="payment2Percent" class="w-40" placeholder="[%]">% wartości brutto, tj. <input type="text" id="payment2Amount" class="w-100" placeholder="[Kwota]"> zł brutto, płatna przed dostawą;</li>
-                                <li>Pozostała kwota w wysokości <input type="text" id="payment3Percent" class="w-40" placeholder="[%]">% wartości brutto, tj. <input type="text" id="payment3Amount" class="w-100" placeholder="[Kwota]"> zł brutto, płatna w terminie 3 dni od daty montażu i podpisania protokołu odbioru.</li>
-                            </ol>
-                        </li>
-                        <li>Płatności będą dokonywane przelewem na rachunek bankowy Wykonawcy: <strong>mBank 31 1140 2004 0000 3302 8257 6928</strong>.</li>
-                    </ol>
-                </div>
-            </div>
-
-            <!-- §4. OBOWIĄZKI STRON -->
-            <div class="paragraph-section">
-                <div class="paragraph-title">§4. Obowiązki Stron</div>
-                <div class="paragraph-content">
-                    <ol>
-                        <li>Wykonawca zobowiązuje się do:
-                            <ol>
-                                <li>Wykonania przedmiotu Umowy zgodnie ze specyfikacją, projektem i zasadami sztuki meblarskiej;</li>
-                                <li>Użycia materiałów wysokiej jakości, zgodnych z ustaleniami;</li>
-                                <li>Terminowej realizacji zamówienia;</li>
-                                <li>Uprzątnięcia miejsca montażu po zakończeniu prac.</li>
-                            </ol>
-                        </li>
                         <li>Zamawiający zobowiązuje się do:
                             <ol>
-                                <li>Terminowego regulowania płatności;</li>
-                                <li>Przygotowania miejsca montażu zgodnie z wytycznymi Wykonawcy;</li>
-                                <li>Zapewnienia dostępu do miejsca montażu w ustalonych terminach;</li>
-                                <li>Dokonania odbioru Mebli zgodnie z postanowieniami Umowy.</li>
+                                <li>Umożliwienia Wykonawcy dokonania pomiarów w miejscu montażu minimum 6 tygodni przed planowanym terminem realizacji,</li>
+                                <li>Zapewnienia Wykonawcy swobodnego dostępu do miejsca montażu w uzgodnionym terminie,</li>
+                                <li>Przygotowania miejsca montażu przez usunięcie przedmiotów mogących utrudniać montaż,</li>
+                                <li>Zapewnienia dostępu do mediów (energia elektryczna, woda) niezbędnych do montażu,</li>
+                                <li>Terminowej realizacji płatności zgodnie z § 6,</li>
+                                <li>Niezwłocznego podejmowania decyzji związanych z realizacją przedmiotu umowy,</li>
+                                <li>Odbioru kompletnych i prawidłowo wykonanych Mebli.</li>
+                            </ol>
+                        </li>
+                        <li>Wykonawca zobowiązuje się do:
+                            <ol>
+                                <li>Wykonania przedmiotu umowy zgodnie z załączoną specyfikacją, projektem oraz uzgodnieniami,</li>
+                                <li>Dokonania niezbędnych pomiarów przed rozpoczęciem produkcji,</li>
+                                <li>Stosowania materiałów zgodnych ze specyfikacją i obowiązującymi normami,</li>
+                                <li>Wykonania montażu z należytą starannością,</li>
+                                <li>Usunięcia odpadów powstałych podczas montażu,</li>
+                                <li>Wydania instrukcji użytkowania Mebli oraz dokumentów gwarancyjnych.</li>
                             </ol>
                         </li>
                     </ol>
                 </div>
             </div>
 
-            <!-- §5. ODBIÓR PRZEDMIOTU UMOWY -->
+            <!-- §4. ODBIÓR -->
             <div class="paragraph-section">
-                <div class="paragraph-title">§5. Odbiór Przedmiotu Umowy</div>
+                <div class="paragraph-title">§4. Odbiór</div>
                 <div class="paragraph-content">
                     <ol>
-                        <li>Po zakończeniu montażu Strony dokonają odbioru końcowego, z którego zostanie sporządzony protokół odbioru.</li>
-                        <li>Zamawiający zobowiązany jest do zgłoszenia wszelkich uwag i zastrzeżeń podczas odbioru.</li>
-                        <li>Brak zgłoszenia uwag podczas odbioru oznacza akceptację wykonanych prac.</li>
-                        <li>W przypadku stwierdzenia wad, Wykonawca zobowiązuje się do ich usunięcia w terminie uzgodnionym przez Strony.</li>
+                        <li>Odbiór przedmiotu umowy nastąpi po zakończeniu montażu Mebli, na podstawie protokołu odbioru podpisanego przez obie Strony.</li>
+                        <li>Zamawiający zobowiązany jest uczestniczyć w odbiorze osobiście lub wyznaczyć osobę upoważnioną do reprezentowania go podczas odbioru.</li>
+                        <li>W przypadku nieobecności Zamawiającego w ustalonym terminie odbioru, Wykonawca sporządzi jednostronny protokół odbioru, który będzie wiążący dla Stron, pod warunkiem udokumentowania wykonania prac w formie fotograficznej lub filmowej, wraz z opisem technicznym i zestawieniem wykonanych pozycji z Załącznika nr 1.</li>
+                        <li>W przypadku opóźnienia odbioru mebli przez Zamawiającego przekraczającego 7 dni od ustalonego terminu, Wykonawca ma prawo naliczyć opłatę magazynową w wysokości 150 zł netto za każdy dzień przechowywania, liczony od 8. dnia opóźnienia.</li>
+                        <li>Wykonawca zobowiązuje się do usunięcia wad i usterek w terminie 14 dni od daty ich zgłoszenia, chyba że z przyczyn technologicznych wymagany będzie dłuższy termin, który zostanie ustalony przez Strony.</li>
+                        <li>Po usunięciu wad i usterek Strony sporządzą dodatkowy protokół odbioru.</li>
+                        <li>Niedopuszczalny jest zwrot Mebli wykonanych zgodnie z zamówieniem.</li>
                     </ol>
                 </div>
             </div>
 
-            <!-- §6. ODBIÓR PRZEDMIOTU UMOWY -->
+            <!-- §5. OSOBY KONTAKTOWE -->
             <div class="paragraph-section">
-                <div class="paragraph-title">§6. Odbiór Przedmiotu Umowy</div>
+                <div class="paragraph-title">§5. Osoby Kontaktowe</div>
                 <div class="paragraph-content">
                     <ol>
-                        <li>Po zakończeniu montażu Strony dokonają odbioru końcowego, z którego zostanie sporządzony protokół odbioru.</li>
-                        <li>Zamawiający zobowiązany jest do zgłoszenia wszelkich uwag i zastrzeżeń podczas odbioru.</li>
-                        <li>Brak zgłoszenia uwag podczas odbioru oznacza akceptację wykonanych prac.</li>
-                        <li>W przypadku stwierdzenia wad, Wykonawca zobowiązuje się do ich usunięcia w terminie uzgodnionym przez Strony.</li>
+                        <li>Osobami upoważnionymi do kontaktów w sprawach związanych z wykonaniem umowy są:</li>
+                    </ol>
+                    <p style="margin-top: var(--spacing-sm);">Ze strony Wykonawcy:</p>
+                    <ol>
+                        <li>Leszek Borowski, tel. 501 260 990, e-mail: leszek@walabi.pl</li>
+                        <li>Jarosław Różański, tel. 501 266 670, e-mail: jarek@walabi.pl</li>
+                    </ol>
+                    <p style="margin-top: var(--spacing-sm);">Ze strony Zamawiającego:</p>
+                    <ol start="3">
+                        <li><input type="text" id="contactPerson1Name" class="w-auto" placeholder="[Imię i Nazwisko]">, tel. <input type="text" id="contactPerson1Phone" class="w-120" placeholder="[Numer Telefonu]">, e-mail: <input type="text" id="contactPerson1Email" class="w-220" placeholder="[Adres E-mail]"></li>
+                        <li><input type="text" id="contactPerson2Name" class="w-auto" placeholder="[Imię i Nazwisko / Funkcja]">, e-mail: <input type="text" id="contactPerson2Email" class="w-220" placeholder="[Adres E-mail]">, upoważniona jest do dokonywania uzgodnień i akceptacji w zakresie rozwiązań projektowych, kolorystyki i materiałów. <input type="text" id="contactPerson2Note" class="w-auto" placeholder="[Opcjonalnie, jeśli jest inna osoba upoważniona]"></li>
+                    </ol>
+                    <ol start="5">
+                        <li>Zmiana osób wskazanych w ust. 1 i 2 nie wymaga aneksu do umowy i może być dokonana poprzez pisemne powiadomienie drugiej Strony.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- §6. WYNAGRODZENIE I WARUNKI PŁATNOŚCI -->
+            <div class="paragraph-section">
+                <div class="paragraph-title">§6. Wynagrodzenie i Warunki Płatności</div>
+                <div class="paragraph-content">
+                    <p>Za wykonanie przedmiotu umowy Zamawiający zapłaci Wykonawcy wynagrodzenie w wysokości:</p>
+                    <ul style="list-style-type: disc; margin-left: 20px; margin-top: var(--spacing-sm);">
+                        <li>Wartość netto: <input type="text" id="priceNetto" class="w-120" placeholder="[Wartość netto]"> zł</li>
+                        <li>Podatek VAT (23%): <input type="text" id="priceVat" class="w-120" placeholder="[Wartość VAT]"> zł</li>
+                        <li>Wartość brutto: <input type="text" id="priceBrutto" class="w-120" placeholder="[Wartość brutto]"> zł</li>
+                        <li>Słownie brutto: <input type="text" id="priceBruttoWords" class="w-auto" placeholder="[Słownie brutto]"></li>
+                        <li>Koszty transportu:
+                            <label style="margin-left:10px;"><input type="radio" name="transportCost" id="transportSeparate" value="separate"> transport rozliczany osobno</label>
+                            <label style="margin-left:10px;"><input type="radio" name="transportCost" id="transportIncluded" value="included"> transport wliczony w cenę</label>
+                        </li>
+                    </ul>
+                    <p style="margin-top: var(--spacing-md);">Wynagrodzenie płatne będzie w następujących transzach:</p>
+                    <ul style="list-style-type: disc; margin-left: 20px; margin-top: var(--spacing-sm);">
+                        <li>Pierwsza płatność w wysokości (<input type="text" id="payment1Percent" class="w-40" value="50">%): <input type="text" id="payment1Amount" class="w-120" placeholder="[Kwota 1. Transzy]"> brutto płatna <input type="text" id="payment1Days" class="w-60" placeholder="[Liczba]"> dni po podpisaniu umowy,</li>
+                        <li>Druga płatność w wysokości (<input type="text" id="payment2Percent" class="w-40" value="45">%): <input type="text" id="payment2Amount" class="w-120" placeholder="[Kwota 2. Transzy]"> brutto płatna przed dostawą</li>
+                        <li>Pozostała kwota w wysokości (<input type="text" id="payment3Percent" class="w-40" value="5">%): <input type="text" id="payment3Amount" class="w-120" placeholder="[Kwota 3. Transzy]"> brutto, płatna w terminie 3 dni od daty montażu i podpisania protokołu odbioru.</li>
+                    </ul>
+                    <ol style="margin-top: var(--spacing-md);">
+                        <li>Płatności będą dokonywane przelewem na rachunek bankowy Wykonawcy: <strong>mBank 48 1140 2004 0000 3602 7758 4396</strong></li>
+                        <li>Faktury VAT będą wystawiane i przesyłane drogą elektroniczną na adres e-mail: <input type="text" id="invoiceEmail" class="w-220" placeholder="[E-mail Zamawiającego do faktur]"></li>
+                        <li>W przypadku opóźnienia w płatnościach Wykonawca ma prawo naliczyć odsetki umowne w wysokości 0,1 % za każdy dzień zwłoki.</li>
+                        <li>W przypadku opóźnienia ukończenia realizacji przedmiotu umowy przez Wykonawcę, Zamawiający ma prawo naliczać odsetki umowne w wysokości 0,1% wartości niezrealizowanego etapu prac, względnie niedostarczonego wyposażenia, z wyłączeniem przypadków działania siły wyższej lub opóźnień wynikających z winy Zamawiającego.</li>
+                        <li>Wykonawca zastrzega sobie prawo własności Mebli do czasu uiszczenia całości wynagrodzenia przez Zamawiającego. W przypadku braku zapłaty w terminie, Wykonawca ma prawo odebrać Meble bez uprzedniego wezwania, a Zamawiający zobowiązuje się do umożliwienia takiego odbioru.</li>
                     </ol>
                 </div>
             </div>
@@ -801,7 +836,7 @@
                 <div class="paragraph-title">§7. Gwarancja</div>
                 <div class="paragraph-content">
                     <ol>
-                        <li>Wykonawca udziela <input type="text" id="warrantyMonths" class="w-60" value="60">-miesięcznej gwarancji na wykonane Meble, liczonej od daty podpisania protokołu odbioru.</li>
+                        <li>Wykonawca udziela <input type="text" id="warrantyMonths" style="width:30px;text-align:center;" placeholder="60"> miesięcy gwarancji na wykonane Meble, liczonej od daty podpisania protokołu odbioru.</li>
                         <li>Szczegółowe warunki gwarancji określa Załącznik nr 3 – „Zalecenia i warunki gwarancji".</li>
                         <li>Gwarancja nie obejmuje:
                             <ol>
@@ -818,7 +853,7 @@
                                 <li>Nieprzestrzegania zaleceń zawartych w instrukcji użytkowania.</li>
                             </ol>
                         </li>
-                        <li>Zgłoszenia reklamacyjne należy kierować na adres e-mail: poczta@walabi.pl lub telefonicznie pod numerem: 501 260 990.</li>
+                        <li>Zgłoszenia reklamacyjne należy kierować na adres e-mail: <strong>poczta@walabi.pl</strong> lub telefonicznie pod numerem: <strong>501 260 990</strong>.</li>
                     </ol>
                 </div>
             </div>
@@ -831,9 +866,9 @@
                         <li>Zamawiający może odstąpić od umowy w przypadku:
                             <ol>
                                 <li>Opóźnienia w realizacji przedmiotu umowy przekraczającego 30 dni z przyczyn leżących wyłącznie po stronie Wykonawcy,</li>
+                                <li>Rażącego naruszenia przez Wykonawcę postanowień niniejszej umowy.</li>
                             </ol>
                         </li>
-                        <li>Rażącego naruszenia przez Wykonawcę postanowień niniejszej umowy.</li>
                         <li>Wykonawca może odstąpić od umowy w przypadku:
                             <ol>
                                 <li>Opóźnienia w płatnościach przekraczającego 14 dni,</li>
@@ -915,13 +950,13 @@
                     <table style="width:100%; border-collapse: collapse; margin: var(--spacing-md) 0; font-size: var(--font-size-base);">
                         <thead>
                             <tr style="background: var(--color-highlight);">
-                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; width: 30px;">L.P.</th>
-                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: left;">Opis mebla</th>
-                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; width: 80px;">Wymiary (cm)</th>
-                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; width: 40px;">Ilość</th>
-                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; width: 35px;">J.m.</th>
-                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right; width: 90px;">Cena netto (zł)</th>
-                                <th style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right; width: 100px;">Wartość netto (zł)</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 3px 6px; text-align: center; width: 30px;">L.P.</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 3px 6px; text-align: center;">Opis mebla</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 3px 6px; text-align: center; width: 80px;">Wymiary (cm)</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 3px 6px; text-align: center; width: 40px;">Ilość</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 3px 6px; text-align: center; width: 35px;">J.m.</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 3px 6px; text-align: right; width: 90px;">Cena netto (zł)</th>
+                                <th style="border: 0.5pt solid var(--color-border); padding: 3px 6px; text-align: right; width: 100px;">Wartość netto (zł)</th>
                             </tr>
                         </thead>
                         <tbody id="specTableBody">
@@ -940,8 +975,8 @@
                             <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;"><input type="text" id="sumDodatkowe" value="0,00" style="border:none;text-align:right;width:100%;"></td>
                         </tr>
                         <tr>
-                            <td style="border: 0.5pt solid var(--color-border); padding: 6px;">Transport</td>
-                            <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;"><input type="text" id="sumTransport" value="0,00" style="border:none;text-align:right;width:100%;"></td>
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px;">Transport <input type="text" id="transportUwagi" placeholder="uwagi..." style="border:none;border-bottom:1px dotted #999;width:60%;margin-left:5px;"></td>
+                            <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right;"><input type="text" id="sumTransport" value="" placeholder="" style="border:none;text-align:right;width:100%;"></td>
                         </tr>
                         <tr>
                             <td style="border: 0.5pt solid var(--color-border); padding: 6px;">Montaż</td>
@@ -1178,21 +1213,23 @@
         const clientNIP = document.getElementById('clientNIP').value || '';
         const clientPhone = document.getElementById('clientPhone').value || '';
         const clientEmail = document.getElementById('clientEmail').value || '';
+        const scopeOfWork = document.getElementById('scopeOfWork').value || 'produkcję, dostawę i montaż';
         const furnitureType = document.getElementById('furnitureType').value || '';
         const installationAddress = document.getElementById('installationAddress').value || '';
         const termWeeksFrom = document.getElementById('termWeeksFrom').value || '';
         const termWeeksTo = document.getElementById('termWeeksTo').value || '';
         const priceNetto = document.getElementById('priceNetto').value || '';
-        const priceNettoWords = document.getElementById('priceNettoWords').value || '';
+        const priceVat = document.getElementById('priceVat').value || '';
         const priceBrutto = document.getElementById('priceBrutto').value || '';
         const priceBruttoWords = document.getElementById('priceBruttoWords').value || '';
-        const payment1Percent = document.getElementById('payment1Percent').value || '';
+        const payment1Percent = document.getElementById('payment1Percent').value || '50';
+        const payment2Percent = document.getElementById('payment2Percent').value || '45';
+        const payment3Percent = document.getElementById('payment3Percent').value || '5';
         const payment1Amount = document.getElementById('payment1Amount').value || '';
-        const payment2Percent = document.getElementById('payment2Percent').value || '';
         const payment2Amount = document.getElementById('payment2Amount').value || '';
-        const payment3Percent = document.getElementById('payment3Percent').value || '';
         const payment3Amount = document.getElementById('payment3Amount').value || '';
-        const warrantyYears = document.getElementById('warrantyYears').value || '';
+        const payment1Days = document.getElementById('payment1Days').value || '';
+        const warrantyMonths = document.getElementById('warrantyMonths').value || '';
 
         const doc = new Document({
             sections: [{
@@ -1259,7 +1296,7 @@
                         spacing: { before: 300, after: 200 }
                     }),
                     new Paragraph({
-                        children: [new TextRun({ text: `1. Zamawiający zleca, a Wykonawca przyjmuje do realizacji zamówienie obejmujące produkcję, dostawę i montaż ${furnitureType || "[Opis Rodzaju Mebli]"} według specyfikacji stanowiącej Załącznik nr 1 oraz projektu stanowiącego Załącznik nr 2.`, size: 22 })],
+                        children: [new TextRun({ text: `1. Zamawiający zleca, a Wykonawca przyjmuje do realizacji zamówienie obejmujące ${scopeOfWork || "produkcję, dostawę i montaż"} ${furnitureType || "[Opis Rodzaju Mebli]"} według specyfikacji stanowiącej Załącznik nr 1 oraz projektu stanowiącego Załącznik nr 2.`, size: 22 })],
                         spacing: { after: 100 }
                     }),
                     new Paragraph({
@@ -1273,40 +1310,127 @@
                     }),
                     new Paragraph({
                         children: [new TextRun({ text: `1. Termin realizacji: ${termWeeksFrom || "[Liczba]"} do ${termWeeksTo || "[Liczba]"} tygodni od daty podpisania umowy.`, size: 22 })],
+                        spacing: { after: 100 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "2. Przez realizację przedmiotu umowy rozumie się wykonanie i montaż wszystkich Mebli wymienionych w Załączniku nr 1.", size: 22 })],
                         spacing: { after: 200 }
                     }),
                     // §3
                     new Paragraph({
-                        children: [new TextRun({ text: "§3. WYNAGRODZENIE", bold: true, size: 24 })],
+                        children: [new TextRun({ text: "§3. OBOWIĄZKI STRON", bold: true, size: 24 })],
                         spacing: { before: 300, after: 200 }
                     }),
                     new Paragraph({
-                        children: [new TextRun({ text: `1. Wynagrodzenie: ${priceNetto || "[Kwota]"} zł netto (${priceNettoWords || "[słownie]"}), ${priceBrutto || "[Kwota]"} zł brutto (${priceBruttoWords || "[słownie]"}) z VAT 23%.`, size: 22 })],
+                        children: [new TextRun({ text: "1. Zamawiający zobowiązuje się do: umożliwienia pomiarów, zapewnienia dostępu, przygotowania miejsca montażu, zapewnienia mediów, terminowej realizacji płatności, niezwłocznego podejmowania decyzji, odbioru Mebli.", size: 22 })],
                         spacing: { after: 100 }
                     }),
                     new Paragraph({
-                        children: [new TextRun({ text: `2. Pierwsza płatność: ${payment1Percent || "[%]"}% = ${payment1Amount || "[Kwota]"} zł brutto, płatna 3 dni po podpisaniu umowy.`, size: 22 })],
-                        spacing: { after: 100 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `3. Druga płatność: ${payment2Percent || "[%]"}% = ${payment2Amount || "[Kwota]"} zł brutto, płatna przed dostawą.`, size: 22 })],
-                        spacing: { after: 100 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: `4. Pozostała kwota: ${payment3Percent || "[%]"}% = ${payment3Amount || "[Kwota]"} zł brutto, płatna 3 dni od montażu i protokołu odbioru.`, size: 22 })],
-                        spacing: { after: 100 }
-                    }),
-                    new Paragraph({
-                        children: [new TextRun({ text: "5. Nr konta: mBank 31 1140 2004 0000 3302 8257 6928", size: 22 })],
+                        children: [new TextRun({ text: "2. Wykonawca zobowiązuje się do: wykonania zgodnie ze specyfikacją, dokonania pomiarów, stosowania materiałów zgodnych z normami, wykonania montażu z należytą starannością, usunięcia odpadów, wydania dokumentów gwarancyjnych.", size: 22 })],
                         spacing: { after: 200 }
                     }),
-                    // §6
+                    // §4
                     new Paragraph({
-                        children: [new TextRun({ text: "§6. GWARANCJA", bold: true, size: 24 })],
+                        children: [new TextRun({ text: "§4. ODBIÓR", bold: true, size: 24 })],
                         spacing: { before: 300, after: 200 }
                     }),
                     new Paragraph({
-                        children: [new TextRun({ text: `1. Gwarancja: ${warrantyYears || "[Liczba]"} lat od daty odbioru końcowego.`, size: 22 })],
+                        children: [new TextRun({ text: "Odbiór przedmiotu umowy nastąpi po zakończeniu montażu Mebli, na podstawie protokołu odbioru podpisanego przez obie Strony.", size: 22 })],
+                        spacing: { after: 200 }
+                    }),
+                    // §5
+                    new Paragraph({
+                        children: [new TextRun({ text: "§5. OSOBY KONTAKTOWE", bold: true, size: 24 })],
+                        spacing: { before: 300, after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "Ze strony Wykonawcy: Leszek Borowski (501 260 990), Jarosław Różański (501 266 670)", size: 22 })],
+                        spacing: { after: 200 }
+                    }),
+                    // §6 WYNAGRODZENIE
+                    new Paragraph({
+                        children: [new TextRun({ text: "§6. WYNAGRODZENIE I WARUNKI PŁATNOŚCI", bold: true, size: 24 })],
+                        spacing: { before: 300, after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `Wartość netto: ${priceNetto || "[Kwota]"} zł`, size: 22 })],
+                        spacing: { after: 50 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `Podatek VAT (23%): ${priceVat || "[Kwota]"} zł`, size: 22 })],
+                        spacing: { after: 50 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `Wartość brutto: ${priceBrutto || "[Kwota]"} zł (${priceBruttoWords || "[słownie]"})`, size: 22 })],
+                        spacing: { after: 100 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `Pierwsza płatność (${payment1Percent}%): ${payment1Amount || "[Kwota]"} zł brutto, płatna ${payment1Days || "[Liczba]"} dni po podpisaniu umowy`, size: 22 })],
+                        spacing: { after: 50 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `Druga płatność (${payment2Percent}%): ${payment2Amount || "[Kwota]"} zł brutto - przed dostawą`, size: 22 })],
+                        spacing: { after: 50 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `Pozostała kwota (${payment3Percent}%): ${payment3Amount || "[Kwota]"} zł brutto - po montażu i protokole odbioru`, size: 22 })],
+                        spacing: { after: 100 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "Nr konta: mBank 48 1140 2004 0000 3602 7758 4396", size: 22 })],
+                        spacing: { after: 200 }
+                    }),
+                    // §7 GWARANCJA
+                    new Paragraph({
+                        children: [new TextRun({ text: "§7. GWARANCJA", bold: true, size: 24 })],
+                        spacing: { before: 300, after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: `1. Wykonawca udziela ${warrantyMonths || "[Liczba]"} miesięcy gwarancji na wykonane Meble, liczonej od daty podpisania protokołu odbioru.`, size: 22 })],
+                        spacing: { after: 100 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "2. Szczegółowe warunki gwarancji określa Załącznik nr 3.", size: 22 })],
+                        spacing: { after: 200 }
+                    }),
+                    // §8
+                    new Paragraph({
+                        children: [new TextRun({ text: "§8. ODSTĄPIENIE OD UMOWY", bold: true, size: 24 })],
+                        spacing: { before: 300, after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "Zamawiający może odstąpić od umowy w przypadku opóźnienia przekraczającego 30 dni lub rażącego naruszenia umowy. Wykonawca może odstąpić w przypadku opóźnienia płatności ponad 14 dni lub braku współdziałania.", size: 22 })],
+                        spacing: { after: 200 }
+                    }),
+                    // §9
+                    new Paragraph({
+                        children: [new TextRun({ text: "§9. OCHRONA DANYCH OSOBOWYCH", bold: true, size: 24 })],
+                        spacing: { before: 300, after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "Zamawiający wyraża zgodę na przetwarzanie danych osobowych zgodnie z RODO. Administratorem jest WALABI Sp. z o.o. Sp.k.", size: 22 })],
+                        spacing: { after: 200 }
+                    }),
+                    // §10
+                    new Paragraph({
+                        children: [new TextRun({ text: "§10. POSTANOWIENIA KOŃCOWE", bold: true, size: 24 })],
+                        spacing: { before: 300, after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "W sprawach nieuregulowanych zastosowanie mają przepisy KC. Zmiany wymagają formy pisemnej. Spory rozstrzygane przez sąd właściwy dla siedziby Wykonawcy.", size: 22 })],
+                        spacing: { after: 100 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "Załączniki: 1) Specyfikacja mebli, 2) Projekt wykonawczy, 3) Zalecenia i warunki gwarancji.", size: 22 })],
+                        spacing: { after: 200 }
+                    }),
+                    // §11
+                    new Paragraph({
+                        children: [new TextRun({ text: "§11. WALORYZACJA", bold: true, size: 24 })],
+                        spacing: { before: 300, after: 200 }
+                    }),
+                    new Paragraph({
+                        children: [new TextRun({ text: "W przypadku wzrostu cen materiałów powyżej 10%, Strony zobowiązują się do renegocjacji wynagrodzenia.", size: 22 })],
                         spacing: { after: 400 }
                     }),
                     // Signatures
@@ -1459,51 +1583,44 @@
     // ===== PRZELICZANIE KWOT =====
     function calculatePrices() {
         const netto = parseNumber(document.getElementById('priceNetto').value);
-        const payment1Percent = parseNumber(document.getElementById('payment1Percent').value);
-        const payment2Percent = parseNumber(document.getElementById('payment2Percent').value);
+        const payment1Percent = parseNumber(document.getElementById('payment1Percent').value) || 50;
+        const payment2Percent = parseNumber(document.getElementById('payment2Percent').value) || 45;
 
         if (netto > 0) {
-            // Oblicz brutto (VAT 23%)
+            // Oblicz VAT i brutto
+            const vat = netto * 0.23;
             const brutto = netto * 1.23;
+
+            document.getElementById('priceVat').value = formatCurrency(vat);
             document.getElementById('priceBrutto').value = formatCurrency(brutto);
 
-            // Słownie
-            const nettoWordsEl = document.getElementById('priceNettoWords');
+            // Słownie brutto
             const bruttoWordsEl = document.getElementById('priceBruttoWords');
-            nettoWordsEl.value = numberToWords(netto);
             bruttoWordsEl.value = numberToWords(brutto);
-
-            // Dopasuj szerokość pól słownie do zawartości
-            autoResizeInput(nettoWordsEl);
             autoResizeInput(bruttoWordsEl);
 
             // Oblicz transze płatności
+            const payment3Percent = 100 - payment1Percent - payment2Percent;
+            document.getElementById('payment3Percent').value = payment3Percent;
+
             const payment1Amount = brutto * (payment1Percent / 100);
             const payment2Amount = brutto * (payment2Percent / 100);
-            const payment3Percent = 100 - payment1Percent - payment2Percent;
-            const payment3Amount = brutto - payment1Amount - payment2Amount;
+            const payment3Amount = brutto * (payment3Percent / 100);
 
-            if (payment1Percent > 0) {
-                document.getElementById('payment1Amount').value = formatCurrency(payment1Amount);
-            }
-            if (payment2Percent > 0) {
-                document.getElementById('payment2Amount').value = formatCurrency(payment2Amount);
-            }
-            if (payment3Percent >= 0) {
-                document.getElementById('payment3Percent').value = payment3Percent;
-                document.getElementById('payment3Amount').value = formatCurrency(payment3Amount);
-            }
+            document.getElementById('payment1Amount').value = formatCurrency(payment1Amount);
+            document.getElementById('payment2Amount').value = formatCurrency(payment2Amount);
+            document.getElementById('payment3Amount').value = formatCurrency(payment3Amount);
 
             // Aktualizuj załącznik nr 1 - podsumowanie kosztów
             document.getElementById('sumMebli').textContent = formatCurrency(netto);
             document.getElementById('sumNettoSpec').textContent = formatCurrency(netto);
-            document.getElementById('sumVatSpec').textContent = formatCurrency(netto * 0.23);
+            document.getElementById('sumVatSpec').textContent = formatCurrency(vat);
             document.getElementById('sumBruttoSpec').textContent = formatCurrency(brutto);
 
             // Aktualizuj harmonogram płatności w załączniku
-            document.getElementById('harmPercent1').textContent = payment1Percent || '0';
-            document.getElementById('harmPercent2').textContent = payment2Percent || '0';
-            document.getElementById('harmPercent3').textContent = payment3Percent || '0';
+            document.getElementById('harmPercent1').textContent = payment1Percent;
+            document.getElementById('harmPercent2').textContent = payment2Percent;
+            document.getElementById('harmPercent3').textContent = payment3Percent;
             document.getElementById('harmAmount1').textContent = formatCurrency(payment1Amount);
             document.getElementById('harmAmount2').textContent = formatCurrency(payment2Amount);
             document.getElementById('harmAmount3').textContent = formatCurrency(payment3Amount);
@@ -1593,7 +1710,6 @@
         syncDocNumbers();
         autoResizeInput(document.getElementById('furnitureType'));
         autoResizeInput(document.getElementById('installationAddress'));
-        autoResizeInput(document.getElementById('priceNettoWords'));
         autoResizeInput(document.getElementById('priceBruttoWords'));
     }
 
@@ -1702,8 +1818,10 @@
 
     // ===== AUTO RESIZE TEXTAREA =====
     window.autoResizeTextarea = function(textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
+        textarea.style.height = '18px';
+        if (textarea.scrollHeight > 18) {
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
     };
 
     // ===== SPECYFIKACJA MEBLI - WIERSZE =====
@@ -1722,13 +1840,13 @@
     function createSpecRow(num) {
         return `
             <tr data-row="${num}">
-                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; vertical-align: top;">${num}</td>
-                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: left; vertical-align: top;"><textarea id="spec${num}Desc" placeholder="Opis mebla" style="border:none;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);text-align:left;resize:none;overflow:hidden;min-height:20px;line-height:1.4;" oninput="autoResizeTextarea(this)"></textarea></td>
-                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; vertical-align: top;"><input type="text" id="spec${num}Dim" placeholder="-" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
-                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; vertical-align: top;"><input type="text" id="spec${num}Qty" value="1" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
-                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: center; vertical-align: top;"><input type="text" id="spec${num}Unit" value="kpl" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
-                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right; vertical-align: top;"><input type="text" id="spec${num}Price" placeholder="0,00" style="border:none;text-align:right;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);" onchange="calculateSpecRow(${num})"></td>
-                <td style="border: 0.5pt solid var(--color-border); padding: 6px; text-align: right; vertical-align: top;"><input type="text" id="spec${num}Total" placeholder="0,00" style="border:none;text-align:right;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);" readonly></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 3px 6px; text-align: center; vertical-align: top;">${num}</td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 3px 6px; text-align: left; vertical-align: top;"><textarea id="spec${num}Desc" placeholder="Opis mebla" style="border:none;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);text-align:left;resize:none;overflow:hidden;line-height:18px;height:18px;word-wrap:break-word;white-space:pre-wrap;margin:0;padding:0;display:block;box-sizing:border-box;" oninput="autoResizeTextarea(this)"></textarea></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 3px 6px; text-align: center; vertical-align: top;"><input type="text" id="spec${num}Dim" placeholder="-" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 3px 6px; text-align: center; vertical-align: top;"><input type="text" id="spec${num}Qty" value="1" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 3px 6px; text-align: center; vertical-align: top;"><input type="text" id="spec${num}Unit" value="kpl" style="border:none;text-align:center;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);"></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 3px 6px; text-align: right; vertical-align: top;"><input type="text" id="spec${num}Price" placeholder="0,00" style="border:none;text-align:right;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);" onblur="formatSpecPrice(this)"></td>
+                <td style="border: 0.5pt solid var(--color-border); padding: 3px 6px; text-align: right; vertical-align: top;"><input type="text" id="spec${num}Total" placeholder="0,00" style="border:none;text-align:right;width:100%;font-family:var(--font-primary);font-size:var(--font-size-data);font-weight:var(--font-weight-data);" readonly></td>
             </tr>
         `;
     }
@@ -1757,11 +1875,14 @@
         const price = parseNumber(priceEl.value) || 0;
         const total = qty * price;
         document.getElementById(`spec${num}Total`).value = formatCurrency(total);
-        // Formatuj cenę ze spacjami
-        if (price > 0) {
-            priceEl.value = formatCurrency(price);
-        }
         calculateSpecTotals();
+    }
+
+    function formatSpecPrice(input) {
+        const price = parseNumber(input.value) || 0;
+        if (price > 0) {
+            input.value = formatCurrency(price);
+        }
     }
 
     function calculateSpecTotals() {
