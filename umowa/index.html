@@ -1828,6 +1828,10 @@
         const docNum = document.getElementById('docNumber').value || 'umowa';
         const client = document.getElementById('clientName').value || 'klient';
 
+        const defaultFilename = `${docNum.replace(/\//g, '-')}_${client.replace(/\s+/g, '_')}.json`;
+        const filename = prompt('Nazwa pliku:', defaultFilename);
+        if (!filename) return;
+
         const exportData = {
             type: 'umowa',
             version: '1.0',
@@ -1841,7 +1845,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${docNum.replace(/\//g, '-')}_${client.replace(/\s+/g, '_')}.json`;
+        a.download = filename.endsWith('.json') ? filename : filename + '.json';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

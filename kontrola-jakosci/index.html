@@ -1134,6 +1134,10 @@
         const docNum = document.getElementById('qcNumber')?.value || 'kontrola-jakosci';
         const client = document.getElementById('orderNumber')?.value || 'zamowienie';
 
+        const defaultFilename = `kontrola-jakosci_${docNum.replace(/\//g, '-')}.json`;
+        const filename = prompt('Nazwa pliku:', defaultFilename);
+        if (!filename) return;
+
         const exportData = {
             type: 'kontrola-jakosci',
             version: '1.0',
@@ -1146,7 +1150,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `kontrola-jakosci_${docNum.replace(/\//g, '-')}.json`;
+        a.download = filename.endsWith('.json') ? filename : filename + '.json';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
