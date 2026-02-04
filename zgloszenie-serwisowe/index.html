@@ -822,6 +822,10 @@
             <button class="btn btn-primary" onclick="printDoc()">Drukuj / Zapisz PDF</button>
             <button class="btn btn-secondary" onclick="sendEmail()">Wyślij mailem</button>
             <button class="btn btn-danger" onclick="clearForm()">Wyczyść formularz</button>
+            <hr style="margin:12px 0;border:none;border-top:1px solid #ddd;">
+            <button class="btn btn-secondary" onclick="exportToJSON()">📥 Eksportuj dane (JSON)</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Importuj dane (JSON)</button>
+            <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importFromJSON(event)">
         </div>
 
         <div class="sidebar-card">
@@ -1324,6 +1328,72 @@
             setupPhotoUpload(i);
         }
     });
+
+    // ===== EKSPORT/IMPORT JSON =====
+    function collectFormData() {
+        const data = {};
+        document.querySelectorAll('.document input, .document textarea, .document select').forEach(el => {
+            if (el.id) data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+        });
+        return data;
+    }
+
+    function restoreFormData(data) {
+        Object.keys(data).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                if (el.type === 'checkbox') el.checked = data[id];
+                else el.value = data[id];
+            }
+        });
+    }
+
+    function exportToJSON() {
+        const data = collectFormData();
+        const docNum = document.getElementById('serviceNumber')?.value || 'zgloszenie-serwisowe';
+        const client = document.getElementById('clientName')?.value || 'klient';
+
+        const exportData = {
+            type: 'zgloszenie-serwisowe',
+            version: '1.0',
+            exportDate: new Date().toISOString(),
+            docNumber: docNum,
+            client: client,
+            formData: data
+        };
+
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${docNum.replace(/\//g, '-')}_${client.replace(/\s+/g, '_')}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function importFromJSON(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const importData = JSON.parse(e.target.result);
+                if (importData.formData) {
+                    restoreFormData(importData.formData);
+                    alert('Dane zaimportowane pomyślnie');
+                } else {
+                    alert('Nieprawidłowy format pliku');
+                }
+            } catch (err) {
+                alert('Błąd wczytywania pliku: ' + err.message);
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
 </script>
 
 </body>
