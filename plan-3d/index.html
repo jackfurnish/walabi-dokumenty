@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan 3D - WALABI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&subset=latin-ext&display=swap" rel="stylesheet">
+    <!-- Three.js r128 (UMD) — works with file:// protocol -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/OBJExporter.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/STLExporter.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/ColladaExporter.js"></script>
+    <style>
+        :root {
+            --color-primary: #2D2E2E;
+            --color-secondary: #757575;
+            --color-accent: #E07B39;
+            --color-border: #E0E0E0;
+            --color-background: #FAFAFA;
+            --color-white: #FFFFFF;
+            --color-highlight: #F7F5F0;
+            --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-primary);
+            font-size: 11px;
+            background: #E8E8E8;
+            color: var(--color-primary);
+            overflow: hidden;
+            height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-wrapper {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: var(--color-white);
+            border-right: 1px solid var(--color-border);
+            overflow-y: auto;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar-card {
+            background: var(--color-background);
+            border-radius: 6px;
+            padding: 12px;
+            border: 1px solid var(--color-border);
+        }
+
+        .sidebar-card h3 {
+            font-size: 8px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--color-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .logo-area {
+            text-align: center;
+            padding: 8px 12px;
+            background: var(--color-white);
+        }
+        .logo-area .logo-text { font-size: 18px; font-weight: 700; letter-spacing: 0.1em; }
+        .logo-area .logo-sub { font-size: 9px; color: var(--color-secondary); margin-top: 2px; }
+
+        .upload-zone {
+            border: 2px dashed var(--color-border);
+            border-radius: 6px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--color-secondary);
+            font-size: 10px;
+        }
+        .upload-zone:hover { border-color: var(--color-accent); color: var(--color-accent); }
+        .upload-zone.has-image { border-style: solid; border-color: #4CAF50; color: #4CAF50; }
+        .upload-zone input { display: none; }
+        .upload-icon { font-size: 24px; margin-bottom: 4px; }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+        }
+        .tool-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 8px 4px;
+            border: 1px solid var(--color-border);
+            border-radius: 5px;
+            background: var(--color-white);
+            cursor: pointer;
+            font-size: 8px;
+            font-family: var(--font-primary);
+            color: var(--color-secondary);
+            transition: all 0.15s;
+        }
+        .tool-btn:hover { background: var(--color-highlight); }
+        .tool-btn.active {
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+        }
+        .tool-btn svg { width: 18px; height: 18px; }
+
+        .dim-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .dim-group label {
+            font-size: 9px;
+            color: var(--color-secondary);
+        }
+        .dim-group input[type="number"] {
+            width: 70px;
+            padding: 4px 6px;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            font-family: var(--font-primary);
+            font-size: 10px;
+            text-align: right;
+            outline: none;
+        }
+        .dim-group input[type="number"]:focus { border-color: var(--color-accent); }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+            font-size: 9px;
+            color: var(--color-secondary);
+        }
+        .check-item input[type="checkbox"] { accent-color: var(--color-primary); }
+
+        .elements-list {
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .element-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 9px;
+            transition: background 0.1s;
+        }
+        .element-item:hover { background: var(--color-highlight); }
+        .element-item.selected { background: #FFF3E0; }
+        .element-item .el-label { display: flex; align-items: center; gap: 4px; }
+        .element-item .el-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .element-item .el-delete {
+            background: none; border: none; cursor: pointer;
+            color: #ccc; font-size: 12px; padding: 0 2px;
+        }
+        .element-item .el-delete:hover { color: #e53935; }
+
+        .empty-msg {
+            color: #bbb; font-size: 9px; text-align: center; padding: 8px 0;
+        }
+
+        .btn-row { display: flex; gap: 4px; flex-wrap: wrap; }
+        .btn {
+            flex: 1;
+            padding: 7px 8px;
+            border: 1px solid var(--color-border);
+            border-radius: 5px;
+            background: var(--color-white);
+            cursor: pointer;
+            font-family: var(--font-primary);
+            font-size: 8px;
+            font-weight: 500;
+            color: var(--color-secondary);
+            text-align: center;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .btn:hover { background: var(--color-highlight); color: var(--color-primary); }
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+        }
+        .btn-primary:hover { background: #444; }
+
+        .main-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #F0F0F0;
+        }
+
+        .mode-toggle {
+            display: flex;
+            background: var(--color-white);
+            border-bottom: 1px solid var(--color-border);
+            padding: 6px 14px;
+            gap: 4px;
+            align-items: center;
+        }
+        .mode-btn {
+            padding: 6px 16px;
+            border: 1px solid var(--color-border);
+            border-radius: 5px;
+            background: var(--color-background);
+            cursor: pointer;
+            font-family: var(--font-primary);
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--color-secondary);
+            transition: all 0.15s;
+        }
+        .mode-btn.active {
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+        }
+        .mode-btn:hover:not(.active) { background: var(--color-highlight); }
+
+        .mode-info {
+            margin-left: auto;
+            font-size: 9px;
+            color: var(--color-secondary);
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 14px;
+            background: var(--color-white);
+            border-top: 1px solid var(--color-border);
+            font-size: 9px;
+            color: var(--color-secondary);
+        }
+
+        #workspace {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        #canvas2dContainer {
+            position: absolute;
+            top: 0; left: 0;
+            transform-origin: 0 0;
+        }
+        #floorplanImage {
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+        #canvas2d {
+            position: absolute;
+            top: 0; left: 0;
+        }
+        #canvas3dContainer {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+        #canvas3d {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--color-primary);
+            color: var(--color-white);
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: var(--font-primary);
+            transition: transform 0.3s ease;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        #toast.show { transform: translateX(-50%) translateY(0); }
+        #toast.error { background: #C62828; }
+        #toast.success { background: #2E7D32; }
+
+        .dialog-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .dialog-overlay.active { display: flex; }
+        .dialog-box {
+            background: var(--color-white);
+            border-radius: 8px;
+            padding: 24px;
+            min-width: 300px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+        }
+        .dialog-box h4 { font-size: 13px; margin-bottom: 12px; }
+        .dialog-box input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--color-border);
+            border-radius: 5px;
+            font-family: var(--font-primary);
+            font-size: 12px;
+            outline: none;
+            margin-bottom: 12px;
+        }
+        .dialog-box input:focus { border-color: var(--color-accent); }
+        .dialog-btns { display: flex; gap: 8px; justify-content: flex-end; }
+        .dialog-btns button {
+            padding: 7px 16px;
+            border: 1px solid var(--color-border);
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: var(--font-primary);
+            font-size: 11px;
+            background: var(--color-white);
+        }
+        .dialog-btns .btn-ok {
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+        }
+        .props-panel { margin-top: 8px; }
+        .props-panel .dim-group { margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <aside class="sidebar">
+        <div class="sidebar-card logo-area">
+            <div class="logo-text">WALABI</div>
+            <div class="logo-sub">Plan 3D</div>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Rzut mieszkania</h3>
+            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon">&#128206;</div>
+                <div id="uploadLabel">Kliknij aby wgrac skan rzutu<br>(PNG, JPG)</div>
+                <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp">
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Narzedzia</h3>
+            <div class="tool-grid">
+                <button class="tool-btn active" data-tool="wall" title="Rysuj sciane (W)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="20" x2="12" y2="4"/><line x1="12" y1="4" x2="21" y2="20"/></svg>
+                    <span>Sciana</span>
+                </button>
+                <button class="tool-btn" data-tool="window" title="Dodaj okno (N)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/><line x1="12" y1="5" x2="12" y2="19"/><line x1="3" y1="12" x2="21" y2="12"/></svg>
+                    <span>Okno</span>
+                </button>
+                <button class="tool-btn" data-tool="door" title="Dodaj drzwi (D)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="1"/><circle cx="15" cy="12" r="1.5"/></svg>
+                    <span>Drzwi</span>
+                </button>
+                <button class="tool-btn" data-tool="select" title="Zaznacz (V)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4l7 18 3-7 7-3L4 4z"/></svg>
+                    <span>Zaznacz</span>
+                </button>
+                <button class="tool-btn" data-tool="delete" title="Usun (X)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    <span>Usun</span>
+                </button>
+                <button class="tool-btn" data-tool="scale" title="Kalibracja skali (S)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="8" x2="2" y2="16"/><line x1="22" y1="8" x2="22" y2="16"/></svg>
+                    <span>Skala</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Ustawienia</h3>
+            <div class="dim-group">
+                <label>Wys. scian (mm)</label>
+                <input type="number" id="setWallHeight" value="2700" min="1000" max="6000" step="100">
+            </div>
+            <div class="dim-group">
+                <label>Grub. scian (mm)</label>
+                <input type="number" id="setWallThickness" value="150" min="50" max="500" step="10">
+            </div>
+            <div class="dim-group">
+                <label>Siatka (px)</label>
+                <input type="number" id="setGridSize" value="20" min="5" max="50" step="5">
+            </div>
+            <div class="check-item">
+                <input type="checkbox" id="setSnapGrid" checked>
+                <label for="setSnapGrid">Przyciagaj do siatki</label>
+            </div>
+            <div class="check-item">
+                <input type="checkbox" id="setSnapAngle" checked>
+                <label for="setSnapAngle">Przyciagaj do katow 45°</label>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Elementy</h3>
+            <div id="elementsList" class="elements-list">
+                <div class="empty-msg">Brak elementow</div>
+            </div>
+            <div id="propsPanel" class="props-panel" style="display:none;"></div>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Eksport do SketchUp</h3>
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="exportOBJ()">Eksport OBJ</button>
+                <button class="btn btn-primary" onclick="exportSTL()">Eksport STL</button>
+            </div>
+            <div class="btn-row" style="margin-top:4px;">
+                <button class="btn" onclick="exportDAE()">Eksport DAE</button>
+                <button class="btn" onclick="exportGLTF()">Eksport GLB</button>
+            </div>
+            <p style="font-size:8px;color:var(--color-secondary);margin-top:6px;line-height:1.4;">
+                OBJ — najlepsza kompatybilnosc ze SketchUp Pro<br>
+                STL — SketchUp Free + Pro<br>
+                DAE (Collada) — natywny format SketchUp<br>
+                GLB — uniwersalny format 3D
+            </p>
+        </div>
+
+        <div class="sidebar-card">
+            <h3>Dane projektu</h3>
+            <div class="btn-row">
+                <button class="btn" onclick="exportToJSON()">Eksport JSON</button>
+                <button class="btn" onclick="document.getElementById('importInput').click()">Import JSON</button>
+                <input type="file" id="importInput" accept=".json" style="display:none" onchange="importFromJSON(event)">
+            </div>
+            <div class="btn-row" style="margin-top:4px;">
+                <button class="btn" onclick="clearAll()">Wyczysc wszystko</button>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-area">
+        <div class="mode-toggle">
+            <button class="mode-btn active" data-mode="2d" onclick="setMode('2d')">&#9998; Widok 2D</button>
+            <button class="mode-btn" data-mode="3d" onclick="setMode('3d')">&#9634; Widok 3D</button>
+            <div class="mode-info" id="modeInfo">Narzedzie: Sciana | Kliknij aby rysowac sciany</div>
+        </div>
+
+        <div id="workspace">
+            <div id="canvas2dContainer">
+                <img id="floorplanImage" style="display:none;">
+                <canvas id="canvas2d"></canvas>
+            </div>
+            <div id="canvas3dContainer">
+                <canvas id="canvas3d"></canvas>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <span id="statusCoords">X: 0  Y: 0</span>
+            <span id="statusScale">Skala: 100 px/m</span>
+            <span id="statusWalls">Sciany: 0</span>
+            <span id="statusWindows">Okna: 0</span>
+            <span id="statusDoors">Drzwi: 0</span>
+        </div>
+    </div>
+</div>
+
+<div class="dialog-overlay" id="scaleDialog">
+    <div class="dialog-box">
+        <h4>Kalibracja skali</h4>
+        <p style="font-size:10px;color:var(--color-secondary);margin-bottom:10px;">Podaj rzeczywisty dystans miedzy zaznaczonymi punktami (w mm):</p>
+        <input type="number" id="scaleDistInput" placeholder="np. 3000" min="1">
+        <div class="dialog-btns">
+            <button onclick="cancelScale()">Anuluj</button>
+            <button class="btn-ok" onclick="confirmScale()">Zatwierdz</button>
+        </div>
+    </div>
+</div>
+
+<div class="dialog-overlay" id="openingDialog">
+    <div class="dialog-box">
+        <h4 id="openingDialogTitle">Wlasciwosci okna</h4>
+        <div class="dim-group">
+            <label>Szerokosc (mm)</label>
+            <input type="number" id="openingWidth" value="1200" min="300" max="5000" step="50">
+        </div>
+        <div class="dim-group">
+            <label>Wysokosc (mm)</label>
+            <input type="number" id="openingHeight" value="1400" min="300" max="3000" step="50">
+        </div>
+        <div class="dim-group" id="sillRow">
+            <label>Wys. parapetu (mm)</label>
+            <input type="number" id="openingSill" value="900" min="0" max="2500" step="50">
+        </div>
+        <div class="dim-group" id="swingRow" style="display:none;">
+            <label>Otwieranie</label>
+            <select id="openingSwing" style="width:130px;padding:4px 6px;border:1px solid var(--color-border);border-radius:4px;font-family:var(--font-primary);font-size:10px;outline:none;">
+                <option value="left-in">← Do wewnatrz (lewe)</option>
+                <option value="right-in">→ Do wewnatrz (prawe)</option>
+                <option value="left-out">← Na zewnatrz (lewe)</option>
+                <option value="right-out">→ Na zewnatrz (prawe)</option>
+            </select>
+        </div>
+        <div class="dialog-btns">
+            <button onclick="cancelOpening()">Anuluj</button>
+            <button class="btn-ok" onclick="confirmOpening()">Dodaj</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function() {
+    'use strict';
+
+    // ===== STATE =====
+    var state = {
+        image: { src: null, width: 0, height: 0, displayWidth: 0, displayHeight: 0 },
+        scale: { pixelsPerMeter: 100, calP1: null, calP2: null },
+        mode: '2d',
+        activeTool: 'wall',
+        walls: [],
+        windows: [],
+        doors: [],
+        drawing: { startPoint: null, currentPoint: null, selectedElement: null, selectedType: null },
+        settings: {
+            wallHeightMm: 2700,
+            wallThicknessMm: 150,
+            gridSize: 20,
+            snapToGrid: true,
+            snapToAngle: true,
+            snapAngleThreshold: 7
+        },
+        nextId: 1
+    };
+
+    // Undo/redo
+    var history = { stack: [], pointer: -1 };
+    function pushHistory() {
+        var snap = JSON.stringify({ walls: state.walls, windows: state.windows, doors: state.doors, nextId: state.nextId });
+        history.stack = history.stack.slice(0, history.pointer + 1);
+        history.stack.push(snap);
+        if (history.stack.length > 50) { history.stack.shift(); history.pointer--; }
+        history.pointer = history.stack.length - 1;
+    }
+    function undo() {
+        if (history.pointer <= 0) return;
+        history.pointer--;
+        restoreHistory(history.stack[history.pointer]);
+    }
+    function redo() {
+        if (history.pointer >= history.stack.length - 1) return;
+        history.pointer++;
+        restoreHistory(history.stack[history.pointer]);
+    }
+    function restoreHistory(snap) {
+        var d = JSON.parse(snap);
+        state.walls = d.walls; state.windows = d.windows; state.doors = d.doors; state.nextId = d.nextId;
+        state.drawing.selectedElement = null; state.drawing.selectedType = null;
+        render2D(); updateElementsList(); updateStatus();
+    }
+
+    // ===== DOM =====
+    var workspace = document.getElementById('workspace');
+    var container2d = document.getElementById('canvas2dContainer');
+    var canvas2d = document.getElementById('canvas2d');
+    var ctx = canvas2d.getContext('2d');
+    var floorplanImg = document.getElementById('floorplanImage');
+    var container3d = document.getElementById('canvas3dContainer');
+    var canvas3d = document.getElementById('canvas3d');
+
+    var view = { scale: 1, offsetX: 0, offsetY: 0 };
+    var isPanning = false;
+    var panStart = { x: 0, y: 0 };
+    var spaceDown = false;
+
+    var scene, camera, renderer, controls;
+    var threeInitialized = false;
+    var pendingOpening = null;
+    var editingOpening = null; // { type, id } — when editing existing door/window
+    var isDragging = false;
+    var dragItem = null; // { type: 'window'|'door', id, wallId }
+    var dragStartT = 0;
+    var dragPending = false;
+    var dragPendingStart = null;
+    var dragPendingInfo = null;
+    var DRAG_THRESHOLD = 5; // px before drag starts
+
+    // ===== INIT =====
+    pushHistory();
+    resizeWorkspace();
+    render2D();
+    updateStatus();
+
+    // ===== IMAGE UPLOAD =====
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+            var img = new Image();
+            img.onload = function() {
+                var w = img.naturalWidth, h = img.naturalHeight;
+                var maxDim = 2000;
+                if (w > maxDim || h > maxDim) {
+                    var s = maxDim / Math.max(w, h);
+                    w = Math.round(w * s);
+                    h = Math.round(h * s);
+                }
+                var oc = document.createElement('canvas');
+                oc.width = w; oc.height = h;
+                oc.getContext('2d').drawImage(img, 0, 0, w, h);
+                state.image.src = oc.toDataURL('image/jpeg', 0.85);
+                state.image.width = w;
+                state.image.height = h;
+
+                floorplanImg.src = state.image.src;
+                floorplanImg.style.display = 'block';
+                fitImageToWorkspace();
+
+                document.getElementById('uploadZone').classList.add('has-image');
+                document.getElementById('uploadLabel').textContent = file.name;
+                toast('Obraz wgrany', 'success');
+            };
+            img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    function fitImageToWorkspace() {
+        var ww = workspace.clientWidth;
+        var wh = workspace.clientHeight;
+        var iw = state.image.width;
+        var ih = state.image.height;
+        var s = Math.min(ww / iw, wh / ih, 1);
+        state.image.displayWidth = Math.round(iw * s);
+        state.image.displayHeight = Math.round(ih * s);
+
+        floorplanImg.width = state.image.displayWidth;
+        floorplanImg.height = state.image.displayHeight;
+        canvas2d.width = state.image.displayWidth;
+        canvas2d.height = state.image.displayHeight;
+        container2d.style.width = state.image.displayWidth + 'px';
+        container2d.style.height = state.image.displayHeight + 'px';
+
+        view.scale = 1;
+        view.offsetX = Math.round((ww - state.image.displayWidth) / 2);
+        view.offsetY = Math.round((wh - state.image.displayHeight) / 2);
+        applyViewTransform();
+        render2D();
+    }
+
+    function resizeWorkspace() {
+        if (!state.image.src) {
+            var ww = workspace.clientWidth || 800;
+            var wh = workspace.clientHeight || 600;
+            canvas2d.width = ww;
+            canvas2d.height = wh;
+            container2d.style.width = ww + 'px';
+            container2d.style.height = wh + 'px';
+            view.offsetX = 0;
+            view.offsetY = 0;
+            applyViewTransform();
+        } else {
+            fitImageToWorkspace();
+        }
+        if (threeInitialized && renderer) {
+            var w = workspace.clientWidth;
+            var h = workspace.clientHeight;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+        }
+    }
+    window.addEventListener('resize', resizeWorkspace);
+
+    function applyViewTransform() {
+        container2d.style.transform = 'translate(' + view.offsetX + 'px,' + view.offsetY + 'px) scale(' + view.scale + ')';
+    }
+
+    // ===== 2D RENDERING =====
+    function render2D() {
+        ctx.clearRect(0, 0, canvas2d.width, canvas2d.height);
+        var w = canvas2d.width, h = canvas2d.height;
+
+        // Grid
+        if (state.settings.snapToGrid) {
+            var g = state.settings.gridSize;
+            ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+            ctx.lineWidth = 0.5;
+            for (var x = 0; x < w; x += g) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+            for (var y = 0; y < h; y += g) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+        }
+
+        // Walls
+        for (var i = 0; i < state.walls.length; i++) {
+            var wall = state.walls[i];
+            var isSel = (state.drawing.selectedElement === wall.id && state.drawing.selectedType === 'wall');
+            drawWall2D(wall, isSel);
+        }
+        // Windows
+        for (var i = 0; i < state.windows.length; i++) {
+            var win = state.windows[i];
+            var isSel = (state.drawing.selectedElement === win.id && state.drawing.selectedType === 'window');
+            drawWindow2D(win, isSel);
+        }
+        // Doors
+        for (var i = 0; i < state.doors.length; i++) {
+            var door = state.doors[i];
+            var isSel = (state.drawing.selectedElement === door.id && state.drawing.selectedType === 'door');
+            drawDoor2D(door, isSel);
+        }
+
+        // Rubber band
+        if (state.activeTool === 'wall' && state.drawing.startPoint && state.drawing.currentPoint) {
+            ctx.setLineDash([6, 4]);
+            ctx.strokeStyle = 'rgba(45,46,46,0.5)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(state.drawing.startPoint.x, state.drawing.startPoint.y);
+            ctx.lineTo(state.drawing.currentPoint.x, state.drawing.currentPoint.y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            var d = dist(state.drawing.startPoint, state.drawing.currentPoint);
+            var mm = Math.round(d / state.scale.pixelsPerMeter * 1000);
+            var mx = (state.drawing.startPoint.x + state.drawing.currentPoint.x) / 2;
+            var my = (state.drawing.startPoint.y + state.drawing.currentPoint.y) / 2;
+            drawLabel(mx, my - 10, mm + ' mm', 'rgba(45,46,46,0.7)');
+        }
+
+        // Scale calibration line
+        if (state.activeTool === 'scale' && state.scale.calP1) {
+            ctx.setLineDash([4, 3]);
+            ctx.strokeStyle = '#4CAF50';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(state.scale.calP1.x, state.scale.calP1.y);
+            var end = state.scale.calP2 || state.drawing.currentPoint;
+            if (end) ctx.lineTo(end.x, end.y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            drawCircle(state.scale.calP1, 5, '#4CAF50');
+            if (state.scale.calP2) drawCircle(state.scale.calP2, 5, '#4CAF50');
+        }
+
+        // Snap indicator
+        if (state.drawing.currentPoint && state.activeTool === 'wall') {
+            var snapped = snapToExistingPoint(state.drawing.currentPoint, 12);
+            if (snapped._snapped) drawCircle(snapped, 7, '#4CAF50');
+        }
+
+        // Wall endpoints
+        for (var i = 0; i < state.walls.length; i++) {
+            drawCircle(state.walls[i].p1, 3, '#2D2E2E');
+            drawCircle(state.walls[i].p2, 3, '#2D2E2E');
+        }
+
+        // Drag distance indicators
+        if (isDragging && dragItem) {
+            drawDragDistances(dragItem);
+        }
+    }
+
+    function drawWall2D(wall, selected) {
+        ctx.strokeStyle = selected ? '#E07B39' : '#2D2E2E';
+        ctx.lineWidth = selected ? 5 : 4;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(wall.p1.x, wall.p1.y);
+        ctx.lineTo(wall.p2.x, wall.p2.y);
+        ctx.stroke();
+
+        var d = dist(wall.p1, wall.p2);
+        var mm = Math.round(d / state.scale.pixelsPerMeter * 1000);
+        var mx = (wall.p1.x + wall.p2.x) / 2;
+        var my = (wall.p1.y + wall.p2.y) / 2;
+        var angle = Math.atan2(wall.p2.y - wall.p1.y, wall.p2.x - wall.p1.x);
+        var ox = -Math.sin(angle) * 14;
+        var oy = Math.cos(angle) * 14;
+        drawLabel(mx + ox, my + oy, mm + ' mm', selected ? '#E07B39' : '#555');
+    }
+
+    function drawWindow2D(win, selected) {
+        var wall = state.walls.find(function(w) { return w.id === win.wallId; });
+        if (!wall) return;
+        var wallLen = dist(wall.p1, wall.p2);
+        var winLenPx = (win.widthMm / 1000) * state.scale.pixelsPerMeter;
+        var halfW = winLenPx / 2 / wallLen;
+        var t1 = Math.max(0, win.positionAlongWall - halfW);
+        var t2 = Math.min(1, win.positionAlongWall + halfW);
+        var p1 = lerpPoint(wall.p1, wall.p2, t1);
+        var p2 = lerpPoint(wall.p1, wall.p2, t2);
+
+        ctx.strokeStyle = selected ? '#E07B39' : '#4FC3F7';
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'butt';
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+
+        var angle = Math.atan2(wall.p2.y - wall.p1.y, wall.p2.x - wall.p1.x);
+        var px = -Math.sin(angle) * 6;
+        var py = Math.cos(angle) * 6;
+        ctx.strokeStyle = selected ? '#E07B39' : '#4FC3F7';
+        ctx.lineWidth = 1.5;
+        [p1, p2].forEach(function(p) {
+            ctx.beginPath();
+            ctx.moveTo(p.x - px, p.y - py);
+            ctx.lineTo(p.x + px, p.y + py);
+            ctx.stroke();
+        });
+
+        var mx = (p1.x + p2.x) / 2;
+        var my = (p1.y + p2.y) / 2;
+        drawLabel(mx + px * 2, my + py * 2, win.widthMm + '', selected ? '#E07B39' : '#0288D1');
+    }
+
+    function drawDoor2D(door, selected) {
+        var wall = state.walls.find(function(w) { return w.id === door.wallId; });
+        if (!wall) return;
+        var wallLen = dist(wall.p1, wall.p2);
+        var doorLenPx = (door.widthMm / 1000) * state.scale.pixelsPerMeter;
+        var halfW = doorLenPx / 2 / wallLen;
+        var t1 = Math.max(0, door.positionAlongWall - halfW);
+        var t2 = Math.min(1, door.positionAlongWall + halfW);
+        var p1 = lerpPoint(wall.p1, wall.p2, t1);
+        var p2 = lerpPoint(wall.p1, wall.p2, t2);
+
+        // Door opening line (threshold)
+        ctx.strokeStyle = selected ? '#E07B39' : '#8D6E63';
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'butt';
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+
+        // Swing arc
+        var swing = door.swing || 'left-in';
+        var wallAngle = Math.atan2(wall.p2.y - wall.p1.y, wall.p2.x - wall.p1.x);
+        var isLeft = swing.indexOf('left') === 0;  // hinges at P1 side
+        var isIn = swing.indexOf('-in') !== -1;     // opens toward -90° side of wall
+
+        // Hinge point: left=P1, right=P2
+        var hinge = isLeft ? p1 : p2;
+
+        // Closed angle: direction from hinge toward the OTHER end of the door
+        // left: closed door points from P1 toward P2 (wallAngle)
+        // right: closed door points from P2 toward P1 (wallAngle + PI)
+        var closedAngle = isLeft ? wallAngle : (wallAngle + Math.PI);
+
+        // Open angle: 90° rotation from closed position
+        // "in"  = rotate -90° (counterclockwise on screen = "left" side of wall direction)
+        // "out" = rotate +90° (clockwise on screen = "right" side of wall direction)
+        var openAngle = isIn ? (closedAngle - Math.PI / 2) : (closedAngle + Math.PI / 2);
+
+        ctx.strokeStyle = selected ? 'rgba(224,123,57,0.4)' : 'rgba(141,110,99,0.4)';
+        ctx.lineWidth = 1.5;
+
+        // Draw door leaf line (from hinge to open position)
+        var leafEndX = hinge.x + doorLenPx * Math.cos(openAngle);
+        var leafEndY = hinge.y + doorLenPx * Math.sin(openAngle);
+        ctx.beginPath();
+        ctx.moveTo(hinge.x, hinge.y);
+        ctx.lineTo(leafEndX, leafEndY);
+        ctx.stroke();
+
+        // Draw the arc from closed to open position
+        // Determine sweep direction (anticlockwise flag for canvas arc)
+        var ccw = isLeft ? !isIn : isIn;
+        ctx.beginPath();
+        ctx.arc(hinge.x, hinge.y, doorLenPx, closedAngle, openAngle, ccw);
+        ctx.stroke();
+
+        // Hinge indicator (small filled circle)
+        ctx.fillStyle = selected ? '#E07B39' : '#8D6E63';
+        ctx.beginPath();
+        ctx.arc(hinge.x, hinge.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Label
+        var mx = (p1.x + p2.x) / 2;
+        var my = (p1.y + p2.y) / 2;
+        var px = -Math.sin(wallAngle) * 14;
+        var py = Math.cos(wallAngle) * 14;
+        drawLabel(mx + px, my + py, door.widthMm + '', selected ? '#E07B39' : '#5D4037');
+    }
+
+    function drawCircle(p, r, color) {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    function drawLabel(x, y, text, color) {
+        ctx.font = '600 10px "Plus Jakarta Sans", sans-serif';
+        var m = ctx.measureText(text);
+        ctx.fillStyle = 'rgba(255,255,255,0.85)';
+        ctx.fillRect(x - m.width / 2 - 3, y - 6, m.width + 6, 13);
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, x, y + 1);
+    }
+
+    function drawDragDistances(di) {
+        var arr = di.type === 'window' ? state.windows : state.doors;
+        var item = arr.find(function(i) { return i.id === di.id; });
+        if (!item) return;
+        var wall = state.walls.find(function(w) { return w.id === di.wallId; });
+        if (!wall) return;
+
+        var wallLen = dist(wall.p1, wall.p2);
+        var wallLenMm = wallLen / state.scale.pixelsPerMeter * 1000;
+        var itemWidthPx = (item.widthMm / 1000) * state.scale.pixelsPerMeter;
+        var halfW = itemWidthPx / 2 / wallLen;
+        var itemLeftT = item.positionAlongWall - halfW;
+        var itemRightT = item.positionAlongWall + halfW;
+
+        // Collect all openings on this wall sorted by position, excluding the dragged one
+        var others = [];
+        state.windows.forEach(function(w) {
+            if (w.wallId !== di.wallId || w.id === di.id) return;
+            var wPx = (w.widthMm / 1000) * state.scale.pixelsPerMeter;
+            var hW = wPx / 2 / wallLen;
+            others.push({ leftT: w.positionAlongWall - hW, rightT: w.positionAlongWall + hW, id: w.id });
+        });
+        state.doors.forEach(function(d) {
+            if (d.wallId !== di.wallId || d.id === di.id) return;
+            var dPx = (d.widthMm / 1000) * state.scale.pixelsPerMeter;
+            var hW = dPx / 2 / wallLen;
+            others.push({ leftT: d.positionAlongWall - hW, rightT: d.positionAlongWall + hW, id: d.id });
+        });
+        others.sort(function(a, b) { return a.leftT - b.leftT; });
+
+        // Find nearest boundary to the left (wall start or right edge of nearest opening)
+        var leftBoundT = 0;
+        for (var i = 0; i < others.length; i++) {
+            if (others[i].rightT <= itemLeftT + 0.001) {
+                leftBoundT = others[i].rightT;
+            }
+        }
+        // Find nearest boundary to the right (wall end or left edge of nearest opening)
+        var rightBoundT = 1;
+        for (var i = others.length - 1; i >= 0; i--) {
+            if (others[i].leftT >= itemRightT - 0.001) {
+                rightBoundT = others[i].leftT;
+            }
+        }
+
+        var angle = Math.atan2(wall.p2.y - wall.p1.y, wall.p2.x - wall.p1.x);
+        var perpX = -Math.sin(angle);
+        var perpY = Math.cos(angle);
+        var offset = 22;
+
+        // Distance to left boundary
+        var distLeftMm = Math.round((itemLeftT - leftBoundT) * wallLenMm);
+        if (distLeftMm > 0) {
+            var pA = lerpPoint(wall.p1, wall.p2, leftBoundT);
+            var pB = lerpPoint(wall.p1, wall.p2, itemLeftT);
+            var midLx = (pA.x + pB.x) / 2 + perpX * offset;
+            var midLy = (pA.y + pB.y) / 2 + perpY * offset;
+
+            // Dimension line
+            ctx.strokeStyle = '#E07B39';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 2]);
+            ctx.beginPath();
+            ctx.moveTo(pA.x + perpX * (offset - 6), pA.y + perpY * (offset - 6));
+            ctx.lineTo(pB.x + perpX * (offset - 6), pB.y + perpY * (offset - 6));
+            ctx.stroke();
+            ctx.setLineDash([]);
+            // Ticks
+            ctx.beginPath();
+            ctx.moveTo(pA.x + perpX * (offset - 10), pA.y + perpY * (offset - 10));
+            ctx.lineTo(pA.x + perpX * (offset - 2), pA.y + perpY * (offset - 2));
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pB.x + perpX * (offset - 10), pB.y + perpY * (offset - 10));
+            ctx.lineTo(pB.x + perpX * (offset - 2), pB.y + perpY * (offset - 2));
+            ctx.stroke();
+
+            drawLabel(midLx, midLy, distLeftMm + '', '#E07B39');
+        }
+
+        // Distance to right boundary
+        var distRightMm = Math.round((rightBoundT - itemRightT) * wallLenMm);
+        if (distRightMm > 0) {
+            var pC = lerpPoint(wall.p1, wall.p2, itemRightT);
+            var pD = lerpPoint(wall.p1, wall.p2, rightBoundT);
+            var midRx = (pC.x + pD.x) / 2 + perpX * offset;
+            var midRy = (pC.y + pD.y) / 2 + perpY * offset;
+
+            ctx.strokeStyle = '#E07B39';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 2]);
+            ctx.beginPath();
+            ctx.moveTo(pC.x + perpX * (offset - 6), pC.y + perpY * (offset - 6));
+            ctx.lineTo(pD.x + perpX * (offset - 6), pD.y + perpY * (offset - 6));
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.moveTo(pC.x + perpX * (offset - 10), pC.y + perpY * (offset - 10));
+            ctx.lineTo(pC.x + perpX * (offset - 2), pC.y + perpY * (offset - 2));
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pD.x + perpX * (offset - 10), pD.y + perpY * (offset - 10));
+            ctx.lineTo(pD.x + perpX * (offset - 2), pD.y + perpY * (offset - 2));
+            ctx.stroke();
+
+            drawLabel(midRx, midRy, distRightMm + '', '#E07B39');
+        }
+
+        // Distance from wall start (P1)
+        var distFromStartMm = Math.round(itemLeftT * wallLenMm);
+        var distFromEndMm = Math.round((1 - itemRightT) * wallLenMm);
+
+        // Show in status bar during drag
+        document.getElementById('statusCoords').textContent =
+            'Od P1: ' + distFromStartMm + ' mm | Od P2: ' + distFromEndMm + ' mm' +
+            (distLeftMm > 0 && leftBoundT > 0 ? ' | L: ' + distLeftMm + ' mm' : '') +
+            (distRightMm > 0 && rightBoundT < 1 ? ' | R: ' + distRightMm + ' mm' : '');
+    }
+
+    // ===== HELPERS =====
+    function dist(a, b) { return Math.hypot(b.x - a.x, b.y - a.y); }
+    function lerpPoint(a, b, t) { return { x: a.x + t * (b.x - a.x), y: a.y + t * (b.y - a.y) }; }
+
+    function screenToCanvas(ex, ey) {
+        var rect = workspace.getBoundingClientRect();
+        return { x: (ex - rect.left - view.offsetX) / view.scale, y: (ey - rect.top - view.offsetY) / view.scale };
+    }
+
+    function snapToGrid(p) {
+        if (!state.settings.snapToGrid) return { x: p.x, y: p.y };
+        var g = state.settings.gridSize;
+        return { x: Math.round(p.x / g) * g, y: Math.round(p.y / g) * g };
+    }
+
+    function snapToAngle(start, end) {
+        if (!state.settings.snapToAngle || !start) return end;
+        var dx = end.x - start.x, dy = end.y - start.y;
+        var angle = Math.atan2(dy, dx) * 180 / Math.PI;
+        var snapAngles = [0, 45, 90, 135, 180, -45, -90, -135, -180];
+        var threshold = state.settings.snapAngleThreshold;
+        for (var i = 0; i < snapAngles.length; i++) {
+            if (Math.abs(angle - snapAngles[i]) < threshold) {
+                var d = Math.sqrt(dx * dx + dy * dy);
+                var rad = snapAngles[i] * Math.PI / 180;
+                return { x: start.x + d * Math.cos(rad), y: start.y + d * Math.sin(rad) };
+            }
+        }
+        return end;
+    }
+
+    function snapToExistingPoint(p, threshold) {
+        for (var i = 0; i < state.walls.length; i++) {
+            var pts = [state.walls[i].p1, state.walls[i].p2];
+            for (var j = 0; j < pts.length; j++) {
+                if (dist(p, pts[j]) < threshold) return { x: pts[j].x, y: pts[j].y, _snapped: true };
+            }
+        }
+        return { x: p.x, y: p.y, _snapped: false };
+    }
+
+    function applyAllSnaps(raw, start) {
+        var p = snapToGrid(raw);
+        p = snapToAngle(start, p);
+        var snapped = snapToExistingPoint(p, 12);
+        if (snapped._snapped) p = snapped;
+        return p;
+    }
+
+    function pointToSegmentDistance(point, a, b) {
+        var dx = b.x - a.x, dy = b.y - a.y;
+        var lenSq = dx * dx + dy * dy;
+        if (lenSq === 0) return { distance: dist(point, a), t: 0 };
+        var t = ((point.x - a.x) * dx + (point.y - a.y) * dy) / lenSq;
+        t = Math.max(0, Math.min(1, t));
+        var proj = { x: a.x + t * dx, y: a.y + t * dy };
+        return { distance: dist(point, proj), t: t };
+    }
+
+    function findWallAtPoint(p, maxDist) {
+        maxDist = maxDist || 12;
+        var best = null, bestDist = Infinity, bestT = 0;
+        for (var i = 0; i < state.walls.length; i++) {
+            var r = pointToSegmentDistance(p, state.walls[i].p1, state.walls[i].p2);
+            if (r.distance < bestDist && r.distance < maxDist) {
+                bestDist = r.distance; best = state.walls[i]; bestT = Math.max(0.05, Math.min(0.95, r.t));
+            }
+        }
+        return best ? { wall: best, t: bestT } : null;
+    }
+
+    function findElementAtPoint(p) {
+        for (var i = 0; i < state.windows.length; i++) {
+            var win = state.windows[i];
+            var wall = state.walls.find(function(w) { return w.id === win.wallId; });
+            if (!wall) continue;
+            var wallLen = dist(wall.p1, wall.p2);
+            var winLenPx = (win.widthMm / 1000) * state.scale.pixelsPerMeter;
+            var halfW = winLenPx / 2 / wallLen;
+            var p1 = lerpPoint(wall.p1, wall.p2, win.positionAlongWall - halfW);
+            var p2 = lerpPoint(wall.p1, wall.p2, win.positionAlongWall + halfW);
+            if (pointToSegmentDistance(p, p1, p2).distance < 12) return { type: 'window', id: win.id };
+        }
+        for (var i = 0; i < state.doors.length; i++) {
+            var door = state.doors[i];
+            var wall = state.walls.find(function(w) { return w.id === door.wallId; });
+            if (!wall) continue;
+            var wallLen = dist(wall.p1, wall.p2);
+            var doorLenPx = (door.widthMm / 1000) * state.scale.pixelsPerMeter;
+            var halfW = doorLenPx / 2 / wallLen;
+            var p1 = lerpPoint(wall.p1, wall.p2, door.positionAlongWall - halfW);
+            var p2 = lerpPoint(wall.p1, wall.p2, door.positionAlongWall + halfW);
+            if (pointToSegmentDistance(p, p1, p2).distance < 12) return { type: 'door', id: door.id };
+        }
+        var wh = findWallAtPoint(p, 8);
+        if (wh) return { type: 'wall', id: wh.wall.id };
+        return null;
+    }
+
+    // ===== MOUSE EVENTS =====
+    workspace.addEventListener('mousedown', onMouseDown);
+    workspace.addEventListener('mousemove', onMouseMove);
+    workspace.addEventListener('mouseup', onMouseUp);
+    workspace.addEventListener('wheel', onWheel, { passive: false });
+    workspace.addEventListener('dblclick', onDblClick);
+    workspace.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+
+    function onMouseDown(e) {
+        if (state.mode !== '2d') return;
+        var cp = screenToCanvas(e.clientX, e.clientY);
+
+        if (e.button === 1 || (e.button === 0 && spaceDown)) {
+            isPanning = true;
+            panStart = { x: e.clientX - view.offsetX, y: e.clientY - view.offsetY };
+            workspace.style.cursor = 'grabbing';
+            e.preventDefault();
+            return;
+        }
+        if (e.button !== 0) return;
+
+        if (state.activeTool === 'wall') {
+            var p = applyAllSnaps(cp, state.drawing.startPoint);
+            if (!state.drawing.startPoint) {
+                state.drawing.startPoint = p;
+            } else {
+                if (dist(state.drawing.startPoint, p) > 5) {
+                    pushHistory();
+                    state.walls.push({ id: state.nextId++, p1: { x: state.drawing.startPoint.x, y: state.drawing.startPoint.y }, p2: { x: p.x, y: p.y } });
+                    state.drawing.startPoint = { x: p.x, y: p.y };
+                    updateElementsList();
+                    updateStatus();
+                }
+            }
+            render2D();
+        } else if (state.activeTool === 'window' || state.activeTool === 'door') {
+            var hit = findWallAtPoint(cp);
+            if (hit) {
+                pendingOpening = { wallId: hit.wall.id, t: hit.t, type: state.activeTool };
+                showOpeningDialog(state.activeTool);
+            } else {
+                toast('Kliknij na scianie', 'error');
+            }
+        } else if (state.activeTool === 'select') {
+            var hit = findElementAtPoint(cp);
+            if (hit) {
+                state.drawing.selectedElement = hit.id;
+                state.drawing.selectedType = hit.type;
+                // Prepare drag for windows/doors (actual drag starts after mouse moves >5px)
+                if (hit.type === 'window' || hit.type === 'door') {
+                    var arr = hit.type === 'window' ? state.windows : state.doors;
+                    var item = arr.find(function(i) { return i.id === hit.id; });
+                    if (item) {
+                        dragPending = true;
+                        dragPendingStart = { x: e.clientX, y: e.clientY };
+                        dragPendingInfo = { type: hit.type, id: hit.id, wallId: item.wallId };
+                        dragStartT = item.positionAlongWall;
+                    }
+                }
+            } else {
+                state.drawing.selectedElement = null;
+                state.drawing.selectedType = null;
+            }
+            render2D(); updateElementsList(); updatePropsPanel();
+        } else if (state.activeTool === 'delete') {
+            var hit = findElementAtPoint(cp);
+            if (hit) { pushHistory(); deleteElement(hit.type, hit.id); render2D(); updateElementsList(); updateStatus(); }
+        } else if (state.activeTool === 'scale') {
+            if (!state.scale.calP1) {
+                state.scale.calP1 = { x: cp.x, y: cp.y };
+            } else if (!state.scale.calP2) {
+                state.scale.calP2 = { x: cp.x, y: cp.y };
+                render2D();
+                document.getElementById('scaleDialog').classList.add('active');
+                document.getElementById('scaleDistInput').focus();
+            }
+        }
+    }
+
+    function onMouseMove(e) {
+        if (state.mode !== '2d') return;
+        if (isPanning) {
+            view.offsetX = e.clientX - panStart.x;
+            view.offsetY = e.clientY - panStart.y;
+            applyViewTransform();
+            return;
+        }
+        var cp = screenToCanvas(e.clientX, e.clientY);
+        state.drawing.currentPoint = applyAllSnaps(cp, state.drawing.startPoint);
+        document.getElementById('statusCoords').textContent = 'X: ' + Math.round(cp.x) + '  Y: ' + Math.round(cp.y);
+
+        // Check drag threshold — start actual drag only after mouse moves >5px
+        if (dragPending && dragPendingStart && !isDragging) {
+            var ddx = e.clientX - dragPendingStart.x;
+            var ddy = e.clientY - dragPendingStart.y;
+            if (Math.sqrt(ddx * ddx + ddy * ddy) > DRAG_THRESHOLD) {
+                isDragging = true;
+                dragItem = dragPendingInfo;
+                pushHistory();
+                workspace.style.cursor = 'move';
+                dragPending = false;
+            }
+        }
+
+        // Drag window/door along wall
+        if (isDragging && dragItem) {
+            var wall = state.walls.find(function(w) { return w.id === dragItem.wallId; });
+            if (wall) {
+                var r = pointToSegmentDistance(cp, wall.p1, wall.p2);
+                var newT = Math.max(0.05, Math.min(0.95, r.t));
+                var arr = dragItem.type === 'window' ? state.windows : state.doors;
+                var item = arr.find(function(i) { return i.id === dragItem.id; });
+                if (item) {
+                    item.positionAlongWall = newT;
+                    render2D();
+                    updateElementsList();
+                }
+            }
+            return;
+        }
+
+        if ((state.activeTool === 'wall' && state.drawing.startPoint) ||
+            (state.activeTool === 'scale' && state.scale.calP1 && !state.scale.calP2)) {
+            render2D();
+        }
+    }
+
+    function onMouseUp(e) {
+        if (isPanning) { isPanning = false; workspace.style.cursor = 'crosshair'; }
+        if (dragPending) {
+            dragPending = false;
+            dragPendingStart = null;
+            dragPendingInfo = null;
+        }
+        if (isDragging) {
+            isDragging = false;
+            dragItem = null;
+            workspace.style.cursor = 'crosshair';
+            render2D();
+            updatePropsPanel();
+        }
+    }
+
+    function onWheel(e) {
+        if (state.mode !== '2d') return;
+        e.preventDefault();
+        var rect = workspace.getBoundingClientRect();
+        var mx = e.clientX - rect.left;
+        var my = e.clientY - rect.top;
+        var delta = e.deltaY > 0 ? 0.9 : 1.1;
+        var newScale = Math.max(0.1, Math.min(5, view.scale * delta));
+        var ratio = newScale / view.scale;
+        view.offsetX = mx - ratio * (mx - view.offsetX);
+        view.offsetY = my - ratio * (my - view.offsetY);
+        view.scale = newScale;
+        applyViewTransform();
+    }
+
+    function onDblClick(e) {
+        if (state.mode !== '2d') return;
+        if (state.activeTool === 'wall' && state.drawing.startPoint) {
+            state.drawing.startPoint = null;
+            state.drawing.currentPoint = null;
+            render2D();
+            return;
+        }
+        // Double-click on door/window opens edit dialog
+        var cp = screenToCanvas(e.clientX, e.clientY);
+        var hit = findElementAtPoint(cp);
+        if (hit && (hit.type === 'door' || hit.type === 'window')) {
+            state.drawing.selectedElement = hit.id;
+            state.drawing.selectedType = hit.type;
+            showEditOpeningDialog(hit.type, hit.id);
+            render2D(); updateElementsList();
+        }
+    }
+
+    function showEditOpeningDialog(type, id) {
+        var arr = type === 'window' ? state.windows : state.doors;
+        var item = arr.find(function(i) { return i.id === id; });
+        if (!item) return;
+        var dlg = document.getElementById('openingDialog');
+        document.getElementById('openingDialogTitle').textContent = type === 'window' ? 'Edycja okna #' + id : 'Edycja drzwi #' + id;
+        document.getElementById('sillRow').style.display = type === 'window' ? 'flex' : 'none';
+        document.getElementById('swingRow').style.display = type === 'door' ? 'flex' : 'none';
+        document.getElementById('openingWidth').value = item.widthMm;
+        document.getElementById('openingHeight').value = item.heightMm;
+        if (type === 'window') {
+            document.getElementById('openingSill').value = item.sillHeightMm || 900;
+        }
+        if (type === 'door') {
+            document.getElementById('openingSwing').value = item.swing || 'left-in';
+        }
+        // Change confirm button behavior for edit mode
+        editingOpening = { type: type, id: id };
+        var confirmBtn = dlg.querySelector('.btn-ok');
+        confirmBtn.textContent = 'Zapisz';
+        dlg.classList.add('active');
+        document.getElementById('openingWidth').focus();
+    }
+
+    // ===== KEYBOARD =====
+    document.addEventListener('keydown', function(e) {
+        if (document.querySelector('.dialog-overlay.active')) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.dialog-overlay.active').forEach(function(d) { d.classList.remove('active'); });
+                state.scale.calP1 = null; state.scale.calP2 = null; pendingOpening = null; editingOpening = null; render2D();
+            }
+            return;
+        }
+        if (e.key === ' ') { spaceDown = true; workspace.style.cursor = 'grab'; e.preventDefault(); }
+        if (e.key === 'Escape') {
+            state.drawing.startPoint = null; state.drawing.currentPoint = null;
+            state.drawing.selectedElement = null; state.drawing.selectedType = null;
+            state.scale.calP1 = null; state.scale.calP2 = null;
+            render2D(); updateElementsList(); updatePropsPanel();
+        }
+        if (e.key === 'Delete' || e.key === 'Backspace') {
+            if (state.drawing.selectedElement != null && !e.target.matches('input')) {
+                pushHistory(); deleteElement(state.drawing.selectedType, state.drawing.selectedElement);
+                state.drawing.selectedElement = null; state.drawing.selectedType = null;
+                render2D(); updateElementsList(); updatePropsPanel(); updateStatus();
+            }
+        }
+        if (e.target.matches('input')) return;
+        if (e.key === 'w' || e.key === 'W') setTool('wall');
+        if (e.key === 'n' || e.key === 'N') setTool('window');
+        if (e.key === 'd' || e.key === 'D') setTool('door');
+        if (e.key === 'v' || e.key === 'V') setTool('select');
+        if (e.key === 'x' || e.key === 'X') setTool('delete');
+        if (e.key === 's' && !e.ctrlKey && !e.metaKey) setTool('scale');
+        if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'z' && e.shiftKey) { e.preventDefault(); redo(); }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
+        if (e.key === 'Tab') { e.preventDefault(); setMode(state.mode === '2d' ? '3d' : '2d'); }
+    });
+    document.addEventListener('keyup', function(e) {
+        if (e.key === ' ') { spaceDown = false; workspace.style.cursor = 'crosshair'; }
+    });
+
+    // ===== TOOL / MODE =====
+    function setTool(tool) {
+        state.activeTool = tool;
+        state.drawing.startPoint = null; state.drawing.currentPoint = null;
+        state.scale.calP1 = null; state.scale.calP2 = null;
+        document.querySelectorAll('.tool-btn').forEach(function(b) {
+            b.classList.toggle('active', b.dataset.tool === tool);
+        });
+        var names = { wall: 'Sciana', window: 'Okno', door: 'Drzwi', select: 'Zaznacz', delete: 'Usun', scale: 'Skala' };
+        var hints = {
+            wall: 'Kliknij aby rysowac sciany', window: 'Kliknij na scianie aby dodac okno',
+            door: 'Kliknij na scianie aby dodac drzwi', select: 'Kliknij element aby go zaznaczyc',
+            delete: 'Kliknij element aby go usunac', scale: 'Zaznacz 2 punkty o znanym dystansie'
+        };
+        document.getElementById('modeInfo').textContent = 'Narzedzie: ' + names[tool] + ' | ' + hints[tool];
+        render2D();
+    }
+    window.setTool = setTool;
+
+    document.querySelectorAll('.tool-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() { setTool(btn.dataset.tool); });
+    });
+
+    function setMode(mode) {
+        state.mode = mode;
+        document.querySelectorAll('.mode-btn').forEach(function(b) {
+            b.classList.toggle('active', b.dataset.mode === mode);
+        });
+        if (mode === '2d') {
+            container2d.style.display = '';
+            container3d.style.display = 'none';
+            workspace.style.cursor = 'crosshair';
+            document.getElementById('modeInfo').textContent = 'Widok 2D';
+            setTool(state.activeTool);
+        } else {
+            container2d.style.display = 'none';
+            container3d.style.display = 'block';
+            workspace.style.cursor = 'default';
+            document.getElementById('modeInfo').textContent = 'Widok 3D | Przytrzymaj LPM aby obracac, scroll aby przyblizac';
+            if (!threeInitialized) initThree();
+            rebuild3D();
+        }
+    }
+    window.setMode = setMode;
+
+    function deleteElement(type, id) {
+        if (type === 'wall') {
+            state.walls = state.walls.filter(function(w) { return w.id !== id; });
+            state.windows = state.windows.filter(function(w) { return w.wallId !== id; });
+            state.doors = state.doors.filter(function(d) { return d.wallId !== id; });
+        } else if (type === 'window') {
+            state.windows = state.windows.filter(function(w) { return w.id !== id; });
+        } else if (type === 'door') {
+            state.doors = state.doors.filter(function(d) { return d.id !== id; });
+        }
+    }
+
+    // ===== DIALOGS =====
+    window.confirmScale = function() {
+        var val = parseFloat(document.getElementById('scaleDistInput').value);
+        if (!val || val <= 0) { toast('Podaj prawidlowy dystans', 'error'); return; }
+        var pixDist = dist(state.scale.calP1, state.scale.calP2);
+        state.scale.pixelsPerMeter = pixDist / (val / 1000);
+        state.scale.calP1 = null; state.scale.calP2 = null;
+        document.getElementById('scaleDialog').classList.remove('active');
+        document.getElementById('statusScale').textContent = 'Skala: ' + Math.round(state.scale.pixelsPerMeter) + ' px/m';
+        toast('Skala skalibrowana: ' + Math.round(state.scale.pixelsPerMeter) + ' px/m', 'success');
+        render2D();
+    };
+    window.cancelScale = function() {
+        state.scale.calP1 = null; state.scale.calP2 = null;
+        document.getElementById('scaleDialog').classList.remove('active');
+        render2D();
+    };
+
+    function showOpeningDialog(type) {
+        editingOpening = null; // reset edit mode
+        document.getElementById('openingDialogTitle').textContent = type === 'window' ? 'Wlasciwosci okna' : 'Wlasciwosci drzwi';
+        document.getElementById('sillRow').style.display = type === 'window' ? 'flex' : 'none';
+        document.getElementById('swingRow').style.display = type === 'door' ? 'flex' : 'none';
+        document.getElementById('openingWidth').value = type === 'window' ? 1200 : 900;
+        document.getElementById('openingHeight').value = type === 'window' ? 1400 : 2100;
+        document.getElementById('openingSill').value = 900;
+        document.getElementById('openingSwing').value = 'left-in';
+        var dlg = document.getElementById('openingDialog');
+        dlg.querySelector('.btn-ok').textContent = 'Dodaj';
+        dlg.classList.add('active');
+        document.getElementById('openingWidth').focus();
+    }
+
+    window.confirmOpening = function() {
+        var widthMm = parseInt(document.getElementById('openingWidth').value) || 1000;
+        var heightMm = parseInt(document.getElementById('openingHeight').value) || 1400;
+        var sillHeightMm = parseInt(document.getElementById('openingSill').value) || 900;
+        pushHistory();
+
+        // Edit mode — update existing element
+        if (editingOpening) {
+            var arr = editingOpening.type === 'window' ? state.windows : state.doors;
+            var item = arr.find(function(i) { return i.id === editingOpening.id; });
+            if (item) {
+                item.widthMm = widthMm;
+                item.heightMm = heightMm;
+                if (editingOpening.type === 'window') {
+                    item.sillHeightMm = sillHeightMm;
+                } else {
+                    item.swing = document.getElementById('openingSwing').value || 'left-in';
+                }
+            }
+            var editType = editingOpening.type;
+            editingOpening = null;
+            document.getElementById('openingDialog').classList.remove('active');
+            render2D(); updateElementsList(); updatePropsPanel(); updateStatus();
+            toast(editType === 'window' ? 'Okno zaktualizowane' : 'Drzwi zaktualizowane', 'success');
+            return;
+        }
+
+        // Add mode — create new element
+        if (!pendingOpening) return;
+        if (pendingOpening.type === 'window') {
+            state.windows.push({ id: state.nextId++, wallId: pendingOpening.wallId, positionAlongWall: pendingOpening.t, widthMm: widthMm, heightMm: heightMm, sillHeightMm: sillHeightMm });
+        } else {
+            var swing = document.getElementById('openingSwing').value || 'left-in';
+            state.doors.push({ id: state.nextId++, wallId: pendingOpening.wallId, positionAlongWall: pendingOpening.t, widthMm: widthMm, heightMm: heightMm, swing: swing });
+        }
+        pendingOpening = null;
+        document.getElementById('openingDialog').classList.remove('active');
+        render2D(); updateElementsList(); updateStatus();
+        toast(state.activeTool === 'window' ? 'Okno dodane' : 'Drzwi dodane', 'success');
+    };
+    window.cancelOpening = function() {
+        pendingOpening = null;
+        editingOpening = null;
+        document.getElementById('openingDialog').classList.remove('active');
+    };
+
+    // ===== ELEMENTS LIST =====
+    function updateElementsList() {
+        var el = document.getElementById('elementsList');
+        if (state.walls.length === 0 && state.windows.length === 0 && state.doors.length === 0) {
+            el.innerHTML = '<div class="empty-msg">Brak elementow</div>';
+            return;
+        }
+        var html = '';
+        state.walls.forEach(function(wall) {
+            var mm = Math.round(dist(wall.p1, wall.p2) / state.scale.pixelsPerMeter * 1000);
+            var sel = (state.drawing.selectedElement === wall.id && state.drawing.selectedType === 'wall') ? ' selected' : '';
+            html += '<div class="element-item' + sel + '" data-type="wall" data-id="' + wall.id + '">' +
+                '<span class="el-label"><span class="el-dot" style="background:#2D2E2E"></span>Sciana #' + wall.id + ' (' + mm + ' mm)</span>' +
+                '<button class="el-delete" data-dtype="wall" data-did="' + wall.id + '">&times;</button></div>';
+        });
+        state.windows.forEach(function(win) {
+            var sel = (state.drawing.selectedElement === win.id && state.drawing.selectedType === 'window') ? ' selected' : '';
+            html += '<div class="element-item' + sel + '" data-type="window" data-id="' + win.id + '">' +
+                '<span class="el-label"><span class="el-dot" style="background:#4FC3F7"></span>Okno #' + win.id + ' (' + win.widthMm + 'x' + win.heightMm + ')</span>' +
+                '<button class="el-delete" data-dtype="window" data-did="' + win.id + '">&times;</button></div>';
+        });
+        var swingLabels = { 'left-in': 'L\u2190wew', 'right-in': 'P\u2192wew', 'left-out': 'L\u2190zew', 'right-out': 'P\u2192zew' };
+        state.doors.forEach(function(door) {
+            var sel = (state.drawing.selectedElement === door.id && state.drawing.selectedType === 'door') ? ' selected' : '';
+            var swLabel = swingLabels[door.swing || 'left-in'] || '';
+            html += '<div class="element-item' + sel + '" data-type="door" data-id="' + door.id + '">' +
+                '<span class="el-label"><span class="el-dot" style="background:#8D6E63"></span>Drzwi #' + door.id + ' (' + door.widthMm + 'x' + door.heightMm + ') ' + swLabel + '</span>' +
+                '<button class="el-delete" data-dtype="door" data-did="' + door.id + '">&times;</button></div>';
+        });
+        el.innerHTML = html;
+        el.querySelectorAll('.element-item').forEach(function(item) {
+            item.addEventListener('click', function(e) {
+                if (e.target.closest('.el-delete')) return;
+                state.drawing.selectedElement = parseInt(item.dataset.id);
+                state.drawing.selectedType = item.dataset.type;
+                render2D(); updateElementsList(); updatePropsPanel();
+            });
+            item.addEventListener('dblclick', function(e) {
+                if (e.target.closest('.el-delete')) return;
+                var type = item.dataset.type;
+                var id = parseInt(item.dataset.id);
+                if (type === 'door' || type === 'window') {
+                    showEditOpeningDialog(type, id);
+                }
+            });
+        });
+        el.querySelectorAll('.el-delete').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation(); pushHistory();
+                deleteElement(btn.dataset.dtype, parseInt(btn.dataset.did));
+                state.drawing.selectedElement = null; state.drawing.selectedType = null;
+                render2D(); updateElementsList(); updatePropsPanel(); updateStatus();
+            });
+        });
+    }
+
+    function updatePropsPanel() {
+        var panel = document.getElementById('propsPanel');
+        if (!state.drawing.selectedElement) { panel.style.display = 'none'; return; }
+        panel.style.display = 'block';
+        if (state.drawing.selectedType === 'window') {
+            var win = state.windows.find(function(w) { return w.id === state.drawing.selectedElement; });
+            if (!win) { panel.style.display = 'none'; return; }
+            panel.innerHTML = '<div class="dim-group"><label>Szer. (mm)</label><input type="number" value="' + win.widthMm + '" onchange="updateOpeningProp(' + win.id + ',\'window\',\'widthMm\',this.value)"></div>' +
+                '<div class="dim-group"><label>Wys. (mm)</label><input type="number" value="' + win.heightMm + '" onchange="updateOpeningProp(' + win.id + ',\'window\',\'heightMm\',this.value)"></div>' +
+                '<div class="dim-group"><label>Parapet (mm)</label><input type="number" value="' + win.sillHeightMm + '" onchange="updateOpeningProp(' + win.id + ',\'window\',\'sillHeightMm\',this.value)"></div>';
+        } else if (state.drawing.selectedType === 'door') {
+            var door = state.doors.find(function(d) { return d.id === state.drawing.selectedElement; });
+            if (!door) { panel.style.display = 'none'; return; }
+            var sw = door.swing || 'left-in';
+            panel.innerHTML = '<div class="dim-group"><label>Szer. (mm)</label><input type="number" value="' + door.widthMm + '" onchange="updateOpeningProp(' + door.id + ',\'door\',\'widthMm\',this.value)"></div>' +
+                '<div class="dim-group"><label>Wys. (mm)</label><input type="number" value="' + door.heightMm + '" onchange="updateOpeningProp(' + door.id + ',\'door\',\'heightMm\',this.value)"></div>' +
+                '<div class="dim-group"><label>Otwieranie</label><select style="width:100px;padding:3px 4px;border:1px solid var(--color-border);border-radius:4px;font-family:var(--font-primary);font-size:9px;" onchange="updateOpeningProp(' + door.id + ',\'door\',\'swing\',this.value)">' +
+                '<option value="left-in"' + (sw === 'left-in' ? ' selected' : '') + '>\u2190 Wewn. L</option>' +
+                '<option value="right-in"' + (sw === 'right-in' ? ' selected' : '') + '>\u2192 Wewn. P</option>' +
+                '<option value="left-out"' + (sw === 'left-out' ? ' selected' : '') + '>\u2190 Zewn. L</option>' +
+                '<option value="right-out"' + (sw === 'right-out' ? ' selected' : '') + '>\u2192 Zewn. P</option>' +
+                '</select></div>';
+        } else { panel.style.display = 'none'; }
+    }
+    window.updateOpeningProp = function(id, type, prop, val) {
+        pushHistory();
+        var arr = type === 'window' ? state.windows : state.doors;
+        var item = arr.find(function(i) { return i.id === id; });
+        if (item) {
+            item[prop] = (prop === 'swing') ? val : (parseInt(val) || 0);
+            render2D(); updateElementsList(); updatePropsPanel();
+        }
+    };
+
+    function updateStatus() {
+        document.getElementById('statusScale').textContent = 'Skala: ' + Math.round(state.scale.pixelsPerMeter) + ' px/m';
+        document.getElementById('statusWalls').textContent = 'Sciany: ' + state.walls.length;
+        document.getElementById('statusWindows').textContent = 'Okna: ' + state.windows.length;
+        document.getElementById('statusDoors').textContent = 'Drzwi: ' + state.doors.length;
+    }
+
+    // ===== SETTINGS =====
+    document.getElementById('setWallHeight').addEventListener('change', function(e) { state.settings.wallHeightMm = parseInt(e.target.value) || 2700; });
+    document.getElementById('setWallThickness').addEventListener('change', function(e) { state.settings.wallThicknessMm = parseInt(e.target.value) || 150; });
+    document.getElementById('setGridSize').addEventListener('change', function(e) { state.settings.gridSize = parseInt(e.target.value) || 20; render2D(); });
+    document.getElementById('setSnapGrid').addEventListener('change', function(e) { state.settings.snapToGrid = e.target.checked; render2D(); });
+    document.getElementById('setSnapAngle').addEventListener('change', function(e) { state.settings.snapToAngle = e.target.checked; });
+
+    // ===== THREE.JS 3D =====
+    function initThree() {
+        var w = workspace.clientWidth;
+        var h = workspace.clientHeight;
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xF0F0F0);
+        camera = new THREE.PerspectiveCamera(50, w / h, 1, 100000);
+        camera.position.set(5000, 6000, 5000);
+        renderer = new THREE.WebGLRenderer({ canvas: canvas3d, antialias: true });
+        renderer.setSize(w, h);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+        var dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(5000, 10000, 5000);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 2048;
+        dirLight.shadow.mapSize.height = 2048;
+        scene.add(dirLight);
+        scene.add(new THREE.HemisphereLight(0xffffff, 0xE8E8E8, 0.3));
+
+        var gridHelper = new THREE.GridHelper(20000, 40, 0xCCCCCC, 0xE0E0E0);
+        gridHelper.userData.keep = true;
+        scene.add(gridHelper);
+
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.08;
+        controls.maxPolarAngle = Math.PI / 2.05;
+        controls.minDistance = 500;
+        controls.maxDistance = 50000;
+
+        (function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        })();
+        threeInitialized = true;
+    }
+
+    function canvasToWorld(cp) {
+        var cx = canvas2d.width / 2;
+        var cy = canvas2d.height / 2;
+        var ppm = state.scale.pixelsPerMeter;
+        return { x: (cp.x - cx) / ppm * 1000, z: (cp.y - cy) / ppm * 1000 };
+    }
+
+    function rebuild3D() {
+        if (!scene) return;
+        var toRemove = [];
+        scene.children.forEach(function(c) { if (!c.userData.keep && !c.isLight) toRemove.push(c); });
+        toRemove.forEach(function(c) { scene.remove(c); disposeObj(c); });
+
+        var group = new THREE.Group();
+        var wallHeight = state.settings.wallHeightMm;
+        var wallThickness = state.settings.wallThicknessMm;
+        var wallMat = new THREE.MeshStandardMaterial({ color: 0xE8E0D8, roughness: 0.9, metalness: 0 });
+        var glassMat = new THREE.MeshStandardMaterial({ color: 0x87CEEB, transparent: true, opacity: 0.3, side: THREE.DoubleSide, roughness: 0.1 });
+        var frameMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, roughness: 0.5 });
+
+        state.walls.forEach(function(wall) {
+            group.add(createWallWithOpenings(wall, wallHeight, wallThickness, wallMat, glassMat, frameMat));
+        });
+
+        if (state.walls.length > 0) {
+            var allPts = [];
+            state.walls.forEach(function(w) { allPts.push(canvasToWorld(w.p1)); allPts.push(canvasToWorld(w.p2)); });
+            var minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity;
+            allPts.forEach(function(p) {
+                if (p.x < minX) minX = p.x; if (p.x > maxX) maxX = p.x;
+                if (p.z < minZ) minZ = p.z; if (p.z > maxZ) maxZ = p.z;
+            });
+            minX -= 300; maxX += 300; minZ -= 300; maxZ += 300;
+            var floorGeo = new THREE.PlaneGeometry(maxX - minX, maxZ - minZ);
+            var floorMat = new THREE.MeshStandardMaterial({ color: 0xF5F0EB, roughness: 0.8, side: THREE.DoubleSide });
+            var floor = new THREE.Mesh(floorGeo, floorMat);
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.set((minX + maxX) / 2, 0, (minZ + maxZ) / 2);
+            floor.receiveShadow = true;
+            group.add(floor);
+        }
+
+        scene.add(group);
+
+        if (state.walls.length > 0) {
+            var box = new THREE.Box3().setFromObject(group);
+            var center = box.getCenter(new THREE.Vector3());
+            controls.target.copy(center);
+            var size = box.getSize(new THREE.Vector3());
+            var maxDim = Math.max(size.x, size.z, 2000);
+            camera.position.set(center.x + maxDim, maxDim * 1.0, center.z + maxDim);
+            camera.lookAt(center);
+        }
+    }
+
+    function createWallWithOpenings(wall, wallHeight, wallThickness, wallMat, glassMat, frameMat) {
+        var group = new THREE.Group();
+        var p1w = canvasToWorld(wall.p1);
+        var p2w = canvasToWorld(wall.p2);
+        var wallLength = Math.sqrt(Math.pow(p2w.x - p1w.x, 2) + Math.pow(p2w.z - p1w.z, 2));
+        var angle = Math.atan2(p2w.z - p1w.z, p2w.x - p1w.x);
+
+        var openings = [];
+        state.windows.forEach(function(w) {
+            if (w.wallId !== wall.id) return;
+            openings.push({ type: 'window', startT: w.positionAlongWall - (w.widthMm / 2 / wallLength), endT: w.positionAlongWall + (w.widthMm / 2 / wallLength), widthMm: w.widthMm, heightMm: w.heightMm, sillHeightMm: w.sillHeightMm });
+        });
+        state.doors.forEach(function(d) {
+            if (d.wallId !== wall.id) return;
+            openings.push({ type: 'door', startT: d.positionAlongWall - (d.widthMm / 2 / wallLength), endT: d.positionAlongWall + (d.widthMm / 2 / wallLength), widthMm: d.widthMm, heightMm: d.heightMm, swing: d.swing || 'left-in' });
+        });
+        openings.sort(function(a, b) { return a.startT - b.startT; });
+
+        if (openings.length === 0) {
+            group.add(makeWallSegment(p1w, p2w, 0, 1, 0, wallHeight, wallThickness, wallMat, angle, wallLength));
+            return group;
+        }
+
+        var currentT = 0;
+        openings.forEach(function(op) {
+            var st = Math.max(0, op.startT);
+            var en = Math.min(1, op.endT);
+            if (st > currentT) {
+                group.add(makeWallSegment(p1w, p2w, currentT, st, 0, wallHeight, wallThickness, wallMat, angle, wallLength));
+            }
+            if (op.type === 'window') {
+                if (op.sillHeightMm > 0)
+                    group.add(makeWallSegment(p1w, p2w, st, en, 0, op.sillHeightMm, wallThickness, wallMat, angle, wallLength));
+                var topOfWin = op.sillHeightMm + op.heightMm;
+                if (topOfWin < wallHeight)
+                    group.add(makeWallSegment(p1w, p2w, st, en, topOfWin, wallHeight, wallThickness, wallMat, angle, wallLength));
+                var midT = (st + en) / 2;
+                var midPt = { x: p1w.x + midT * (p2w.x - p1w.x), z: p1w.z + midT * (p2w.z - p1w.z) };
+                var glassGeo = new THREE.PlaneGeometry(op.widthMm, op.heightMm);
+                var glass = new THREE.Mesh(glassGeo, glassMat);
+                glass.position.set(midPt.x, op.sillHeightMm + op.heightMm / 2, midPt.z);
+                glass.rotation.y = -angle;
+                group.add(glass);
+                var ft = 40;
+                var ftGeo = new THREE.BoxGeometry(op.widthMm + ft, ft, wallThickness);
+                var topFrame = new THREE.Mesh(ftGeo, frameMat);
+                topFrame.position.set(midPt.x, op.sillHeightMm + op.heightMm, midPt.z);
+                topFrame.rotation.y = -angle;
+                group.add(topFrame);
+                var fbGeo = new THREE.BoxGeometry(op.widthMm + ft, ft, wallThickness + 30);
+                var botFrame = new THREE.Mesh(fbGeo, frameMat);
+                botFrame.position.set(midPt.x, op.sillHeightMm, midPt.z);
+                botFrame.rotation.y = -angle;
+                group.add(botFrame);
+            } else if (op.type === 'door') {
+                if (op.heightMm < wallHeight)
+                    group.add(makeWallSegment(p1w, p2w, st, en, op.heightMm, wallHeight, wallThickness, wallMat, angle, wallLength));
+                var midT = (st + en) / 2;
+                var midPt = { x: p1w.x + midT * (p2w.x - p1w.x), z: p1w.z + midT * (p2w.z - p1w.z) };
+                var ft = 40;
+                var ftGeo = new THREE.BoxGeometry(op.widthMm + ft, ft, wallThickness);
+                var topFrame = new THREE.Mesh(ftGeo, frameMat);
+                topFrame.position.set(midPt.x, op.heightMm, midPt.z);
+                topFrame.rotation.y = -angle;
+                group.add(topFrame);
+
+                // Door leaf (skrzydlo drzwi)
+                var doorSwing = op.swing || 'left-in';
+                var isLeft = doorSwing.indexOf('left') === 0;
+                var isIn = doorSwing.indexOf('-in') !== -1;
+                var doorLeafThick = 45;
+                var doorLeafGeo = new THREE.BoxGeometry(op.widthMm, op.heightMm - 20, doorLeafThick);
+                var doorLeafMat = new THREE.MeshStandardMaterial({ color: 0xA0866C, roughness: 0.7, metalness: 0.05 });
+                var doorLeaf = new THREE.Mesh(doorLeafGeo, doorLeafMat);
+                doorLeaf.castShadow = true;
+
+                // Translate geometry so pivot edge (hinge side) is at local origin
+                doorLeafGeo.translate(isLeft ? op.widthMm / 2 : -op.widthMm / 2, 0, 0);
+
+                // Hinge point position along wall
+                var hingeT = isLeft ? st : en;
+                var hingePt = { x: p1w.x + hingeT * (p2w.x - p1w.x), z: p1w.z + hingeT * (p2w.z - p1w.z) };
+                doorLeaf.position.set(hingePt.x, op.heightMm / 2 - 10, hingePt.z);
+
+                // In Three.js: Y-axis rotation, -angle aligns with wall
+                // Closed: door flat against wall opening
+                // left closed = -angle, right closed = -angle + PI
+                // "in" = +swingAngle (one side), "out" = -swingAngle (other side)
+                var swingAngle = Math.PI / 6; // 30 degrees open
+                var closedRot = isLeft ? -angle : (-angle + Math.PI);
+                var openOffset = isLeft ? (isIn ? -swingAngle : swingAngle) : (isIn ? swingAngle : -swingAngle);
+                doorLeaf.rotation.y = closedRot + openOffset;
+                group.add(doorLeaf);
+            }
+            currentT = en;
+        });
+        if (currentT < 1) {
+            group.add(makeWallSegment(p1w, p2w, currentT, 1, 0, wallHeight, wallThickness, wallMat, angle, wallLength));
+        }
+        return group;
+    }
+
+    function makeWallSegment(p1w, p2w, startT, endT, bottomMm, topMm, thickness, material, angle, wallLength) {
+        var segLength = (endT - startT) * wallLength;
+        var segHeight = topMm - bottomMm;
+        if (segLength <= 0 || segHeight <= 0) return new THREE.Group();
+        var geo = new THREE.BoxGeometry(segLength, segHeight, thickness);
+        var mesh = new THREE.Mesh(geo, material);
+        var midT = (startT + endT) / 2;
+        mesh.position.set(
+            p1w.x + midT * (p2w.x - p1w.x),
+            bottomMm + segHeight / 2,
+            p1w.z + midT * (p2w.z - p1w.z)
+        );
+        mesh.rotation.y = -angle;
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        return mesh;
+    }
+
+    function disposeObj(obj) {
+        if (obj.geometry) obj.geometry.dispose();
+        if (obj.material) {
+            if (Array.isArray(obj.material)) obj.material.forEach(function(m) { m.dispose(); });
+            else obj.material.dispose();
+        }
+        if (obj.children) obj.children.forEach(disposeObj);
+    }
+
+    // ===== SKETCHUP EXPORTS =====
+    function ensure3DBuilt() {
+        if (!threeInitialized) initThree();
+        rebuild3D();
+    }
+
+    function getExportScene() {
+        ensure3DBuilt();
+        var exportScene = new THREE.Scene();
+        scene.children.forEach(function(child) {
+            if (!child.userData.keep && !child.isLight) {
+                exportScene.add(child.clone());
+            }
+        });
+        return exportScene;
+    }
+
+    function downloadFile(content, filename, mimeType) {
+        var blob = new Blob([content], { type: mimeType });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a); URL.revokeObjectURL(url);
+    }
+
+    function downloadBlob(blob, filename) {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a); URL.revokeObjectURL(url);
+    }
+
+    window.exportOBJ = function() {
+        if (state.walls.length === 0) { toast('Brak scian do eksportu', 'error'); return; }
+        try {
+            var exportScene = getExportScene();
+            var exporter = new THREE.OBJExporter();
+            var result = exporter.parse(exportScene);
+            var defaultName = 'plan-3d_' + new Date().toISOString().slice(0, 10) + '.obj';
+            var filename = prompt('Nazwa pliku OBJ:', defaultName);
+            if (!filename) return;
+            downloadFile(result, filename.endsWith('.obj') ? filename : filename + '.obj', 'text/plain');
+            toast('Wyeksportowano OBJ — importuj do SketchUp: File > Import', 'success');
+        } catch (err) { toast('Blad eksportu OBJ: ' + err.message, 'error'); }
+    };
+
+    window.exportSTL = function() {
+        if (state.walls.length === 0) { toast('Brak scian do eksportu', 'error'); return; }
+        try {
+            var exportScene = getExportScene();
+            var exporter = new THREE.STLExporter();
+            var result = exporter.parse(exportScene, { binary: true });
+            var defaultName = 'plan-3d_' + new Date().toISOString().slice(0, 10) + '.stl';
+            var filename = prompt('Nazwa pliku STL:', defaultName);
+            if (!filename) return;
+            downloadBlob(new Blob([result], { type: 'application/octet-stream' }), filename.endsWith('.stl') ? filename : filename + '.stl');
+            toast('Wyeksportowano STL — importuj do SketchUp: File > Import', 'success');
+        } catch (err) { toast('Blad eksportu STL: ' + err.message, 'error'); }
+    };
+
+    window.exportDAE = function() {
+        if (state.walls.length === 0) { toast('Brak scian do eksportu', 'error'); return; }
+        try {
+            var exportScene = getExportScene();
+            var exporter = new THREE.ColladaExporter();
+            var result = exporter.parse(exportScene);
+            var defaultName = 'plan-3d_' + new Date().toISOString().slice(0, 10) + '.dae';
+            var filename = prompt('Nazwa pliku DAE (Collada):', defaultName);
+            if (!filename) return;
+            downloadFile(result.data, filename.endsWith('.dae') ? filename : filename + '.dae', 'application/xml');
+            toast('Wyeksportowano DAE — importuj do SketchUp: File > Import', 'success');
+        } catch (err) { toast('Blad eksportu DAE: ' + err.message, 'error'); }
+    };
+
+    window.exportGLTF = function() {
+        if (state.walls.length === 0) { toast('Brak scian do eksportu', 'error'); return; }
+        try {
+            var exportScene = getExportScene();
+            var exporter = new THREE.GLTFExporter();
+            exporter.parse(exportScene, function(result) {
+                var defaultName = 'plan-3d_' + new Date().toISOString().slice(0, 10) + '.glb';
+                var filename = prompt('Nazwa pliku GLB:', defaultName);
+                if (!filename) return;
+                downloadBlob(new Blob([result], { type: 'application/octet-stream' }), filename.endsWith('.glb') ? filename : filename + '.glb');
+                toast('Wyeksportowano GLB', 'success');
+            }, { binary: true });
+        } catch (err) { toast('Blad eksportu GLB: ' + err.message, 'error'); }
+    };
+
+    // ===== JSON EXPORT/IMPORT =====
+    window.exportToJSON = function() {
+        var data = {
+            type: 'plan-3d', version: '1.0',
+            exportDate: new Date().toISOString(),
+            scale: state.scale, settings: state.settings,
+            walls: state.walls, windows: state.windows, doors: state.doors, nextId: state.nextId,
+            image: state.image.src ? { width: state.image.width, height: state.image.height } : null
+        };
+        var defaultName = 'plan-3d_' + new Date().toISOString().slice(0, 10) + '.json';
+        var filename = prompt('Nazwa pliku:', defaultName);
+        if (!filename) return;
+        downloadFile(JSON.stringify(data, null, 2), filename.endsWith('.json') ? filename : filename + '.json', 'application/json');
+        toast('Dane wyeksportowane', 'success');
+    };
+
+    window.importFromJSON = function(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+            try {
+                var data = JSON.parse(ev.target.result);
+                if (data.type !== 'plan-3d') { toast('Nieprawidlowy format pliku', 'error'); return; }
+                pushHistory();
+                state.walls = data.walls || []; state.windows = data.windows || []; state.doors = data.doors || [];
+                state.nextId = data.nextId || 1;
+                if (data.scale) state.scale.pixelsPerMeter = data.scale.pixelsPerMeter || 100;
+                if (data.settings) {
+                    Object.assign(state.settings, data.settings);
+                    document.getElementById('setWallHeight').value = state.settings.wallHeightMm;
+                    document.getElementById('setWallThickness').value = state.settings.wallThicknessMm;
+                    document.getElementById('setGridSize').value = state.settings.gridSize;
+                    document.getElementById('setSnapGrid').checked = state.settings.snapToGrid;
+                    document.getElementById('setSnapAngle').checked = state.settings.snapToAngle;
+                }
+                render2D(); updateElementsList(); updateStatus();
+                toast('Dane zaimportowane', 'success');
+            } catch (err) { toast('Blad importu: ' + err.message, 'error'); }
+        };
+        reader.readAsText(file);
+        e.target.value = '';
+    };
+
+    window.clearAll = function() {
+        if (!confirm('Wyczysc wszystkie elementy?')) return;
+        pushHistory();
+        state.walls = []; state.windows = []; state.doors = []; state.nextId = 1;
+        state.drawing.startPoint = null; state.drawing.currentPoint = null;
+        state.drawing.selectedElement = null; state.drawing.selectedType = null;
+        render2D(); updateElementsList(); updatePropsPanel(); updateStatus();
+        toast('Wyczyszczono', 'success');
+    };
+
+    // ===== TOAST =====
+    function toast(msg, type) {
+        var el = document.getElementById('toast');
+        el.textContent = msg;
+        el.className = 'show' + (type ? ' ' + type : '');
+        clearTimeout(el._timeout);
+        el._timeout = setTimeout(function() { el.className = ''; }, 2500);
+    }
+
+})();
+</script>
+</body>
+</html>
