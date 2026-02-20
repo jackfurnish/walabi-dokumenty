@@ -465,6 +465,112 @@
             color: var(--color-secondary);
         }
 
+        /* SKETCH PAGE */
+        .sketch-page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 10mm 12mm;
+            background: var(--color-white);
+            box-shadow: 0 4px 24px rgba(0,0,0,.08);
+            margin-top: 20px;
+            position: relative;
+            display: none;
+        }
+
+        .sketch-page.visible { display: block; }
+
+        .sketch-page-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1pt solid var(--color-primary);
+        }
+
+        .sketch-page-title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.10em;
+            color: var(--color-primary);
+            text-align: center;
+            margin: var(--spacing-sm) 0 var(--spacing-md) 0;
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 0.5pt solid var(--color-border);
+        }
+
+        .sketch-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-label);
+            color: var(--color-secondary);
+        }
+
+        .sketch-meta span { font-weight: 600; color: var(--color-primary); }
+
+        .sketch-canvas-wrap {
+            position: relative;
+            border: 1px solid var(--color-border);
+            background:
+                repeating-linear-gradient(0deg, transparent, transparent 9mm, #e8e8e8 9mm, #e8e8e8 10mm),
+                repeating-linear-gradient(90deg, transparent, transparent 9mm, #e8e8e8 9mm, #e8e8e8 10mm);
+            cursor: crosshair;
+        }
+
+        #sketchCanvas {
+            display: block;
+            width: 100%;
+            touch-action: none;
+        }
+
+        .sketch-toolbar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .sketch-toolbar button {
+            padding: 4px 10px;
+            font-size: var(--font-size-label);
+            font-family: var(--font-primary);
+            border: 1px solid var(--color-border);
+            border-radius: 3px;
+            cursor: pointer;
+            background: var(--color-white);
+            color: var(--color-primary);
+            transition: background .15s;
+        }
+
+        .sketch-toolbar button:hover { background: var(--color-highlight); }
+        .sketch-toolbar button.active { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+
+        .sketch-toolbar input[type="color"] {
+            width: 30px; height: 28px;
+            border: 1px solid var(--color-border);
+            border-radius: 3px;
+            cursor: pointer;
+            padding: 1px;
+        }
+
+        .sketch-toolbar select {
+            padding: 3px 6px;
+            font-size: var(--font-size-label);
+            font-family: var(--font-primary);
+            border: 1px solid var(--color-border);
+            border-radius: 3px;
+            background: var(--color-white);
+        }
+
+        .sketch-toolbar label {
+            font-size: var(--font-size-label);
+            color: var(--color-secondary);
+        }
+
         /* PRINT */
         @media print {
             html, body {
@@ -494,6 +600,21 @@
 
             .sketch-area {
                 background: none;
+            }
+
+            .sketch-page {
+                display: block !important;
+                box-shadow: none;
+                margin-top: 0;
+                page-break-before: always;
+            }
+
+            .sketch-toolbar { display: none !important; }
+
+            .sketch-canvas-wrap {
+                background:
+                    repeating-linear-gradient(0deg, transparent, transparent 9mm, #e8e8e8 9mm, #e8e8e8 10mm),
+                    repeating-linear-gradient(90deg, transparent, transparent 9mm, #e8e8e8 9mm, #e8e8e8 10mm);
             }
 
             @page {
@@ -565,6 +686,7 @@
             <h3>Akcje</h3>
             <a href="../index.html" class="btn btn-secondary" style="text-decoration:none;margin-bottom:12px;">← Strona główna</a>
             <button class="btn btn-primary" onclick="printDoc()">Drukuj / Zapisz PDF</button>
+            <button class="btn btn-secondary" onclick="toggleSketchPage()">📐 Szkic pomieszczenia</button>
             <button class="btn btn-secondary" onclick="sendEmail()">Wyślij mailem</button>
             <button class="btn btn-danger" onclick="clearForm()">Wyczyść formularz</button>
             <hr style="margin:12px 0;border:none;border-top:1px solid #ddd;">
@@ -905,6 +1027,58 @@
             </div>
 
         </div>
+
+        <!-- STRONA SZKICU -->
+        <div class="sketch-page" id="sketchPage">
+
+            <div class="sketch-page-header">
+                <div class="logo">
+                    <img src="../list-przewozowy/logo.png" alt="WALABI" style="height:50px;opacity:0.95;" onerror="this.outerHTML='<div style=&quot;font-size:24px;font-weight:600;color:#2D2E2E;letter-spacing:0.05em&quot;>WALABI</div>'">
+                </div>
+                <div style="text-align:right;font-size:var(--font-size-label);color:var(--color-secondary);">
+                    <div>Karta Pomiarowa Nr <strong id="sketchDocNum">KP-XXX-26</strong></div>
+                    <div>Klient: <strong id="sketchClient">—</strong></div>
+                    <div>Pomieszczenie: <strong id="sketchRoom">—</strong></div>
+                </div>
+            </div>
+
+            <div class="sketch-page-title">Szkic pomieszczenia z wymiarami</div>
+
+            <!-- Toolbar – ukryty przy druku -->
+            <div class="sketch-toolbar no-print">
+                <button id="toolPen" class="active" onclick="setTool('pen')">✏️ Rysuj</button>
+                <button id="toolLine" onclick="setTool('line')">📏 Linia</button>
+                <button id="toolRect" onclick="setTool('rect')">⬜ Prostokąt</button>
+                <button id="toolText" onclick="setTool('text')">T Tekst</button>
+                <button id="toolEraser" onclick="setTool('eraser')">🧹 Gumka</button>
+                <label>Kolor:</label>
+                <input type="color" id="strokeColor" value="#2D2E2E" oninput="updateColor()">
+                <label>Grubość:</label>
+                <select id="lineWidth" onchange="updateLineWidth()">
+                    <option value="1">1px</option>
+                    <option value="2" selected>2px</option>
+                    <option value="3">3px</option>
+                    <option value="5">5px</option>
+                </select>
+                <button onclick="undoSketch()">↩ Cofnij</button>
+                <button onclick="clearCanvas()">🗑 Wyczyść</button>
+            </div>
+
+            <div class="sketch-canvas-wrap">
+                <canvas id="sketchCanvas" width="1587" height="2100"></canvas>
+            </div>
+
+            <div style="margin-top:var(--spacing-md);font-size:var(--font-size-xs);color:var(--color-secondary);">
+                Uwagi do szkicu: <input type="text" id="sketchNotes" style="width:70%;border:none;border-bottom:1px solid var(--color-border);font-family:var(--font-primary);font-size:var(--font-size-xs);background:transparent;">
+            </div>
+
+            <div class="doc-footer" style="margin-top:var(--spacing-lg);">
+                <div>WALABI Sp. z o.o. Sp.k. · ul. Kosynierów Kościuszkowskich 13/4 · 87-100 Toruń</div>
+                <div>Tel: +48 501 260 990 · poczta@walabi.pl · www.walabi.pl</div>
+            </div>
+
+        </div>
+
     </main>
 </div>
 
@@ -1036,6 +1210,172 @@
         reader.readAsText(file);
         event.target.value = '';
     }
+
+    // ===== SZKIC POMIESZCZENIA =====
+
+    function toggleSketchPage() {
+        const page = document.getElementById('sketchPage');
+        const isVisible = page.classList.toggle('visible');
+        if (isVisible) {
+            syncSketchMeta();
+            initCanvas();
+            toast('Strona szkicu dodana');
+        } else {
+            toast('Strona szkicu ukryta');
+        }
+    }
+
+    function syncSketchMeta() {
+        document.getElementById('sketchDocNum').textContent = document.getElementById('docNumber').value || 'KP-XXX-26';
+        document.getElementById('sketchClient').textContent = document.getElementById('clientName').value || '—';
+        document.getElementById('sketchRoom').textContent = document.getElementById('locationRoom').value || '—';
+    }
+
+    // Odświeżaj meta przy zmianie pól
+    ['docNumber','clientName','locationRoom'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', syncSketchMeta);
+    });
+
+    // ===== CANVAS =====
+    let canvas, ctx;
+    let isDrawing = false;
+    let currentTool = 'pen';
+    let currentColor = '#2D2E2E';
+    let currentWidth = 2;
+    let startX, startY;
+    let snapshot;
+    let history = [];
+
+    function initCanvas() {
+        if (canvas) return; // już zainicjowany
+        canvas = document.getElementById('sketchCanvas');
+        ctx = canvas.getContext('2d');
+
+        // Ustaw canvas na pełną szerokość kontenera (pikselowo)
+        const wrap = canvas.parentElement;
+        const w = wrap.clientWidth;
+        const ratio = canvas.width / w;
+        canvas.style.height = (canvas.height / ratio) + 'px';
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        saveHistory();
+
+        canvas.addEventListener('mousedown', onDown);
+        canvas.addEventListener('mousemove', onMove);
+        canvas.addEventListener('mouseup', onUp);
+        canvas.addEventListener('mouseleave', onUp);
+
+        canvas.addEventListener('touchstart', e => { e.preventDefault(); onDown(toMouse(e)); }, { passive: false });
+        canvas.addEventListener('touchmove',  e => { e.preventDefault(); onMove(toMouse(e)); }, { passive: false });
+        canvas.addEventListener('touchend',   e => { e.preventDefault(); onUp(); }, { passive: false });
+    }
+
+    function toMouse(e) {
+        const t = e.touches[0];
+        return { clientX: t.clientX, clientY: t.clientY };
+    }
+
+    function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        return {
+            x: (e.clientX - rect.left) * scaleX,
+            y: (e.clientY - rect.top) * scaleY
+        };
+    }
+
+    function onDown(e) {
+        const pos = getPos(e);
+        startX = pos.x; startY = pos.y;
+        isDrawing = true;
+        snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        if (currentTool === 'text') {
+            isDrawing = false;
+            const txt = prompt('Wpisz tekst:');
+            if (txt) {
+                ctx.font = `${currentWidth * 8 + 10}px Plus Jakarta Sans, sans-serif`;
+                ctx.fillStyle = currentColor;
+                ctx.fillText(txt, startX, startY);
+                saveHistory();
+            }
+            return;
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+    }
+
+    function onMove(e) {
+        if (!isDrawing) return;
+        const pos = getPos(e);
+
+        if (currentTool === 'pen' || currentTool === 'eraser') {
+            ctx.lineTo(pos.x, pos.y);
+            ctx.strokeStyle = currentTool === 'eraser' ? '#ffffff' : currentColor;
+            ctx.lineWidth = currentTool === 'eraser' ? currentWidth * 8 : currentWidth;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.stroke();
+        } else {
+            ctx.putImageData(snapshot, 0, 0);
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = currentWidth;
+            ctx.lineCap = 'round';
+            if (currentTool === 'line') {
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+            } else if (currentTool === 'rect') {
+                ctx.beginPath();
+                ctx.strokeRect(startX, startY, pos.x - startX, pos.y - startY);
+            }
+        }
+    }
+
+    function onUp() {
+        if (!isDrawing) return;
+        isDrawing = false;
+        saveHistory();
+    }
+
+    function saveHistory() {
+        history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        if (history.length > 30) history.shift();
+    }
+
+    window.undoSketch = function() {
+        if (history.length <= 1) return;
+        history.pop();
+        ctx.putImageData(history[history.length - 1], 0, 0);
+    };
+
+    window.clearCanvas = function() {
+        if (!confirm('Wyczyścić szkic?')) return;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        history = [];
+        saveHistory();
+    };
+
+    window.setTool = function(tool) {
+        currentTool = tool;
+        document.querySelectorAll('.sketch-toolbar button[id^="tool"]').forEach(b => b.classList.remove('active'));
+        const btn = document.getElementById('tool' + tool.charAt(0).toUpperCase() + tool.slice(1));
+        if (btn) btn.classList.add('active');
+    };
+
+    window.updateColor = function() {
+        currentColor = document.getElementById('strokeColor').value;
+    };
+
+    window.updateLineWidth = function() {
+        currentWidth = parseInt(document.getElementById('lineWidth').value);
+    };
 </script>
 
 </body>
