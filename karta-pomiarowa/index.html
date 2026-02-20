@@ -1054,6 +1054,8 @@
                 <button id="toolCircle" onclick="setTool('circle')">⭕ Koło</button>
                 <button id="toolArrow" onclick="setTool('arrow')">➤ Strzałka</button>
                 <button id="toolDimension" onclick="setTool('dimension')">↔ Wymiar</button>
+                <button id="toolSocket" onclick="setTool('socket')">⚡ Gniazdko</button>
+                <button id="toolValve" onclick="setTool('valve')">⊗ Zawór</button>
                 <button id="toolEraser" onclick="setTool('eraser')">🧹 Gumka</button>
                 <label>Kolor:</label>
                 <input type="color" id="strokeColor" value="#2D2E2E" oninput="updateColor()">
@@ -1461,6 +1463,67 @@
             c.fillStyle = s.color;
             c.fillText(dimMm, 0, -4);
             c.restore();
+        } else if (s.type === 'socket') {
+            // Symbol gniazdka elektrycznego (widok z boku na ścianie)
+            // Okrąg + dwie kreski pionowe (otwory) + pozioma kreska bazowa
+            const cx = s.x1, cy = s.y1;
+            const r = s.size || 28;
+            // Okrąg
+            c.lineWidth = s.width;
+            c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.stroke();
+            // Dwie kreski — otwory wtyczki
+            const pinW = r * 0.22, pinH = r * 0.38, pinY = cy - r * 0.08;
+            c.lineWidth = Math.max(s.width * 1.2, 2);
+            c.beginPath();
+            c.moveTo(cx - pinW, pinY - pinH); c.lineTo(cx - pinW, pinY + pinH);
+            c.moveTo(cx + pinW, pinY - pinH); c.lineTo(cx + pinW, pinY + pinH);
+            c.stroke();
+            // Kreska bazowa (montaż do ściany) — półłuk dolny
+            c.lineWidth = Math.max(s.width * 1.5, 2.5);
+            c.beginPath();
+            c.arc(cx, cy, r * 0.55, Math.PI * 0.15, Math.PI * 0.85);
+            c.stroke();
+            // Etykieta
+            if (s.text) {
+                c.font = `400 ${Math.round(r * 0.8)}px Barlow Condensed, sans-serif`;
+                c.fillStyle = s.color;
+                c.textAlign = 'center';
+                c.fillText(s.text, cx, cy + r + Math.round(r * 0.9));
+            }
+        } else if (s.type === 'valve') {
+            // Symbol zaworu — dwa trójkąty stykające się wierzchołkami (motyl)
+            const cx = s.x1, cy = s.y1;
+            const r = s.size || 28;
+            c.lineWidth = s.width;
+            // Lewy trójkąt
+            c.beginPath();
+            c.moveTo(cx - r, cy - r * 0.75);
+            c.lineTo(cx,     cy);
+            c.lineTo(cx - r, cy + r * 0.75);
+            c.closePath(); c.stroke();
+            // Prawy trójkąt
+            c.beginPath();
+            c.moveTo(cx + r, cy - r * 0.75);
+            c.lineTo(cx,     cy);
+            c.lineTo(cx + r, cy + r * 0.75);
+            c.closePath(); c.stroke();
+            // Pozioma linia rury (przez oba trójkąty)
+            c.lineWidth = Math.max(s.width * 1.3, 2);
+            c.beginPath();
+            c.moveTo(cx - r, cy); c.lineTo(cx + r, cy);
+            c.stroke();
+            // Kreska trzonka (górna)
+            c.lineWidth = Math.max(s.width, 1.5);
+            c.beginPath();
+            c.moveTo(cx, cy - r * 0.05); c.lineTo(cx, cy - r * 0.75);
+            c.stroke();
+            // Etykieta
+            if (s.text) {
+                c.font = `400 ${Math.round(r * 0.8)}px Barlow Condensed, sans-serif`;
+                c.fillStyle = s.color;
+                c.textAlign = 'center';
+                c.fillText(s.text, cx, cy + r + Math.round(r * 0.9));
+            }
         } else if (s.type === 'text') {
             c.font = `300 ${s.fontSize}px Barlow Condensed, sans-serif`;
             c.fillText(s.text, s.x1, s.y1);
@@ -1511,6 +1574,11 @@
             const x = Math.min(s.x1, s.x2), y = Math.min(s.y1, s.y2);
             return { x: x - 30, y: y - 30, w: Math.abs(s.x2 - s.x1) + 60 || 1, h: Math.abs(s.y2 - s.y1) + 60 || 1 };
         }
+        if (s.type === 'socket' || s.type === 'valve') {
+            const r = (s.size || 28) + 10;
+            const rh = s.type === 'valve' ? r * 0.85 : r;
+            return { x: s.x1 - r, y: s.y1 - rh, w: r * 2, h: rh + r * 1.8 };
+        }
         const x = Math.min(s.x1, s.x2), y = Math.min(s.y1, s.y2);
         return { x, y, w: Math.abs(s.x2 - s.x1) || 1, h: Math.abs(s.y2 - s.y1) || 1 };
     }
@@ -1537,6 +1605,9 @@
             if (len2 === 0) return Math.hypot(px-s.x1, py-s.y1) < pad;
             const t = Math.max(0, Math.min(1, ((px-s.x1)*dx + (py-s.y1)*dy) / len2));
             return Math.hypot(px - (s.x1+t*dx), py - (s.y1+t*dy)) < pad + 20;
+        }
+        if (s.type === 'socket' || s.type === 'valve') {
+            return Math.hypot(px - s.x1, py - s.y1) < (s.size || 28) + pad;
         }
         return px >= bb.x - pad && px <= bb.x + bb.w + pad &&
                py >= bb.y - pad && py <= bb.y + bb.h + pad;
@@ -1627,6 +1698,18 @@
                 redraw();
                 saveHistory();
             }
+            return;
+        }
+
+        if (currentTool === 'socket' || currentTool === 'valve') {
+            isDrawing = false;
+            const label = currentTool === 'socket' ? 'Etykieta gniazdka (opcjonalnie):' : 'Etykieta zaworu (opcjonalnie):';
+            const txt = prompt(label, '');
+            if (txt === null) return; // anulowano
+            const sz = currentWidth * 10 + 18;
+            shapes.push({ type: currentTool, x1: pos.x, y1: pos.y, color: currentColor, width: Math.max(currentWidth, 1.5), size: sz, text: txt || '' });
+            redraw();
+            saveHistory();
             return;
         }
 
@@ -1735,8 +1818,8 @@
         const raw = getRawPos(e);
         for (let i = shapes.length-1; i >= 0; i--) {
             const s = shapes[i];
-            if ((s.type === 'text' || s.type === 'arrow' || s.type === 'dimension') && hitTest(s, raw.x, raw.y)) {
-                const label = s.type === 'dimension' ? 'Edytuj wymiar:' : 'Edytuj tekst:';
+            if ((s.type === 'text' || s.type === 'arrow' || s.type === 'dimension' || s.type === 'socket' || s.type === 'valve') && hitTest(s, raw.x, raw.y)) {
+                const label = s.type === 'dimension' ? 'Edytuj wymiar:' : 'Edytuj etykietę:';
                 const newTxt = prompt(label, s.text || '');
                 if (newTxt !== null) {
                     s.text = newTxt;
