@@ -1046,6 +1046,7 @@
 
             <!-- Toolbar – ukryty przy druku -->
             <div class="sketch-toolbar no-print">
+                <button id="toolSelect" onclick="setTool('select')">↖ Zaznacz</button>
                 <button id="toolPen" class="active" onclick="setTool('pen')">✏️ Rysuj</button>
                 <button id="toolLine" onclick="setTool('line')">📏 Linia</button>
                 <button id="toolRect" onclick="setTool('rect')">⬜ Prostokąt</button>
@@ -1254,47 +1255,49 @@
     let canvas, ctx;
     let gridCanvas, gctx;
     let cursorCanvas, cctx;
-    let isDrawing = false;
     let currentTool = 'pen';
     let currentColor = '#2D2E2E';
     let currentWidth = 2;
-    let startX, startY;
-    let snapshot;
-    let history = [];
     let snapEnabled = true;
 
     // Canvas 1587px szerokości = 186mm (210mm A4 minus marginesy 2×12mm)
-    const MM_TO_PX = 1587 / 186; // ≈ 8.53 px/mm
-    let gridStep = Math.round(10 * MM_TO_PX); // domyślnie 10mm
+    const MM_TO_PX = 1587 / 186;
+    let gridStep = Math.round(10 * MM_TO_PX);
 
-    function mmToPx(mm) { return Math.round(mm * MM_TO_PX); }
+    // ===== LISTA KSZTAŁTÓW (architektura obiektowa) =====
+    // Każdy kształt: { type, x1,y1,x2,y2, color, width, text, fontSize }
+    let shapes = [];       // zapisane kształty
+    let penPoints = [];    // bieżące punkty odręczne
+    let history = [];      // historia stanów do cofania
+    let selectedIdx = -1;  // indeks zaznaczonego kształtu
+    let isDragging = false;
+    let isDrawing = false;
+    let startX, startY;
+    let dragOffX, dragOffY; // offset kursora względem lewego górnego rogu kształtu
 
+    // ===== INIT =====
     function initCanvas() {
         if (canvas) return;
-        canvas = document.getElementById('sketchCanvas');
-        ctx    = canvas.getContext('2d');
+        canvas       = document.getElementById('sketchCanvas');
+        ctx          = canvas.getContext('2d');
         gridCanvas   = document.getElementById('gridCanvas');
         gctx         = gridCanvas.getContext('2d');
         cursorCanvas = document.getElementById('cursorCanvas');
         cctx         = cursorCanvas.getContext('2d');
 
-        // Synchronizuj wysokość CSS canvasów
-        const wrap = canvas.parentElement;
+        const wrap  = canvas.parentElement;
         const ratio = canvas.width / wrap.clientWidth;
-        const cssH = canvas.height / ratio;
-        [canvas, gridCanvas, cursorCanvas].forEach(c => {
-            c.style.height = cssH + 'px';
-        });
+        const cssH  = canvas.height / ratio;
+        [canvas, gridCanvas, cursorCanvas].forEach(c => { c.style.height = cssH + 'px'; });
 
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        saveHistory();
         drawGrid();
+        redraw();
 
         canvas.addEventListener('mousedown', onDown);
         canvas.addEventListener('mousemove', onMove);
-        canvas.addEventListener('mouseup', onUp);
+        canvas.addEventListener('mouseup',   onUp);
         canvas.addEventListener('mouseleave', onLeave);
+        canvas.addEventListener('dblclick',  onDblClick);
 
         canvas.addEventListener('touchstart', e => { e.preventDefault(); onDown(toMouse(e)); }, { passive: false });
         canvas.addEventListener('touchmove',  e => { e.preventDefault(); onMove(toMouse(e)); }, { passive: false });
@@ -1308,21 +1311,7 @@
 
     function snapToGrid(x, y) {
         if (!snapEnabled || gridStep === 0) return { x, y };
-        return {
-            x: Math.round(x / gridStep) * gridStep,
-            y: Math.round(y / gridStep) * gridStep
-        };
-    }
-
-    function getPos(e) {
-        const rect = canvas.getBoundingClientRect();
-        const scaleX = canvas.width / rect.width;
-        const scaleY = canvas.height / rect.height;
-        const raw = {
-            x: (e.clientX - rect.left) * scaleX,
-            y: (e.clientY - rect.top)  * scaleY
-        };
-        return snapToGrid(raw.x, raw.y);
+        return { x: Math.round(x / gridStep) * gridStep, y: Math.round(y / gridStep) * gridStep };
     }
 
     function getRawPos(e) {
@@ -1333,165 +1322,270 @@
         };
     }
 
+    function getPos(e) {
+        const raw = getRawPos(e);
+        return snapToGrid(raw.x, raw.y);
+    }
+
     // ===== SIATKA =====
     function drawGrid() {
         gctx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
         if (gridStep === 0) return;
-
         const W = gridCanvas.width, H = gridCanvas.height;
-        const gridMm = parseInt(document.getElementById('gridSize').value) || 10;
-
-        // Co 10 wierszy/kolumn — linia grubsza (co 100mm)
         for (let x = 0; x <= W; x += gridStep) {
             const isMajor = Math.round(x / gridStep) % 10 === 0;
-            gctx.beginPath();
-            gctx.moveTo(x, 0);
-            gctx.lineTo(x, H);
+            gctx.beginPath(); gctx.moveTo(x, 0); gctx.lineTo(x, H);
             gctx.strokeStyle = isMajor ? 'rgba(180,180,180,0.7)' : 'rgba(210,210,210,0.5)';
-            gctx.lineWidth = isMajor ? 1.5 : 0.8;
-            gctx.stroke();
+            gctx.lineWidth = isMajor ? 1.5 : 0.8; gctx.stroke();
         }
         for (let y = 0; y <= H; y += gridStep) {
             const isMajor = Math.round(y / gridStep) % 10 === 0;
-            gctx.beginPath();
-            gctx.moveTo(0, y);
-            gctx.lineTo(W, y);
+            gctx.beginPath(); gctx.moveTo(0, y); gctx.lineTo(W, y);
             gctx.strokeStyle = isMajor ? 'rgba(180,180,180,0.7)' : 'rgba(210,210,210,0.5)';
-            gctx.lineWidth = isMajor ? 1.5 : 0.8;
-            gctx.stroke();
+            gctx.lineWidth = isMajor ? 1.5 : 0.8; gctx.stroke();
         }
-
-        // Etykiety co 100mm wzdłuż osi X i Y
         gctx.font = '18px Plus Jakarta Sans, sans-serif';
         gctx.fillStyle = 'rgba(150,150,150,0.8)';
         gctx.textAlign = 'center';
-        for (let x = gridStep * 10; x < W; x += gridStep * 10) {
+        for (let x = gridStep * 10; x < W; x += gridStep * 10)
             gctx.fillText(Math.round(x / MM_TO_PX) + 'mm', x, 20);
-        }
         gctx.textAlign = 'right';
-        for (let y = gridStep * 10; y < H; y += gridStep * 10) {
+        for (let y = gridStep * 10; y < H; y += gridStep * 10)
             gctx.fillText(Math.round(y / MM_TO_PX) + 'mm', 46, y + 6);
-        }
     }
 
-    // ===== KURSOR / PODGLĄD =====
-    function drawCursor(x, y) {
-        cctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
-        if (gridStep === 0 || !snapEnabled) return;
+    // ===== RYSOWANIE KSZTAŁTÓW =====
+    function drawShape(c, s, selected) {
+        c.save();
+        c.strokeStyle = s.color;
+        c.fillStyle   = s.color;
+        c.lineWidth   = s.width;
+        c.lineCap     = 'round';
+        c.lineJoin    = 'round';
 
-        // Krzyżyk na węźle siatki
-        const snapped = snapToGrid(x, y);
+        if (s.type === 'pen') {
+            if (!s.points || s.points.length < 2) { c.restore(); return; }
+            c.beginPath();
+            c.moveTo(s.points[0].x, s.points[0].y);
+            for (let i = 1; i < s.points.length; i++) c.lineTo(s.points[i].x, s.points[i].y);
+            c.stroke();
+        } else if (s.type === 'line') {
+            c.beginPath(); c.moveTo(s.x1, s.y1); c.lineTo(s.x2, s.y2); c.stroke();
+        } else if (s.type === 'rect') {
+            c.strokeRect(s.x1, s.y1, s.x2 - s.x1, s.y2 - s.y1);
+        } else if (s.type === 'text') {
+            c.font = `bold ${s.fontSize}px Plus Jakarta Sans, sans-serif`;
+            c.fillText(s.text, s.x1, s.y1);
+        }
+
+        // Ramka zaznaczenia
+        if (selected) {
+            const bb = getBBox(s);
+            c.strokeStyle = '#B8860B';
+            c.lineWidth = 1.5;
+            c.setLineDash([5, 3]);
+            c.strokeRect(bb.x - 4, bb.y - 4, bb.w + 8, bb.h + 8);
+            c.setLineDash([]);
+            // uchwyty narożne
+            c.fillStyle = '#B8860B';
+            [[bb.x-4, bb.y-4],[bb.x+bb.w+4, bb.y-4],[bb.x-4, bb.y+bb.h+4],[bb.x+bb.w+4, bb.y+bb.h+4]].forEach(([hx,hy]) => {
+                c.fillRect(hx-4, hy-4, 8, 8);
+            });
+        }
+        c.restore();
+    }
+
+    function redraw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        shapes.forEach((s, i) => drawShape(ctx, s, i === selectedIdx));
+    }
+
+    // ===== BOUNDING BOX =====
+    function getBBox(s) {
+        if (s.type === 'pen') {
+            const xs = s.points.map(p => p.x), ys = s.points.map(p => p.y);
+            const x = Math.min(...xs), y = Math.min(...ys);
+            return { x, y, w: Math.max(...xs) - x || 1, h: Math.max(...ys) - y || 1 };
+        }
+        if (s.type === 'text') {
+            ctx.font = `bold ${s.fontSize}px Plus Jakarta Sans, sans-serif`;
+            const w = ctx.measureText(s.text).width;
+            return { x: s.x1, y: s.y1 - s.fontSize, w: w || 60, h: s.fontSize + 4 };
+        }
+        const x = Math.min(s.x1, s.x2), y = Math.min(s.y1, s.y2);
+        return { x, y, w: Math.abs(s.x2 - s.x1) || 1, h: Math.abs(s.y2 - s.y1) || 1 };
+    }
+
+    function hitTest(s, px, py) {
+        const bb = getBBox(s);
+        const pad = Math.max(s.width || 0, 10);
+        if (s.type === 'line') {
+            // odległość punktu od odcinka
+            const dx = s.x2 - s.x1, dy = s.y2 - s.y1;
+            const len2 = dx*dx + dy*dy;
+            if (len2 === 0) return Math.hypot(px-s.x1, py-s.y1) < pad;
+            const t = Math.max(0, Math.min(1, ((px-s.x1)*dx + (py-s.y1)*dy) / len2));
+            return Math.hypot(px - (s.x1+t*dx), py - (s.y1+t*dy)) < pad;
+        }
+        return px >= bb.x - pad && px <= bb.x + bb.w + pad &&
+               py >= bb.y - pad && py <= bb.y + bb.h + pad;
+    }
+
+    // ===== KURSOR OVERLAY =====
+    function drawCursor(rawX, rawY) {
+        cctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+        if (gridStep === 0 || !snapEnabled || currentTool === 'select') return;
+
+        const snapped = snapToGrid(rawX, rawY);
         cctx.strokeStyle = 'rgba(184,134,11,0.85)';
         cctx.lineWidth = 1.5;
         const s = 14;
         cctx.beginPath();
-        cctx.moveTo(snapped.x - s, snapped.y); cctx.lineTo(snapped.x + s, snapped.y);
-        cctx.moveTo(snapped.x, snapped.y - s); cctx.lineTo(snapped.x, snapped.y + s);
+        cctx.moveTo(snapped.x-s, snapped.y); cctx.lineTo(snapped.x+s, snapped.y);
+        cctx.moveTo(snapped.x, snapped.y-s); cctx.lineTo(snapped.x, snapped.y+s);
         cctx.stroke();
-
-        // Kółko
         cctx.beginPath();
-        cctx.arc(snapped.x, snapped.y, 5, 0, Math.PI * 2);
-        cctx.strokeStyle = 'rgba(184,134,11,0.9)';
+        cctx.arc(snapped.x, snapped.y, 5, 0, Math.PI*2);
         cctx.stroke();
 
-        // Podgląd linii podczas rysowania (tylko dla line/rect)
         if (isDrawing && (currentTool === 'line' || currentTool === 'rect')) {
-            cctx.strokeStyle = 'rgba(184,134,11,0.5)';
+            cctx.strokeStyle = 'rgba(184,134,11,0.45)';
             cctx.lineWidth = 1;
             cctx.setLineDash([6, 4]);
             if (currentTool === 'line') {
-                cctx.beginPath();
-                cctx.moveTo(startX, startY);
-                cctx.lineTo(snapped.x, snapped.y);
-                cctx.stroke();
+                cctx.beginPath(); cctx.moveTo(startX, startY); cctx.lineTo(snapped.x, snapped.y); cctx.stroke();
             } else {
-                cctx.strokeRect(startX, startY, snapped.x - startX, snapped.y - startY);
+                cctx.strokeRect(startX, startY, snapped.x-startX, snapped.y-startY);
             }
             cctx.setLineDash([]);
-
-            // Wymiar w mm
-            const dx = Math.abs(snapped.x - startX) / MM_TO_PX;
-            const dy = Math.abs(snapped.y - startY) / MM_TO_PX;
-            const label = currentTool === 'line'
-                ? `${Math.round(Math.sqrt(dx*dx+dy*dy))} mm`
-                : `${Math.round(dx)} × ${Math.round(dy)} mm`;
+            const dx = Math.abs(snapped.x-startX)/MM_TO_PX, dy = Math.abs(snapped.y-startY)/MM_TO_PX;
+            const lbl = currentTool === 'line' ? `${Math.round(Math.sqrt(dx*dx+dy*dy))} mm` : `${Math.round(dx)} × ${Math.round(dy)} mm`;
             cctx.font = 'bold 22px Plus Jakarta Sans, sans-serif';
             cctx.fillStyle = 'rgba(184,134,11,0.95)';
             cctx.textAlign = 'left';
-            cctx.fillText(label, snapped.x + 12, snapped.y - 8);
+            cctx.fillText(lbl, snapped.x+12, snapped.y-8);
         }
     }
 
-    function clearCursor() {
-        if (cctx) cctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
-    }
+    function clearCursor() { if (cctx) cctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height); }
 
-    // ===== RYSOWANIE =====
+    // ===== ZDARZENIA =====
     function onDown(e) {
+        const raw = getRawPos(e);
         const pos = getPos(e);
-        startX = pos.x; startY = pos.y;
+
+        if (currentTool === 'select') {
+            // Szukaj kształtu od góry
+            let found = -1;
+            for (let i = shapes.length - 1; i >= 0; i--) {
+                if (hitTest(shapes[i], raw.x, raw.y)) { found = i; break; }
+            }
+            if (found >= 0) {
+                selectedIdx = found;
+                isDragging  = true;
+                const bb = getBBox(shapes[found]);
+                dragOffX = raw.x - bb.x;
+                dragOffY = raw.y - bb.y;
+            } else {
+                selectedIdx = -1;
+            }
+            redraw();
+            return;
+        }
+
+        // Narzędzia rysujące
         isDrawing = true;
-        snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        startX = pos.x; startY = pos.y;
 
         if (currentTool === 'text') {
             isDrawing = false;
             const txt = prompt('Wpisz tekst:');
             if (txt) {
-                ctx.font = `bold ${currentWidth * 8 + 10}px Plus Jakarta Sans, sans-serif`;
-                ctx.fillStyle = currentColor;
-                ctx.fillText(txt, startX, startY);
+                shapes.push({ type:'text', x1:pos.x, y1:pos.y, color:currentColor, width:currentWidth, text:txt, fontSize: currentWidth*8+10 });
+                redraw();
                 saveHistory();
             }
             return;
         }
 
-        ctx.beginPath();
-        ctx.moveTo(startX, startY);
+        if (currentTool === 'pen') penPoints = [{ x:pos.x, y:pos.y }];
     }
 
     function onMove(e) {
         const raw = getRawPos(e);
-        const pos = snapToGrid(raw.x, raw.y);
+        const pos = getPos(e);
         drawCursor(raw.x, raw.y);
 
-        // Współrzędne w mm
         const coordsEl = document.getElementById('coordsDisplay');
-        if (coordsEl) {
-            const mx = Math.round(pos.x / MM_TO_PX);
-            const my = Math.round(pos.y / MM_TO_PX);
-            coordsEl.textContent = `X: ${mx} mm  Y: ${my} mm`;
+        if (coordsEl) coordsEl.textContent = `X: ${Math.round(pos.x/MM_TO_PX)} mm  Y: ${Math.round(pos.y/MM_TO_PX)} mm`;
+
+        // Przeciąganie
+        if (isDragging && selectedIdx >= 0) {
+            const s = shapes[selectedIdx];
+            const bb = getBBox(s);
+            const newBBx = raw.x - dragOffX;
+            const newBBy = raw.y - dragOffY;
+            const dx = newBBx - bb.x;
+            const dy = newBBy - bb.y;
+            moveShape(s, dx, dy);
+            redraw();
+            return;
         }
 
         if (!isDrawing) return;
 
-        if (currentTool === 'pen' || currentTool === 'eraser') {
-            ctx.lineTo(pos.x, pos.y);
-            ctx.strokeStyle = currentTool === 'eraser' ? '#ffffff' : currentColor;
-            ctx.lineWidth  = currentTool === 'eraser' ? currentWidth * 8 : currentWidth;
-            ctx.lineCap    = 'round';
-            ctx.lineJoin   = 'round';
-            ctx.stroke();
-        } else {
-            ctx.putImageData(snapshot, 0, 0);
+        if (currentTool === 'pen') {
+            penPoints.push({ x:pos.x, y:pos.y });
+            // Rysuj odręczne bieżące kreski bezpośrednio (szybkie)
             ctx.strokeStyle = currentColor;
             ctx.lineWidth   = currentWidth;
-            ctx.lineCap     = 'round';
-            if (currentTool === 'line') {
+            ctx.lineCap     = 'round'; ctx.lineJoin = 'round';
+            if (penPoints.length > 1) {
+                const p = penPoints;
                 ctx.beginPath();
-                ctx.moveTo(startX, startY);
-                ctx.lineTo(pos.x, pos.y);
+                ctx.moveTo(p[p.length-2].x, p[p.length-2].y);
+                ctx.lineTo(p[p.length-1].x, p[p.length-1].y);
                 ctx.stroke();
-            } else if (currentTool === 'rect') {
-                ctx.strokeRect(startX, startY, pos.x - startX, pos.y - startY);
             }
+        } else if (currentTool === 'eraser') {
+            // Gumka: usuń kształty dotknięte kursorem
+            shapes = shapes.filter(s => !hitTest(s, pos.x, pos.y));
+            if (selectedIdx >= shapes.length) selectedIdx = -1;
+            redraw();
+        } else {
+            // Podgląd: rysuj tymczasowy kształt
+            redraw();
+            const tmp = { type: currentTool, x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth };
+            drawShape(ctx, tmp, false);
         }
     }
 
-    function onUp() {
+    function onUp(e) {
+        const pos = e ? getPos(e) : { x:startX, y:startY };
+
+        if (isDragging) {
+            isDragging = false;
+            saveHistory();
+            return;
+        }
+
         if (!isDrawing) return;
         isDrawing = false;
         clearCursor();
+
+        if (currentTool === 'pen') {
+            if (penPoints.length > 1)
+                shapes.push({ type:'pen', points:[...penPoints], color:currentColor, width:currentWidth });
+            penPoints = [];
+        } else if (currentTool === 'line') {
+            shapes.push({ type:'line', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth });
+        } else if (currentTool === 'rect') {
+            shapes.push({ type:'rect', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth });
+        }
+
+        redraw();
         saveHistory();
     }
 
@@ -1499,54 +1593,82 @@
         clearCursor();
         const coordsEl = document.getElementById('coordsDisplay');
         if (coordsEl) coordsEl.textContent = '';
-        if (isDrawing) { isDrawing = false; saveHistory(); }
+        if (isDragging) { isDragging = false; saveHistory(); }
+        if (isDrawing)  { onUp(); }
     }
 
+    // Podwójny klik na tekst — edycja
+    function onDblClick(e) {
+        if (currentTool !== 'select') return;
+        const raw = getRawPos(e);
+        for (let i = shapes.length-1; i >= 0; i--) {
+            if (shapes[i].type === 'text' && hitTest(shapes[i], raw.x, raw.y)) {
+                const newTxt = prompt('Edytuj tekst:', shapes[i].text);
+                if (newTxt !== null) {
+                    shapes[i].text = newTxt;
+                    redraw();
+                    saveHistory();
+                }
+                return;
+            }
+        }
+    }
+
+    // ===== PRZESUWANIE KSZTAŁTU =====
+    function moveShape(s, dx, dy) {
+        if (s.type === 'pen') {
+            s.points = s.points.map(p => ({ x: p.x+dx, y: p.y+dy }));
+        } else {
+            s.x1 += dx; s.y1 += dy;
+            if (s.x2 !== undefined) { s.x2 += dx; s.y2 += dy; }
+        }
+    }
+
+    // ===== HISTORIA =====
     function saveHistory() {
-        history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-        if (history.length > 30) history.shift();
+        history.push(JSON.stringify(shapes));
+        if (history.length > 40) history.shift();
     }
 
     window.undoSketch = function() {
         if (history.length <= 1) return;
         history.pop();
-        ctx.putImageData(history[history.length - 1], 0, 0);
+        shapes = JSON.parse(history[history.length-1]);
+        selectedIdx = -1;
+        redraw();
     };
 
     window.clearCanvas = function() {
         if (!confirm('Wyczyścić szkic?')) return;
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        shapes = []; selectedIdx = -1;
         history = [];
+        redraw();
         saveHistory();
     };
 
     window.setTool = function(tool) {
         currentTool = tool;
+        selectedIdx = -1;
+        redraw();
         document.querySelectorAll('.sketch-toolbar button[id^="tool"]').forEach(b => b.classList.remove('active'));
         const btn = document.getElementById('tool' + tool.charAt(0).toUpperCase() + tool.slice(1));
         if (btn) btn.classList.add('active');
+        canvas.style.cursor = tool === 'select' ? 'default' : 'crosshair';
     };
 
-    window.updateColor = function() {
-        currentColor = document.getElementById('strokeColor').value;
-    };
-
-    window.updateLineWidth = function() {
-        currentWidth = parseInt(document.getElementById('lineWidth').value);
-    };
+    window.updateColor = function() { currentColor = document.getElementById('strokeColor').value; };
+    window.updateLineWidth = function() { currentWidth = parseInt(document.getElementById('lineWidth').value); };
 
     window.updateGrid = function() {
         const sel = document.getElementById('gridSize');
-        const mm = parseInt(sel.options[sel.selectedIndex].text); // np. "10 mm" → 10
+        const mm = parseInt(sel.options[sel.selectedIndex].text);
         gridStep = isNaN(mm) ? 0 : Math.round(mm * MM_TO_PX);
         if (gctx) drawGrid();
     };
 
     window.toggleSnap = function() {
         snapEnabled = !snapEnabled;
-        const btn = document.getElementById('snapBtn');
-        if (btn) btn.classList.toggle('active', snapEnabled);
+        document.getElementById('snapBtn').classList.toggle('active', snapEnabled);
         toast(snapEnabled ? 'Snap włączony' : 'Snap wyłączony');
     };
 </script>
