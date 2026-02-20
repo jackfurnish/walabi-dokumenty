@@ -6,7 +6,7 @@
     <title>Karta Pomiarowa - WALABI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Oswald:wght@300&subset=latin-ext&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Barlow+Condensed:wght@300;400&subset=latin-ext&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         :root {
@@ -1374,7 +1374,7 @@
         } else if (s.type === 'rect') {
             c.strokeRect(s.x1, s.y1, s.x2 - s.x1, s.y2 - s.y1);
         } else if (s.type === 'text') {
-            c.font = `300 ${s.fontSize}px Oswald, sans-serif`;
+            c.font = `300 ${s.fontSize}px Barlow Condensed, sans-serif`;
             c.fillText(s.text, s.x1, s.y1);
         }
 
@@ -1410,7 +1410,7 @@
             return { x, y, w: Math.max(...xs) - x || 1, h: Math.max(...ys) - y || 1 };
         }
         if (s.type === 'text') {
-            ctx.font = `300 ${s.fontSize}px Oswald, sans-serif`;
+            ctx.font = `300 ${s.fontSize}px Barlow Condensed, sans-serif`;
             const w = ctx.measureText(s.text).width;
             return { x: s.x1, y: s.y1 - s.fontSize, w: w || 60, h: s.fontSize + 4 };
         }
