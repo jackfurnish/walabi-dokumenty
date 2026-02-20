@@ -1082,6 +1082,16 @@
                 </select>
                 <button id="btnCopy" onclick="copySelected()" title="Kopiuj zaznaczony element (Ctrl+C)">📋 Kopiuj</button>
                 <button id="btnPaste" onclick="pasteShape()" title="Wklej (Ctrl+V)" style="display:none;">📌 Wklej</button>
+                <span id="voicePanel" style="display:none;align-items:center;gap:4px;border-left:1px solid var(--color-border);padding-left:6px;margin-left:2px;">
+                    <span id="voiceStatus" style="font-size:var(--font-size-xs);color:#c0392b;font-weight:600;min-width:36px;"></span>
+                    <button id="btnVoiceRecord" onclick="startVoiceNote()" title="Nagraj notatkę głosową">🎤 Nagraj</button>
+                    <button id="btnVoiceStop"   onclick="stopVoiceNote()"  title="Stop nagrywania" style="display:none;background:#c0392b;color:#fff;border-color:#c0392b;">⏹ Stop</button>
+                    <button id="btnVoicePlay"   onclick="playVoiceNote()"  title="Odtwórz notatkę" style="display:none;">▶ Odtwórz</button>
+                    <button id="btnVoiceDel"    onclick="deleteVoiceNote()" title="Usuń notatkę głosową" style="display:none;">🗑</button>
+                    <label id="btnVoiceUpload" title="Wgraj plik audio (mp3, m4a, ogg...)" style="padding:4px 10px;font-size:var(--font-size-label);border:1px solid var(--color-border);border-radius:3px;cursor:pointer;background:var(--color-white);">📁 Audio
+                        <input type="file" id="audioFileInput" accept="audio/*" style="display:none;" onchange="handleAudioUpload(event)">
+                    </label>
+                </span>
                 <button onclick="undoSketch()">↩ Cofnij</button>
                 <button onclick="clearCanvas()">🗑 Wyczyść</button>
             </div>
@@ -1297,6 +1307,16 @@
     let startX, startY;
     let dragOffX, dragOffY; // offset kursora względem lewego górnego rogu kształtu
 
+    // ===== AUDIO =====
+    let audioStore = {};       // { shapeId: base64 dataURL }
+    let shapeIdCounter = 0;
+    function newShapeId() { return ++shapeIdCounter; }
+    // Sprawdź czy nagrywanie jest możliwe (wymaga secure context — HTTPS lub localhost)
+    const CAN_RECORD = !!(window.isSecureContext &&
+                          navigator.mediaDevices &&
+                          navigator.mediaDevices.getUserMedia &&
+                          window.MediaRecorder);
+
     // ===== INIT =====
     function initCanvas() {
         if (canvas) return;
@@ -1315,6 +1335,7 @@
         drawGrid();
         redraw();
         updateCopyBtn();
+        updateVoicePanel();
 
         canvas.addEventListener('mousedown', onDown);
         canvas.addEventListener('mousemove', onMove);
@@ -1655,6 +1676,14 @@
                 c.fillRect(hx-4, hy-4, 8, 8);
             });
         }
+        // Ikona notatki głosowej
+        if (s.id && audioStore[s.id]) {
+            const bb = getBBox(s);
+            c.font = '24px serif';
+            c.textAlign = 'left';
+            c.fillStyle = voiceActive && selected ? '#c0392b' : '#E07B39';
+            c.fillText('🎤', bb.x + bb.w + 6, bb.y - 2);
+        }
         c.restore();
     }
 
@@ -1795,6 +1824,7 @@
             }
             redraw();
             updateCopyBtn();
+            updateVoicePanel();
             return;
         }
 
@@ -1806,7 +1836,7 @@
             isDrawing = false;
             const txt = prompt('Wpisz tekst:');
             if (txt) {
-                shapes.push({ type:'text', x1:pos.x, y1:pos.y, color:currentColor, width:currentWidth, text:txt, fontSize: currentWidth*8+10 });
+                shapes.push({ id:newShapeId(), type:'text', x1:pos.x, y1:pos.y, color:currentColor, width:currentWidth, text:txt, fontSize: currentWidth*8+10 });
                 redraw();
                 saveHistory();
             }
@@ -1818,7 +1848,7 @@
             const txt = prompt('Etykieta (opcjonalnie):', '');
             if (txt === null) return;
             const sz = currentWidth * 10 + 22;
-            shapes.push({ type: 'symbol', subtype: currentSymbol, x1: pos.x, y1: pos.y, color: currentColor, width: Math.max(currentWidth, 1.5), size: sz, text: txt || '' });
+            shapes.push({ id:newShapeId(), type: 'symbol', subtype: currentSymbol, x1: pos.x, y1: pos.y, color: currentColor, width: Math.max(currentWidth, 1.5), size: sz, text: txt || '' });
             redraw();
             saveHistory();
             return;
@@ -1891,24 +1921,24 @@
 
         if (currentTool === 'pen') {
             if (penPoints.length > 1)
-                shapes.push({ type:'pen', points:[...penPoints], color:currentColor, width:currentWidth });
+                shapes.push({ id:newShapeId(), type:'pen', points:[...penPoints], color:currentColor, width:currentWidth });
             penPoints = [];
         } else if (currentTool === 'line') {
-            shapes.push({ type:'line', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth });
+            shapes.push({ id:newShapeId(), type:'line', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth });
         } else if (currentTool === 'rect') {
-            shapes.push({ type:'rect', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth });
+            shapes.push({ id:newShapeId(), type:'rect', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth });
         } else if (currentTool === 'circle') {
-            shapes.push({ type:'circle', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth });
+            shapes.push({ id:newShapeId(), type:'circle', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth });
         } else if (currentTool === 'arrow') {
             const txt = prompt('Tekst strzałki (zostaw puste jeśli brak):', '');
             const fs = currentWidth * 8 + 12;
-            shapes.push({ type:'arrow', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth, text: txt || '', fontSize: fs });
+            shapes.push({ id:newShapeId(), type:'arrow', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth, text: txt || '', fontSize: fs });
         } else if (currentTool === 'dimension') {
             const autoMm = Math.round(Math.hypot(pos.x - startX, pos.y - startY) / MM_TO_PX) + ' mm';
             const txt = prompt('Wartość wymiaru:', autoMm);
             if (txt === null) { redraw(); saveHistory(); return; }
             const fs = currentWidth * 6 + 18;
-            shapes.push({ type:'dimension', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth, text: txt || autoMm, fontSize: fs });
+            shapes.push({ id:newShapeId(), type:'dimension', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth, text: txt || autoMm, fontSize: fs });
         }
 
         redraw();
@@ -1973,13 +2003,16 @@
     window.pasteShape = function() {
         if (!clipboard) return;
         const copy = JSON.parse(JSON.stringify(clipboard));
-        const offset = 40; // przesunięcie wklejonej kopii
+        copy.id = newShapeId();           // nowe ID — audio nie jest przenoszone do kopii
+        copy.audioDuration = undefined;   // kopia bez notatki głosowej
+        const offset = 40;
         moveShape(copy, offset, offset);
         shapes.push(copy);
         selectedIdx = shapes.length - 1;
         redraw();
         saveHistory();
         updateCopyBtn();
+        updateVoicePanel();
         toast('Wklejono element');
     };
 
@@ -2021,11 +2054,13 @@
     };
 
     window.clearCanvas = function() {
-        if (!confirm('Wyczyścić szkic?')) return;
+        if (!confirm('Wyczyścić szkic? Notatki głosowe zostaną usunięte.')) return;
         shapes = []; selectedIdx = -1;
         history = [];
+        audioStore = {};
         redraw();
         saveHistory();
+        updateVoicePanel();
     };
 
     window.setTool = function(tool) {
@@ -2043,6 +2078,7 @@
             const symPicker = document.getElementById('symbolPicker');
             if (symPicker) symPicker.value = '';
         }
+        updateVoicePanel();
     };
 
     window.updateColor = function() { currentColor = document.getElementById('strokeColor').value; };
@@ -2053,6 +2089,122 @@
         const mm = parseInt(sel.options[sel.selectedIndex].text);
         gridStep = isNaN(mm) ? 0 : Math.round(mm * MM_TO_PX);
         if (gctx) drawGrid();
+    };
+
+    // ===== NOTATKI GŁOSOWE =====
+    let voiceRecorder  = null;
+    let voiceChunks    = [];
+    let voiceActive    = false; // true podczas nagrywania
+    let voiceAudioObj  = null;  // aktualnie odtwarzany Audio()
+
+    function updateVoicePanel() {
+        const panel = document.getElementById('voicePanel');
+        if (!panel) return;
+        const hasSel = selectedIdx >= 0 && !!shapes[selectedIdx];
+        panel.style.display = hasSel ? 'flex' : 'none';
+        if (!hasSel) return;
+
+        const sid    = shapes[selectedIdx].id;
+        const hasAudio = sid && !!audioStore[sid];
+        const dur    = shapes[selectedIdx].audioDuration;
+
+        // Status REC / czas trwania
+        const statusEl = document.getElementById('voiceStatus');
+        statusEl.textContent = voiceActive ? '🔴 REC' : (hasAudio ? `🎤 ${dur || '?'}s` : '');
+
+        const show = (id, vis) => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = vis ? 'inline-block' : 'none';
+        };
+        show('btnVoiceRecord', !voiceActive && CAN_RECORD);
+        show('btnVoiceStop',    voiceActive);
+        show('btnVoicePlay',    !voiceActive && hasAudio);
+        show('btnVoiceDel',     !voiceActive && hasAudio);
+        show('btnVoiceUpload',  !voiceActive);
+    }
+
+    window.startVoiceNote = async function() {
+        if (selectedIdx < 0) return;
+        if (!CAN_RECORD) { toast('Nagrywanie niedostępne — użyj przycisku 📁 Audio', 'error'); return; }
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+            voiceChunks  = [];
+            const mime   = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+                           ? 'audio/webm;codecs=opus' : 'audio/webm';
+            voiceRecorder = new MediaRecorder(stream, { mimeType: mime });
+            voiceRecorder.ondataavailable = e => { if (e.data.size > 0) voiceChunks.push(e.data); };
+            voiceRecorder.onstop = () => {
+                const blob   = new Blob(voiceChunks, { type: voiceRecorder.mimeType });
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    if (selectedIdx < 0) return;
+                    const sid = shapes[selectedIdx].id;
+                    audioStore[sid] = ev.target.result;
+                    // Pobierz czas trwania
+                    const tmp = new Audio(ev.target.result);
+                    tmp.onloadedmetadata = () => {
+                        if (shapes[selectedIdx]) shapes[selectedIdx].audioDuration = Math.round(tmp.duration);
+                        redraw();
+                        updateVoicePanel();
+                    };
+                    voiceActive = false;
+                    stream.getTracks().forEach(t => t.stop());
+                    toast('Notatka głosowa zapisana', 'success');
+                };
+                reader.readAsDataURL(blob);
+            };
+            voiceRecorder.start(100);
+            voiceActive = true;
+            updateVoicePanel();
+            toast('Nagrywanie... kliknij ⏹ Stop');
+        } catch(err) {
+            toast('Brak dostępu do mikrofonu: ' + err.message, 'error');
+        }
+    };
+
+    window.stopVoiceNote = function() {
+        if (voiceRecorder && voiceActive) voiceRecorder.stop();
+    };
+
+    window.playVoiceNote = function() {
+        if (selectedIdx < 0) return;
+        const sid = shapes[selectedIdx].id;
+        if (!audioStore[sid]) return;
+        if (voiceAudioObj) { voiceAudioObj.pause(); voiceAudioObj = null; }
+        voiceAudioObj = new Audio(audioStore[sid]);
+        voiceAudioObj.onended = () => { voiceAudioObj = null; };
+        voiceAudioObj.play();
+        toast('▶ Odtwarzanie notatki głosowej');
+    };
+
+    window.deleteVoiceNote = function() {
+        if (selectedIdx < 0) return;
+        if (!confirm('Usunąć notatkę głosową?')) return;
+        const sid = shapes[selectedIdx].id;
+        delete audioStore[sid];
+        shapes[selectedIdx].audioDuration = undefined;
+        redraw();
+        updateVoicePanel();
+        toast('Notatka głosowa usunięta');
+    };
+
+    window.handleAudioUpload = function(event) {
+        const file = event.target.files[0];
+        if (!file || selectedIdx < 0) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            const sid = shapes[selectedIdx].id;
+            audioStore[sid] = ev.target.result;
+            const tmp = new Audio(ev.target.result);
+            tmp.onloadedmetadata = () => {
+                if (shapes[selectedIdx]) shapes[selectedIdx].audioDuration = Math.round(tmp.duration);
+                redraw();
+                updateVoicePanel();
+            };
+            toast('Audio wgrane: ' + file.name, 'success');
+        };
+        reader.readAsDataURL(file);
+        event.target.value = '';
     };
 
     // ===== SYMBOLE =====
