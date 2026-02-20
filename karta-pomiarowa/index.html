@@ -1382,75 +1382,68 @@
             const r  = Math.hypot(s.x2 - s.x1, s.y2 - s.y1) / 2;
             c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.stroke();
         } else if (s.type === 'arrow') {
-            // Linia ze strzałką na końcu
+            // Linia ze smukłą strzałką techniczną na końcu
             const ax = s.x2 - s.x1, ay = s.y2 - s.y1;
             const len = Math.hypot(ax, ay);
             if (len < 2) { c.restore(); return; }
             const ux = ax / len, uy = ay / len;
-            const hw = Math.max(s.width * 5, 18); // długość głowicy strzałki
-            const hh = Math.max(s.width * 3, 10); // szerokość połówki głowicy
-            c.beginPath(); c.moveTo(s.x1, s.y1); c.lineTo(s.x2, s.y2); c.stroke();
-            // Głowica strzałki (wypełniony trójkąt)
+            // Smukła głowica: długa i wąska (styl techniczny)
+            const hw = Math.max(s.width * 9, 30); // długość głowicy
+            const hh = Math.max(s.width * 2, 6);  // półszerokość głowicy
+            // Linia zatrzymana przed czubkiem strzałki
+            c.beginPath(); c.moveTo(s.x1, s.y1); c.lineTo(s.x2 - ux * hw * 0.5, s.y2 - uy * hw * 0.5); c.stroke();
+            // Wypełniony trójkąt — smukły
             c.beginPath();
             c.moveTo(s.x2, s.y2);
             c.lineTo(s.x2 - ux*hw + uy*hh, s.y2 - uy*hw - ux*hh);
             c.lineTo(s.x2 - ux*hw - uy*hh, s.y2 - uy*hw + ux*hh);
             c.closePath(); c.fill();
-            // Etykieta tekstowa nad strzałką
+            // Etykieta tekstowa — przy ogonie strzałki, lekko z boku
             if (s.text) {
                 c.save();
-                const mx = (s.x1 + s.x2) / 2, my = (s.y1 + s.y2) / 2;
                 const angle = Math.atan2(ay, ax);
-                c.translate(mx, my);
-                // Obróć tak, aby tekst zawsze był "w górę"
+                // Tekst przy początku strzałki, prostopadle przesunięty
+                const nx = -uy, ny = ux; // prostopadły
+                const tx = s.x1 + nx * (s.fontSize || 28) * 0.6;
+                const ty = s.y1 + ny * (s.fontSize || 28) * 0.6;
+                c.translate(tx, ty);
                 let rot = angle;
                 if (rot > Math.PI/2 || rot < -Math.PI/2) rot += Math.PI;
                 c.rotate(rot);
-                c.font = `300 ${s.fontSize || 28}px Barlow Condensed, sans-serif`;
+                c.font = `400 ${s.fontSize || 28}px Barlow Condensed, sans-serif`;
                 c.fillStyle = s.color;
-                c.textAlign = 'center';
-                c.fillText(s.text, 0, -8);
+                c.textAlign = 'left';
+                c.fillText(s.text, 0, 0);
                 c.restore();
             }
         } else if (s.type === 'dimension') {
-            // Linia wymiarowa w stylu CAD
+            // Linia wymiarowa — styl rysunku technicznego
+            // Linia od x1→x2, "nóżki" prostopadłe na końcach, tekst nad środkiem
             const dx = s.x2 - s.x1, dy = s.y2 - s.y1;
             const len = Math.hypot(dx, dy);
             if (len < 2) { c.restore(); return; }
             const ux = dx / len, uy = dy / len;
-            // Prostopadły wektor (linie pomocnicze)
-            const nx = -uy, ny = ux;
-            const ext = 20; // wysunięcie linii pomocniczych
-            const ovr = 8;  // wysunięcie powyżej linii wymiarowej
-            // Linie pomocnicze
-            c.lineWidth = Math.max(s.width * 0.7, 1);
-            c.beginPath();
-            c.moveTo(s.x1 + nx * ovr, s.y1 + ny * ovr);
-            c.lineTo(s.x1 + nx * (ext + ovr), s.y1 + ny * (ext + ovr));
-            c.moveTo(s.x2 + nx * ovr, s.y2 + ny * ovr);
-            c.lineTo(s.x2 + nx * (ext + ovr), s.y2 + ny * (ext + ovr));
-            c.stroke();
-            // Linia wymiarowa
-            const p1x = s.x1 + nx * (ext + ovr - 4), p1y = s.y1 + ny * (ext + ovr - 4);
-            const p2x = s.x2 + nx * (ext + ovr - 4), p2y = s.y2 + ny * (ext + ovr - 4);
+            const nx = -uy, ny = ux; // prostopadły (lewo od kierunku)
+            const tickH  = Math.max(s.width * 6, 18);  // długość nóżki ograniczającej
+            const tickOvr = Math.max(s.width * 2, 6);  // wysunięcie ponad linię wymiarową
+            const extOff = tickH * 0.55; // przesunięcie linii wymiarowej od punktów bazowych
+            // Punkty linii wymiarowej (równoległe, odsunięte w kierunku nx)
+            const p1x = s.x1 + nx * extOff, p1y = s.y1 + ny * extOff;
+            const p2x = s.x2 + nx * extOff, p2y = s.y2 + ny * extOff;
             c.lineWidth = s.width;
+            // Linia wymiarowa główna
             c.beginPath(); c.moveTo(p1x, p1y); c.lineTo(p2x, p2y); c.stroke();
-            // Strzałki na końcach linii wymiarowej
-            const hw = Math.max(s.width * 5, 16);
-            const hh = Math.max(s.width * 2.5, 7);
-            // Strzałka lewa (w kierunku x1)
+            // Nóżki ograniczające (prostopadłe, symetrycznie przez punkt)
+            c.lineWidth = Math.max(s.width, 1.5);
+            const t1x = s.x1 + nx * (extOff + tickOvr), t1y = s.y1 + ny * (extOff + tickOvr);
+            const t2x = s.x2 + nx * (extOff + tickOvr), t2y = s.y2 + ny * (extOff + tickOvr);
+            const b1x = s.x1 + nx * (extOff - tickH + tickOvr), b1y = s.y1 + ny * (extOff - tickH + tickOvr);
+            const b2x = s.x2 + nx * (extOff - tickH + tickOvr), b2y = s.y2 + ny * (extOff - tickH + tickOvr);
             c.beginPath();
-            c.moveTo(p1x, p1y);
-            c.lineTo(p1x + ux*hw + ny*hh, p1y + uy*hw - nx*hh);
-            c.lineTo(p1x + ux*hw - ny*hh, p1y + uy*hw + nx*hh);
-            c.closePath(); c.fill();
-            // Strzałka prawa (w kierunku x2)
-            c.beginPath();
-            c.moveTo(p2x, p2y);
-            c.lineTo(p2x - ux*hw + ny*hh, p2y - uy*hw - nx*hh);
-            c.lineTo(p2x - ux*hw - ny*hh, p2y - uy*hw + nx*hh);
-            c.closePath(); c.fill();
-            // Etykieta z wymiarem
+            c.moveTo(t1x, t1y); c.lineTo(b1x, b1y);
+            c.moveTo(t2x, t2y); c.lineTo(b2x, b2y);
+            c.stroke();
+            // Tekst wymiaru — nad środkiem linii wymiarowej
             const mx = (p1x + p2x) / 2, my = (p1y + p2y) / 2;
             const dimMm = s.text || (Math.round(len / MM_TO_PX) + ' mm');
             c.save();
@@ -1460,14 +1453,13 @@
             c.rotate(rot);
             const fs = s.fontSize || 26;
             c.font = `600 ${fs}px Barlow Condensed, sans-serif`;
-            c.fillStyle = s.color;
             c.textAlign = 'center';
             // Białe tło pod tekstem
             const tw = c.measureText(dimMm).width;
-            c.fillStyle = 'rgba(255,255,255,0.85)';
-            c.fillRect(-tw/2 - 4, -fs - 2, tw + 8, fs + 4);
+            c.fillStyle = 'rgba(255,255,255,0.9)';
+            c.fillRect(-tw/2 - 4, -fs - 2, tw + 8, fs + 2);
             c.fillStyle = s.color;
-            c.fillText(dimMm, 0, -6);
+            c.fillText(dimMm, 0, -4);
             c.restore();
         } else if (s.type === 'text') {
             c.font = `300 ${s.fontSize}px Barlow Condensed, sans-serif`;
