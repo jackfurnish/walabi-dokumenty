@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adnotacje Zdjęć — WALABI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Barlow+Condensed:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary:    #2D2E2E;
+            --color-secondary:  #757575;
+            --color-accent:     #E07B39;
+            --color-gold:       #B8860B;
+            --color-border:     #E0E0E0;
+            --color-bg:         #1A1A1A;
+            --color-sidebar:    #242424;
+            --color-panel:      #2E2E2E;
+            --color-white:      #FFFFFF;
+            --color-highlight:  #F7F5F0;
+            --font:             'Plus Jakarta Sans', sans-serif;
+            --font-cond:        'Barlow Condensed', sans-serif;
+            --sidebar-w:        260px;
+            --toolbar-h:        48px;
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        html, body {
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background: var(--color-bg);
+            color: var(--color-white);
+            font-family: var(--font);
+            font-size: 13px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== LAYOUT ===== */
+        #app {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* ===== SIDEBAR ===== */
+        #sidebar {
+            width: var(--sidebar-w);
+            flex-shrink: 0;
+            background: var(--color-sidebar);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #3A3A3A;
+            z-index: 10;
+        }
+
+        #sidebar-header {
+            padding: 14px 14px 10px;
+            border-bottom: 1px solid #3A3A3A;
+        }
+
+        #sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        #sidebar-logo img { height: 32px; opacity: 0.9; }
+
+        #sidebar-logo .logo-text {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .sb-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding: 8px 10px;
+            margin-bottom: 4px;
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid #3A3A3A;
+            border-radius: 5px;
+            cursor: pointer;
+            background: var(--color-panel);
+            color: var(--color-white);
+            transition: background .15s;
+            text-align: left;
+        }
+        .sb-btn:hover { background: #3A3A3A; }
+        .sb-btn.primary { background: var(--color-accent); border-color: var(--color-accent); }
+        .sb-btn.primary:hover { background: #c96a2a; }
+        .sb-btn.danger { color: #ff6b6b; }
+        .sb-btn.danger:hover { background: #3A2020; }
+
+        #photos-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        #photos-list::-webkit-scrollbar { width: 4px; }
+        #photos-list::-webkit-scrollbar-track { background: transparent; }
+        #photos-list::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+
+        .photo-thumb {
+            position: relative;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color .15s;
+        }
+        .photo-thumb.active { border-color: var(--color-accent); }
+        .photo-thumb img {
+            width: 100%;
+            height: 90px;
+            object-fit: cover;
+            display: block;
+        }
+        .photo-thumb-label {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,.65);
+            padding: 3px 6px;
+            font-size: 11px;
+            color: #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .photo-thumb-del {
+            background: none; border: none; color: #ff6b6b;
+            cursor: pointer; font-size: 13px; padding: 0 2px;
+        }
+        .photo-thumb-badge {
+            background: var(--color-accent);
+            color: white;
+            border-radius: 10px;
+            padding: 1px 6px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        #sidebar-footer {
+            padding: 10px;
+            border-top: 1px solid #3A3A3A;
+        }
+
+        /* ===== MAIN AREA ===== */
+        #main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        /* ===== TOOLBAR ===== */
+        #toolbar {
+            height: var(--toolbar-h);
+            background: var(--color-panel);
+            border-bottom: 1px solid #3A3A3A;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0 10px;
+            flex-shrink: 0;
+            overflow-x: auto;
+        }
+
+        #toolbar::-webkit-scrollbar { height: 3px; }
+        #toolbar::-webkit-scrollbar-thumb { background: #444; }
+
+        .tb-sep {
+            width: 1px;
+            height: 28px;
+            background: #3A3A3A;
+            flex-shrink: 0;
+            margin: 0 3px;
+        }
+
+        .tb-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 9px;
+            font-family: var(--font);
+            font-size: 11px;
+            font-weight: 500;
+            border: 1px solid #3A3A3A;
+            border-radius: 4px;
+            cursor: pointer;
+            background: transparent;
+            color: #ccc;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: background .12s, color .12s;
+        }
+        .tb-btn:hover { background: #3A3A3A; color: white; }
+        .tb-btn.active { background: var(--color-accent); color: white; border-color: var(--color-accent); }
+        .tb-btn.rec { background: #c0392b; color: white; border-color: #c0392b; animation: pulse 1s infinite; }
+
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.7} }
+
+        .tb-color { width:26px; height:26px; border-radius:3px; border:1px solid #555; cursor:pointer; padding:1px; flex-shrink:0; }
+
+        .tb-select {
+            padding: 4px 6px;
+            font-family: var(--font);
+            font-size: 11px;
+            border: 1px solid #3A3A3A;
+            border-radius: 4px;
+            background: var(--color-panel);
+            color: #ccc;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .tb-label { font-size: 10px; color: #666; flex-shrink: 0; }
+
+        /* Suwak jasności */
+        .tb-slider {
+            -webkit-appearance: none;
+            width: 80px;
+            height: 4px;
+            border-radius: 2px;
+            background: #444;
+            outline: none;
+            flex-shrink: 0;
+        }
+        .tb-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            cursor: pointer;
+        }
+
+        /* ===== CANVAS AREA ===== */
+        #canvas-area {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 20px;
+            background: var(--color-bg);
+        }
+
+        #canvas-area::-webkit-scrollbar { width: 6px; height: 6px; }
+        #canvas-area::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+
+        /* Placeholder gdy brak zdjęć */
+        #no-photo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            color: #555;
+            text-align: center;
+            height: 100%;
+        }
+        #no-photo .icon { font-size: 64px; opacity: 0.3; }
+        #no-photo h2 { font-size: 18px; font-weight: 400; color: #666; }
+        #no-photo p  { font-size: 13px; color: #444; max-width: 300px; line-height: 1.6; }
+        #no-photo .add-btn {
+            padding: 12px 28px;
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: var(--font);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        #no-photo .add-btn:hover { background: #c96a2a; }
+
+        /* ===== PHOTO FRAME (3 warstwy) ===== */
+        .photo-frame {
+            position: relative;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .photo-frame .layer-img {
+            display: block;
+            max-width: 100%;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .photo-frame .layer-brightness {
+            position: absolute;
+            inset: 0;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .1s;
+        }
+
+        .photo-frame .layer-canvas {
+            position: absolute;
+            inset: 0;
+            cursor: crosshair;
+        }
+
+        /* ===== VOICE BUBBLE na canvas ===== */
+        /* rysowane przez JS */
+
+        /* ===== TRANSCRIPT PAGE ===== */
+        .transcript-page {
+            width: 210mm;
+            min-height: 120px;
+            background: white;
+            color: #2D2E2E;
+            padding: 14mm 16mm 10mm;
+            margin: 20px auto;
+            box-shadow: 0 4px 24px rgba(0,0,0,.3);
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .transcript-page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1pt solid #2D2E2E;
+        }
+
+        .transcript-page-title {
+            font-size: 11pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #2D2E2E;
+        }
+
+        .transcript-entry {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 0.5pt solid #E0E0E0;
+        }
+
+        .transcript-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            color: white;
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .transcript-content { flex: 1; }
+
+        .transcript-play {
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 2px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            color: #555;
+            margin-bottom: 4px;
+        }
+        .transcript-play:hover { background: #f5f5f5; }
+
+        .transcript-text {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #E0E0E0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 9pt;
+            color: #2D2E2E;
+            background: transparent;
+            resize: none;
+            min-height: 36px;
+            line-height: 1.5;
+        }
+        .transcript-text:focus { outline: none; border-bottom-color: #2D2E2E; }
+
+        /* ===== PRINT ===== */
+        @media print {
+            html, body { overflow: visible !important; width: auto !important; height: auto !important; background: white !important; }
+            #app { display: block !important; width: auto !important; height: auto !important; }
+            #sidebar, #toolbar, #toast, .no-print { display: none !important; }
+            #canvas-area {
+                overflow: visible !important;
+                padding: 0 !important;
+                background: white !important;
+                display: block !important;
+            }
+            #no-photo { display: none !important; }
+            .photo-frame {
+                display: block;
+                width: 100% !important;
+                max-width: 100% !important;
+                page-break-after: avoid;
+            }
+            .photo-frame.landscape { page-break-after: always; }
+            .photo-frame.portrait  { page-break-after: always; }
+            .photo-frame .layer-img { width: 100% !important; height: auto !important; }
+            .photo-frame .layer-canvas { display: none; } /* canvas nie drukuje się dobrze — używamy merged */
+            .photo-frame .layer-brightness { display: none; }
+            .print-canvas { display: block !important; width: 100% !important; }
+            .transcript-page {
+                width: 100% !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                page-break-before: always;
+            }
+            .transcript-play { display: none !important; }
+            @page { margin: 8mm; }
+            @page landscape { size: A4 landscape; }
+            @page portrait  { size: A4 portrait; }
+        }
+
+        /* ===== TOAST ===== */
+        #toast {
+            position: fixed;
+            bottom: 20px; right: 20px;
+            padding: 10px 18px;
+            background: var(--color-primary);
+            color: white;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: all .3s;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        #toast.show { opacity: 1; transform: translateY(0); }
+        #toast.ok   { background: #166534; }
+        #toast.err  { background: #991B1B; }
+
+        /* ===== VOICE STATUS OVERLAY ===== */
+        #voice-overlay {
+            position: fixed;
+            top: 60px; left: 50%; transform: translateX(-50%);
+            background: rgba(192,57,43,.92);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: none;
+            z-index: 9998;
+            gap: 8px;
+            align-items: center;
+        }
+        #voice-overlay.show { display: flex; }
+        #voice-overlay .blink { animation: pulse .8s infinite; }
+    </style>
+</head>
+<body>
+<div id="app">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside id="sidebar">
+        <div id="sidebar-header">
+            <div id="sidebar-logo">
+                <img src="../list-przewozowy/logo.png" alt="WALABI"
+                     onerror="this.outerHTML='<span class=\'logo-text\'>WALABI</span>'">
+                <span class="logo-text" style="font-size:12px;color:#aaa;">Adnotacje Zdjęć</span>
+            </div>
+            <button class="sb-btn primary" onclick="document.getElementById('photoInput').click()">
+                📷 Dodaj zdjęcie
+            </button>
+            <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="addPhotos(event)">
+        </div>
+
+        <div id="photos-list">
+            <!-- miniatury zdjęć -->
+        </div>
+
+        <div id="sidebar-footer">
+            <button class="sb-btn" onclick="printDoc()">🖨 Drukuj / PDF</button>
+            <button class="sb-btn" onclick="exportJSON()">📥 Zapisz (JSON)</button>
+            <button class="sb-btn" onclick="document.getElementById('importInput').click()">📤 Wczytaj (JSON)</button>
+            <input type="file" id="importInput" accept=".json" style="display:none" onchange="importJSON(event)">
+            <button class="sb-btn" onclick="sendEmail()" style="margin-top:2px;">✉️ Wyślij mailem</button>
+            <a href="../index.html" class="sb-btn" style="text-decoration:none;margin-top:8px;display:flex;">← Strona główna</a>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN ===== -->
+    <div id="main">
+
+        <!-- TOOLBAR -->
+        <div id="toolbar">
+            <!-- Narzędzia rysowania -->
+            <button class="tb-btn active" id="toolSelect"    onclick="setTool('select')">↖ Zaznacz</button>
+            <button class="tb-btn"        id="toolPen"       onclick="setTool('pen')">✏️ Rysuj</button>
+            <button class="tb-btn"        id="toolLine"      onclick="setTool('line')">📏 Linia</button>
+            <button class="tb-btn"        id="toolArrow"     onclick="setTool('arrow')">➤ Strzałka</button>
+            <button class="tb-btn"        id="toolRect"      onclick="setTool('rect')">⬜ Prostokąt</button>
+            <button class="tb-btn"        id="toolCircle"    onclick="setTool('circle')">⭕ Koło</button>
+            <button class="tb-btn"        id="toolDimension" onclick="setTool('dimension')">↔ Wymiar</button>
+            <button class="tb-btn"        id="toolText"      onclick="setTool('text')">T Tekst</button>
+            <div class="tb-sep"></div>
+            <!-- Notatka głosowa -->
+            <button class="tb-btn"        id="toolVoice"     onclick="setTool('voice')" title="Kliknij punkt na zdjęciu → nagraj notatkę głosową">🎤 Notatka</button>
+            <div class="tb-sep"></div>
+            <!-- Kolor i grubość -->
+            <span class="tb-label">Kolor:</span>
+            <input type="color" class="tb-color" id="strokeColor" value="#FF3B30" oninput="updateColor()">
+            <span class="tb-label">Grubość:</span>
+            <select class="tb-select" id="lineWidth" onchange="updateLineWidth()">
+                <option value="2">2px</option>
+                <option value="3" selected>3px</option>
+                <option value="5">5px</option>
+                <option value="8">8px</option>
+            </select>
+            <div class="tb-sep"></div>
+            <!-- Jasność zdjęcia -->
+            <span class="tb-label">☀️ Jasność:</span>
+            <input type="range" class="tb-slider" id="brightnessSlider" min="0" max="85" value="0" oninput="updateBrightness()">
+            <span class="tb-label" id="brightnessVal">0%</span>
+            <div class="tb-sep"></div>
+            <!-- Cofnij / Wyczyść -->
+            <button class="tb-btn" onclick="undoActive()">↩ Cofnij</button>
+            <button class="tb-btn" onclick="copyActiveSelected()">📋 Kopiuj</button>
+            <button class="tb-btn" id="btnPaste" style="display:none" onclick="pasteActive()">📌 Wklej</button>
+        </div>
+
+        <!-- CANVAS AREA -->
+        <div id="canvas-area">
+            <div id="no-photo">
+                <div class="icon">📷</div>
+                <h2>Brak zdjęć</h2>
+                <p>Dodaj zdjęcia z iPhone, iPada lub komputera.<br>Możesz dodać wiele zdjęć naraz.</p>
+                <button class="add-btn" onclick="document.getElementById('photoInput').click()">+ Dodaj zdjęcia</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Voice recording overlay -->
+<div id="voice-overlay">
+    <span class="blink">🔴</span>
+    <span id="voice-transcript-live"></span>
+    <button onclick="stopVoiceRecord()" style="background:#fff2;border:1px solid #fff5;color:white;border-radius:3px;padding:2px 10px;font-size:12px;cursor:pointer;margin-left:8px;">⏹ Stop</button>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+// =====================================================
+// WALABI — Adnotacje Zdjęć
+// =====================================================
+
+const MM_TO_PX = 3.7795; // 1mm = 3.7795px przy 96dpi
+
+// ===== STAN APLIKACJI =====
+let photos = [];        // [{ id, name, src, brightness, shapes, audioStore, shapeIdCounter, orientation }]
+let activePhotoId = null;
+let currentTool  = 'select';
+let currentColor = '#FF3B30';
+let currentWidth = 3;
+let clipboard    = null;
+
+// Referencje do aktywnego canvas
+let activeCanvas = null;
+let activeCtx    = null;
+
+// Rysowanie
+let isDrawing = false;
+let isDragging = false;
+let startX = 0, startY = 0;
+let penPoints = [];
+let selectedIdx = -1;
+let dragOffX = 0, dragOffY = 0;
+
+// Voice
+let voiceRecorder  = null;
+let voiceChunks    = [];
+let voiceActive    = false;
+let voicePhotoId   = null;
+let voicePoint     = null; // {x,y} na canvas gdzie kliknięto
+let recognition    = null;
+let liveTranscript = '';
+
+const CAN_RECORD = !!(window.isSecureContext &&
+    navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+
+const CAN_SPEECH = !!( window.SpeechRecognition || window.webkitSpeechRecognition );
+
+// =====================================================
+// UTILS
+// =====================================================
+function toast(msg, type='') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'toast show' + (type ? ' ' + type : '');
+    setTimeout(() => el.className = 'toast', 3000);
+}
+
+function newId() { return Date.now() + '_' + Math.random().toString(36).slice(2,7); }
+
+function getPhoto(id) { return photos.find(p => p.id === id); }
+
+function getActive() { return getPhoto(activePhotoId); }
+
+// =====================================================
+// ZDJĘCIA — DODAJ / USUŃ / PRZEŁĄCZ
+// =====================================================
+function addPhotos(event) {
+    const files = Array.from(event.target.files);
+    if (!files.length) return;
+
+    files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = ev => {
+            const img = new Image();
+            img.onload = () => {
+                const orientation = img.naturalWidth >= img.naturalHeight ? 'landscape' : 'portrait';
+                const photo = {
+                    id:             newId(),
+                    name:           file.name.replace(/\.[^.]+$/, ''),
+                    src:            ev.target.result,
+                    brightness:     0,
+                    shapes:         [],
+                    audioStore:     {},
+                    shapeIdCounter: 0,
+                    orientation:    orientation,
+                    naturalW:       img.naturalWidth,
+                    naturalH:       img.naturalHeight
+                };
+                photos.push(photo);
+                renderPhotoList();
+                renderCanvasArea();
+                if (!activePhotoId) switchPhoto(photo.id);
+                toast(file.name + ' dodano', 'ok');
+            };
+            img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+    event.target.value = '';
+}
+
+function deletePhoto(id) {
+    if (!confirm('Usunąć to zdjęcie wraz z adnotacjami i nagraniami?')) return;
+    photos = photos.filter(p => p.id !== id);
+    if (activePhotoId === id) {
+        activePhotoId = photos.length ? photos[0].id : null;
+        activeCanvas = null; activeCtx = null;
+    }
+    renderPhotoList();
+    renderCanvasArea();
+}
+
+function switchPhoto(id) {
+    activePhotoId = id;
+    selectedIdx = -1;
+    // Zaktualizuj suwak jasności
+    const ph = getActive();
+    if (ph) {
+        document.getElementById('brightnessSlider').value = ph.brightness;
+        document.getElementById('brightnessVal').textContent = ph.brightness + '%';
+    }
+    // Podświetl miniaturę
+    document.querySelectorAll('.photo-thumb').forEach(el => {
+        el.classList.toggle('active', el.dataset.id === id);
+    });
+    // Znajdź canvas aktywnego zdjęcia
+    const frame = document.querySelector(`.photo-frame[data-id="${id}"]`);
+    if (frame) {
+        activeCanvas = frame.querySelector('.layer-canvas');
+        activeCtx    = activeCanvas.getContext('2d');
+        redraw();
+        updatePasteBtn();
+        updateVoiceOverlay();
+        frame.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
+// =====================================================
+// RENDER — lista miniatur
+// =====================================================
+function renderPhotoList() {
+    const list = document.getElementById('photos-list');
+    list.innerHTML = '';
+    photos.forEach(ph => {
+        const count = Object.keys(ph.audioStore).length;
+        const div = document.createElement('div');
+        div.className = 'photo-thumb' + (ph.id === activePhotoId ? ' active' : '');
+        div.dataset.id = ph.id;
+        div.onclick = () => switchPhoto(ph.id);
+        div.innerHTML = `
+            <img src="${ph.src}" alt="${ph.name}">
+            <div class="photo-thumb-label">
+                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px">${ph.name}</span>
+                <span style="display:flex;align-items:center;gap:4px">
+                    ${count ? `<span class="photo-thumb-badge">🎤${count}</span>` : ''}
+                    <button class="photo-thumb-del" onclick="event.stopPropagation();deletePhoto('${ph.id}')" title="Usuń zdjęcie">🗑</button>
+                </span>
+            </div>`;
+        list.appendChild(div);
+    });
+}
+
+// =====================================================
+// RENDER — obszar canvas (wszystkie zdjęcia + transkrypcje)
+// =====================================================
+function renderCanvasArea() {
+    const area = document.getElementById('canvas-area');
+    const noPhoto = document.getElementById('no-photo');
+
+    if (!photos.length) {
+        noPhoto.style.display = 'flex';
+        // Usuń wszystkie photo-frame i transcript-page
+        area.querySelectorAll('.photo-frame, .transcript-page').forEach(el => el.remove());
+        return;
+    }
+    noPhoto.style.display = 'none';
+
+    // Zbuduj zestaw istniejących id
+    const existing = new Set(Array.from(area.querySelectorAll('.photo-frame')).map(el => el.dataset.id));
+    const current  = new Set(photos.map(p => p.id));
+
+    // Usuń usunięte
+    area.querySelectorAll('.photo-frame, .transcript-page').forEach(el => {
+        const id = el.dataset.id;
+        if (id && !current.has(id)) el.remove();
+    });
+
+    // Dodaj nowe (zachowaj kolejność)
+    photos.forEach(ph => {
+        if (!existing.has(ph.id)) {
+            appendPhotoBlock(ph);
+        }
+    });
+
+    // Zaktualizuj aktywny canvas
+    if (activePhotoId) {
+        const frame = area.querySelector(`.photo-frame[data-id="${activePhotoId}"]`);
+        if (frame) {
+            activeCanvas = frame.querySelector('.layer-canvas');
+            activeCtx    = activeCanvas.getContext('2d');
+            redraw();
+        }
+    }
+}
+
+function appendPhotoBlock(ph) {
+    const area = document.getElementById('canvas-area');
+
+    // --- Photo frame ---
+    const frame = document.createElement('div');
+    frame.className = 'photo-frame ' + ph.orientation;
+    frame.dataset.id = ph.id;
+    frame.style.marginBottom = '0';
+
+    // Warstwa 1 — zdjęcie
+    const img = document.createElement('img');
+    img.className = 'layer-img';
+    img.src = ph.src;
+    img.draggable = false;
+    img.style.maxHeight = '80vh';
+
+    // Warstwa 2 — jasność
+    const bright = document.createElement('div');
+    bright.className = 'layer-brightness';
+    bright.style.opacity = ph.brightness / 100;
+
+    // Warstwa 3 — canvas adnotacji
+    const cvs = document.createElement('canvas');
+    cvs.className = 'layer-canvas';
+
+    img.onload = () => {
+        const w = img.offsetWidth  || img.naturalWidth;
+        const h = img.offsetHeight || img.naturalHeight;
+        cvs.width  = img.naturalWidth;
+        cvs.height = img.naturalHeight;
+        cvs.style.width  = img.offsetWidth  + 'px';
+        cvs.style.height = img.offsetHeight + 'px';
+        if (ph.id === activePhotoId) {
+            activeCanvas = cvs;
+            activeCtx    = cvs.getContext('2d');
+            redraw();
+        } else {
+            const ctx = cvs.getContext('2d');
+            ph.shapes.forEach(s => drawShape(ctx, s, false, ph.audioStore));
+        }
+    };
+
+    // Obsługa resize (gdy okno zmienia rozmiar)
+    const ro = new ResizeObserver(() => {
+        if (img.offsetWidth) {
+            cvs.style.width  = img.offsetWidth  + 'px';
+            cvs.style.height = img.offsetHeight + 'px';
+        }
+    });
+    ro.observe(img);
+
+    frame.appendChild(img);
+    frame.appendChild(bright);
+    frame.appendChild(cvs);
+    area.appendChild(frame);
+
+    // Eventy canvas
+    cvs.addEventListener('mousedown', e => onDown(e, ph.id));
+    cvs.addEventListener('mousemove', e => onMove(e, ph.id));
+    cvs.addEventListener('mouseup',   e => onUp(e,   ph.id));
+    cvs.addEventListener('mouseleave',e => onLeave(e, ph.id));
+    cvs.addEventListener('dblclick',  e => onDblClick(e, ph.id));
+    cvs.addEventListener('touchstart', e => { e.preventDefault(); onDown(toMouse(e), ph.id); }, { passive:false });
+    cvs.addEventListener('touchmove',  e => { e.preventDefault(); onMove(toMouse(e), ph.id); }, { passive:false });
+    cvs.addEventListener('touchend',   e => { e.preventDefault(); onUp(toMouse(e),  ph.id); }, { passive:false });
+
+    // --- Transcript page ---
+    appendTranscriptPage(ph, area);
+}
+
+function appendTranscriptPage(ph, area) {
+    const tp = document.createElement('div');
+    tp.className = 'transcript-page';
+    tp.dataset.id = ph.id;
+    tp.innerHTML = `
+        <div class="transcript-page-header">
+            <div class="transcript-page-title">Notatki głosowe — ${ph.name}</div>
+            <div style="font-size:10pt;color:#757575;">WALABI Sp. z o.o. Sp.k.</div>
+        </div>
+        <div class="transcript-entries" id="te_${ph.id}"></div>
+        <div style="margin-top:8px;font-size:8pt;color:#aaa;border-top:0.5pt solid #eee;padding-top:6px;">
+            Adnotacje Zdjęć · WALABI · <span id="tp_date_${ph.id}"></span>
+        </div>`;
+    document.getElementById('tp_date_' + ph.id) && (document.getElementById('tp_date_' + ph.id).textContent = new Date().toLocaleDateString('pl-PL'));
+    area.appendChild(tp);
+    refreshTranscriptPage(ph.id);
+}
+
+function refreshTranscriptPage(photoId) {
+    const ph = getPhoto(photoId);
+    if (!ph) return;
+    const container = document.getElementById('te_' + photoId);
+    if (!container) return;
+    container.innerHTML = '';
+
+    const voiceShapes = ph.shapes.filter(s => s.type === 'voice');
+    if (!voiceShapes.length) {
+        container.innerHTML = '<div style="color:#aaa;font-size:9pt;padding:8px 0;">Brak notatek głosowych dla tego zdjęcia.</div>';
+        return;
+    }
+
+    voiceShapes.forEach(s => {
+        const hasAudio = !!ph.audioStore[s.id];
+        const entry = document.createElement('div');
+        entry.className = 'transcript-entry';
+        entry.innerHTML = `
+            <div class="transcript-badge">${s.voiceNum}</div>
+            <div class="transcript-content">
+                ${hasAudio ? `<button class="transcript-play" onclick="playAudio('${photoId}','${s.id}')">▶ Odtwórz</button>` : ''}
+                <textarea class="transcript-text" rows="2"
+                    placeholder="Transkrypcja / opis..."
+                    onchange="saveTranscript('${photoId}','${s.id}',this.value)"
+                >${s.transcript || ''}</textarea>
+            </div>`;
+        container.appendChild(entry);
+    });
+}
+
+// =====================================================
+// TOOLS
+// =====================================================
+function setTool(tool) {
+    currentTool = tool;
+    selectedIdx = -1;
+    if (activeCtx) redraw();
+    updatePasteBtn();
+    document.querySelectorAll('.tb-btn[id^="tool"]').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById('tool' + tool.charAt(0).toUpperCase() + tool.slice(1));
+    if (btn) btn.classList.add('active');
+    // Kursor
+    if (activeCanvas) activeCanvas.style.cursor = tool === 'select' ? 'default' : 'crosshair';
+    document.querySelectorAll('.layer-canvas').forEach(c => {
+        c.style.cursor = tool === 'select' ? 'default' : (tool === 'voice' ? 'cell' : 'crosshair');
+    });
+}
+
+function updateColor()     { currentColor = document.getElementById('strokeColor').value; }
+function updateLineWidth() { currentWidth = parseInt(document.getElementById('lineWidth').value); }
+
+function updateBrightness() {
+    const val = parseInt(document.getElementById('brightnessSlider').value);
+    document.getElementById('brightnessVal').textContent = val + '%';
+    const ph = getActive();
+    if (!ph) return;
+    ph.brightness = val;
+    // Zaktualizuj warstwę jasności
+    const frame = document.querySelector(`.photo-frame[data-id="${ph.id}"]`);
+    if (frame) frame.querySelector('.layer-brightness').style.opacity = val / 100;
+}
+
+// =====================================================
+// CANVAS — pozycja myszy
+// =====================================================
+function getCanvasPos(e, cvs) {
+    const rect = cvs.getBoundingClientRect();
+    return {
+        x: (e.clientX - rect.left) * (cvs.width  / rect.width),
+        y: (e.clientY - rect.top)  * (cvs.height / rect.height)
+    };
+}
+
+function toMouse(e) {
+    const t = e.touches ? e.touches[0] || e.changedTouches[0] : e;
+    return { clientX: t.clientX, clientY: t.clientY };
+}
+
+// =====================================================
+// KSZTAŁTY — rysowanie
+// =====================================================
+function drawShape(c, s, selected, audioStore) {
+    c.save();
+    c.strokeStyle = s.color;
+    c.fillStyle   = s.color;
+    c.lineWidth   = s.width;
+    c.lineCap     = 'round';
+    c.lineJoin    = 'round';
+
+    if (s.type === 'pen') {
+        if (!s.points || s.points.length < 2) { c.restore(); return; }
+        c.beginPath();
+        c.moveTo(s.points[0].x, s.points[0].y);
+        for (let i = 1; i < s.points.length; i++) c.lineTo(s.points[i].x, s.points[i].y);
+        c.stroke();
+
+    } else if (s.type === 'line') {
+        c.beginPath(); c.moveTo(s.x1,s.y1); c.lineTo(s.x2,s.y2); c.stroke();
+
+    } else if (s.type === 'rect') {
+        c.strokeRect(s.x1,s.y1,s.x2-s.x1,s.y2-s.y1);
+
+    } else if (s.type === 'circle') {
+        const cx=(s.x1+s.x2)/2, cy=(s.y1+s.y2)/2, r=Math.hypot(s.x2-s.x1,s.y2-s.y1)/2;
+        c.beginPath(); c.arc(cx,cy,r,0,Math.PI*2); c.stroke();
+
+    } else if (s.type === 'arrow') {
+        const ax=s.x2-s.x1, ay=s.y2-s.y1, len=Math.hypot(ax,ay);
+        if (len < 2) { c.restore(); return; }
+        const ux=ax/len, uy=ay/len;
+        const hw=Math.max(s.width*9,30), hh=Math.max(s.width*2,6);
+        c.beginPath(); c.moveTo(s.x1,s.y1); c.lineTo(s.x2-ux*hw*0.5, s.y2-uy*hw*0.5); c.stroke();
+        c.beginPath();
+        c.moveTo(s.x2,s.y2);
+        c.lineTo(s.x2-ux*hw+uy*hh, s.y2-uy*hw-ux*hh);
+        c.lineTo(s.x2-ux*hw-uy*hh, s.y2-uy*hw+ux*hh);
+        c.closePath(); c.fill();
+        if (s.text) {
+            c.save();
+            const nx=-uy, ny=ux, fs=s.fontSize||28, gap=Math.max(fs*0.5,10);
+            c.translate(s.x2+nx*gap, s.y2+ny*gap);
+            let rot=Math.atan2(ay,ax);
+            if (rot>Math.PI/2||rot<-Math.PI/2) rot+=Math.PI;
+            c.rotate(rot);
+            c.font=`400 ${fs}px Barlow Condensed, sans-serif`;
+            c.fillStyle=s.color; c.textAlign='right';
+            c.fillText(' '+s.text,0,0);
+            c.restore();
+        }
+
+    } else if (s.type === 'dimension') {
+        const dx=s.x2-s.x1, dy=s.y2-s.y1, len=Math.hypot(dx,dy);
+        if (len<2){c.restore();return;}
+        const ux=dx/len, uy=dy/len, nx=-uy, ny=ux;
+        const tickH=Math.max(s.width*6,18), tickOvr=Math.max(s.width*2,6), extOff=tickH*0.55;
+        const p1x=s.x1+nx*extOff, p1y=s.y1+ny*extOff;
+        const p2x=s.x2+nx*extOff, p2y=s.y2+ny*extOff;
+        c.lineWidth=s.width;
+        c.beginPath(); c.moveTo(p1x,p1y); c.lineTo(p2x,p2y); c.stroke();
+        c.lineWidth=Math.max(s.width,1.5);
+        const t1x=s.x1+nx*(extOff+tickOvr), t1y=s.y1+ny*(extOff+tickOvr);
+        const t2x=s.x2+nx*(extOff+tickOvr), t2y=s.y2+ny*(extOff+tickOvr);
+        const b1x=s.x1+nx*(extOff-tickH+tickOvr), b1y=s.y1+ny*(extOff-tickH+tickOvr);
+        const b2x=s.x2+nx*(extOff-tickH+tickOvr), b2y=s.y2+ny*(extOff-tickH+tickOvr);
+        c.beginPath(); c.moveTo(t1x,t1y); c.lineTo(b1x,b1y); c.moveTo(t2x,t2y); c.lineTo(b2x,b2y); c.stroke();
+        const mx=(p1x+p2x)/2, my=(p1y+p2y)/2;
+        const dimTxt=s.text||'';
+        c.save(); c.translate(mx,my);
+        let rot=Math.atan2(dy,dx); if(rot>Math.PI/2||rot<-Math.PI/2) rot+=Math.PI;
+        c.rotate(rot);
+        const fs=s.fontSize||26;
+        c.font=`600 ${fs}px Barlow Condensed, sans-serif`;
+        const tw=c.measureText(dimTxt).width;
+        c.fillStyle='rgba(255,255,255,0.9)'; c.fillRect(-tw/2-4,-fs-2,tw+8,fs+2);
+        c.fillStyle=s.color; c.textAlign='center'; c.fillText(dimTxt,0,-4);
+        c.restore();
+
+    } else if (s.type === 'text') {
+        c.font=`${s.fontSize||28}px Barlow Condensed, sans-serif`;
+        c.fillText(s.text, s.x1, s.y1);
+
+    } else if (s.type === 'voice') {
+        // Kółko z numerem
+        const r = s.radius || 28;
+        // Cień
+        c.shadowColor = 'rgba(0,0,0,0.4)';
+        c.shadowBlur  = 8;
+        // Wypełnienie
+        c.beginPath(); c.arc(s.x1, s.y1, r, 0, Math.PI*2);
+        c.fillStyle = s.color; c.fill();
+        c.shadowBlur = 0;
+        // Obwódka biała
+        c.lineWidth = Math.max(s.width, 2);
+        c.strokeStyle = 'white'; c.stroke();
+        // Numer
+        c.fillStyle = 'white';
+        c.font = `bold ${Math.round(r*1.1)}px Plus Jakarta Sans, sans-serif`;
+        c.textAlign = 'center';
+        c.textBaseline = 'middle';
+        c.fillText(s.voiceNum, s.x1, s.y1);
+        c.textBaseline = 'alphabetic';
+        // Ikona mikrofonu jeśli ma nagranie
+        if (audioStore && audioStore[s.id]) {
+            c.font = `${Math.round(r*0.7)}px serif`;
+            c.fillText('🎤', s.x1 + r*0.7, s.y1 - r*0.7);
+        }
+    }
+
+    // Ramka zaznaczenia
+    if (selected) {
+        const bb = getBBox(s);
+        c.strokeStyle = '#FFD700';
+        c.lineWidth   = 2;
+        c.setLineDash([6,3]);
+        c.strokeRect(bb.x-6, bb.y-6, bb.w+12, bb.h+12);
+        c.setLineDash([]);
+        c.fillStyle = '#FFD700';
+        [[bb.x-6,bb.y-6],[bb.x+bb.w+6,bb.y-6],[bb.x-6,bb.y+bb.h+6],[bb.x+bb.w+6,bb.y+bb.h+6]].forEach(([hx,hy])=>{
+            c.fillRect(hx-4,hy-4,8,8);
+        });
+    }
+    c.restore();
+}
+
+// =====================================================
+// BOUNDING BOX / HIT TEST
+// =====================================================
+function getBBox(s) {
+    if (s.type==='pen') {
+        const xs=s.points.map(p=>p.x), ys=s.points.map(p=>p.y);
+        const x=Math.min(...xs), y=Math.min(...ys);
+        return {x,y,w:Math.max(...xs)-x||1,h:Math.max(...ys)-y||1};
+    }
+    if (s.type==='text') {
+        return {x:s.x1,y:s.y1-s.fontSize,w:s.text.length*s.fontSize*0.5||60,h:s.fontSize+4};
+    }
+    if (s.type==='voice') {
+        const r=s.radius||28;
+        return {x:s.x1-r,y:s.y1-r,w:r*2,h:r*2};
+    }
+    const x=Math.min(s.x1,s.x2||s.x1), y=Math.min(s.y1,s.y2||s.y1);
+    return {x,y,w:Math.abs((s.x2||s.x1)-s.x1)||1,h:Math.abs((s.y2||s.y1)-s.y1)||1};
+}
+
+function hitTest(s, px, py) {
+    const pad = Math.max(s.width||0, 12);
+    if (s.type==='line' || s.type==='arrow' || s.type==='dimension') {
+        const dx=s.x2-s.x1, dy=s.y2-s.y1, len2=dx*dx+dy*dy;
+        if (len2===0) return Math.hypot(px-s.x1,py-s.y1)<pad;
+        const t=Math.max(0,Math.min(1,((px-s.x1)*dx+(py-s.y1)*dy)/len2));
+        return Math.hypot(px-(s.x1+t*dx),py-(s.y1+t*dy))<pad+12;
+    }
+    if (s.type==='voice') return Math.hypot(px-s.x1,py-s.y1)<(s.radius||28)+pad;
+    if (s.type==='circle') {
+        const cx=(s.x1+s.x2)/2, cy=(s.y1+s.y2)/2, r=Math.hypot(s.x2-s.x1,s.y2-s.y1)/2;
+        return Math.abs(Math.hypot(px-cx,py-cy)-r)<pad;
+    }
+    const bb=getBBox(s);
+    return px>=bb.x-pad&&px<=bb.x+bb.w+pad&&py>=bb.y-pad&&py<=bb.y+bb.h+pad;
+}
+
+// =====================================================
+// REDRAW
+// =====================================================
+function redraw() {
+    if (!activeCtx || !activeCanvas) return;
+    const ph = getActive();
+    if (!ph) return;
+    activeCtx.clearRect(0,0,activeCanvas.width,activeCanvas.height);
+    ph.shapes.forEach((s,i) => drawShape(activeCtx, s, i===selectedIdx, ph.audioStore));
+}
+
+// =====================================================
+// EVENTS
+// =====================================================
+function onDown(e, photoId) {
+    if (photoId !== activePhotoId) switchPhoto(photoId);
+    const ph = getPhoto(photoId);
+    if (!ph) return;
+    const cvs = e.target;
+    const pos = getCanvasPos(e, cvs);
+
+    // Narzędzie Voice — kliknij punkt i zacznij nagrywać
+    if (currentTool === 'voice') {
+        startVoiceRecord(photoId, pos);
+        return;
+    }
+
+    if (currentTool === 'select') {
+        let found = -1;
+        for (let i = ph.shapes.length-1; i>=0; i--) {
+            if (hitTest(ph.shapes[i], pos.x, pos.y)) { found=i; break; }
+        }
+        selectedIdx = found;
+        if (found>=0) {
+            isDragging=true;
+            const bb=getBBox(ph.shapes[found]);
+            dragOffX=pos.x-bb.x; dragOffY=pos.y-bb.y;
+        }
+        redraw();
+        updatePasteBtn();
+        return;
+    }
+
+    isDrawing = true;
+    startX = pos.x; startY = pos.y;
+
+    if (currentTool==='text') {
+        isDrawing=false;
+        const txt = prompt('Wpisz tekst:');
+        if (txt) {
+            ph.shapes.push({id:newId(),type:'text',x1:pos.x,y1:pos.y,color:currentColor,width:currentWidth,text:txt,fontSize:currentWidth*8+12});
+            redraw(); saveHistory(ph);
+        }
+        return;
+    }
+    if (currentTool==='pen') penPoints=[{x:pos.x,y:pos.y}];
+}
+
+function onMove(e, photoId) {
+    if (photoId !== activePhotoId) return;
+    const ph = getActive(); if (!ph) return;
+    const cvs = e.target;
+    const pos = getCanvasPos(e, cvs);
+
+    if (isDragging && selectedIdx>=0) {
+        const s=ph.shapes[selectedIdx];
+        const bb=getBBox(s);
+        moveShape(s, pos.x-dragOffX-bb.x, pos.y-dragOffY-bb.y);
+        redraw(); return;
+    }
+    if (!isDrawing) return;
+
+    if (currentTool==='pen') {
+        penPoints.push({x:pos.x,y:pos.y});
+        if (penPoints.length>1) {
+            activeCtx.strokeStyle=currentColor; activeCtx.lineWidth=currentWidth;
+            activeCtx.lineCap='round'; activeCtx.lineJoin='round';
+            const p=penPoints;
+            activeCtx.beginPath();
+            activeCtx.moveTo(p[p.length-2].x,p[p.length-2].y);
+            activeCtx.lineTo(p[p.length-1].x,p[p.length-1].y);
+            activeCtx.stroke();
+        }
+    } else {
+        redraw();
+        const tmp={type:currentTool,x1:startX,y1:startY,x2:pos.x,y2:pos.y,color:currentColor,width:currentWidth};
+        drawShape(activeCtx,tmp,false,ph.audioStore);
+    }
+}
+
+function onUp(e, photoId) {
+    if (photoId !== activePhotoId) return;
+    const ph = getActive(); if (!ph) return;
+    const cvs = e.target;
+    const pos = e ? getCanvasPos(e, cvs) : {x:startX,y:startY};
+
+    if (isDragging) { isDragging=false; saveHistory(ph); return; }
+    if (!isDrawing) return;
+    isDrawing=false;
+
+    if (currentTool==='pen') {
+        if (penPoints.length>1) ph.shapes.push({id:newId(),type:'pen',points:[...penPoints],color:currentColor,width:currentWidth});
+        penPoints=[];
+    } else if (currentTool==='line') {
+        ph.shapes.push({id:newId(),type:'line',x1:startX,y1:startY,x2:pos.x,y2:pos.y,color:currentColor,width:currentWidth});
+    } else if (currentTool==='rect') {
+        ph.shapes.push({id:newId(),type:'rect',x1:startX,y1:startY,x2:pos.x,y2:pos.y,color:currentColor,width:currentWidth});
+    } else if (currentTool==='circle') {
+        ph.shapes.push({id:newId(),type:'circle',x1:startX,y1:startY,x2:pos.x,y2:pos.y,color:currentColor,width:currentWidth});
+    } else if (currentTool==='arrow') {
+        const txt=prompt('Tekst strzałki (opcjonalnie):','');
+        const fs=currentWidth*8+12;
+        ph.shapes.push({id:newId(),type:'arrow',x1:startX,y1:startY,x2:pos.x,y2:pos.y,color:currentColor,width:currentWidth,text:txt||'',fontSize:fs});
+    } else if (currentTool==='dimension') {
+        const autoMm = prompt('Wartość wymiaru:','');
+        if (autoMm===null){redraw();return;}
+        const fs=currentWidth*6+18;
+        ph.shapes.push({id:newId(),type:'dimension',x1:startX,y1:startY,x2:pos.x,y2:pos.y,color:currentColor,width:currentWidth,text:autoMm,fontSize:fs});
+    }
+    redraw(); saveHistory(ph);
+}
+
+function onLeave(e, photoId) {
+    if (isDragging) { isDragging=false; const ph=getActive(); if(ph) saveHistory(ph); }
+    if (isDrawing)  { onUp(e, photoId); }
+}
+
+function onDblClick(e, photoId) {
+    if (currentTool!=='select') return;
+    const ph=getPhoto(photoId); if(!ph) return;
+    const cvs=e.target, pos=getCanvasPos(e,cvs);
+    for (let i=ph.shapes.length-1;i>=0;i--) {
+        const s=ph.shapes[i];
+        if ((s.type==='text'||s.type==='arrow'||s.type==='dimension') && hitTest(s,pos.x,pos.y)) {
+            const lbl=s.type==='dimension'?'Edytuj wymiar:':'Edytuj tekst:';
+            const t=prompt(lbl,s.text||'');
+            if (t!==null){s.text=t;redraw();saveHistory(ph);}
+            return;
+        }
+        if (s.type==='voice' && hitTest(s,pos.x,pos.y)) {
+            playAudio(photoId, s.id);
+            return;
+        }
+    }
+}
+
+function moveShape(s,dx,dy) {
+    if (s.type==='pen') s.points=s.points.map(p=>({x:p.x+dx,y:p.y+dy}));
+    else { s.x1+=dx; s.y1+=dy; if(s.x2!==undefined){s.x2+=dx;s.y2+=dy;} }
+}
+
+// =====================================================
+// HISTORIA (per photo)
+// =====================================================
+function saveHistory(ph) {
+    if (!ph.history) ph.history=[];
+    ph.history.push(JSON.stringify(ph.shapes));
+    if (ph.history.length>40) ph.history.shift();
+    renderPhotoList(); // zaktualizuj badge
+    refreshTranscriptPage(ph.id);
+}
+
+function undoActive() {
+    const ph=getActive(); if(!ph||!ph.history||ph.history.length<=1) return;
+    ph.history.pop();
+    ph.shapes=JSON.parse(ph.history[ph.history.length-1]);
+    selectedIdx=-1;
+    redraw();
+    refreshTranscriptPage(ph.id);
+}
+
+// =====================================================
+// COPY / PASTE
+// =====================================================
+function updatePasteBtn() {
+    document.getElementById('btnPaste').style.display = clipboard ? 'inline-block' : 'none';
+}
+
+function copyActiveSelected() {
+    const ph=getActive(); if(!ph||selectedIdx<0) return;
+    clipboard=JSON.parse(JSON.stringify(ph.shapes[selectedIdx]));
+    updatePasteBtn();
+    toast('Skopiowano element');
+}
+
+function pasteActive() {
+    if (!clipboard) return;
+    const ph=getActive(); if(!ph) return;
+    const copy=JSON.parse(JSON.stringify(clipboard));
+    copy.id=newId();
+    if (copy.type==='voice') copy.voiceNum=nextVoiceNum(ph);
+    copy.audioDuration=undefined;
+    moveShape(copy,40,40);
+    ph.shapes.push(copy);
+    selectedIdx=ph.shapes.length-1;
+    redraw(); saveHistory(ph);
+    toast('Wklejono element');
+}
+
+function nextVoiceNum(ph) {
+    const nums=ph.shapes.filter(s=>s.type==='voice').map(s=>s.voiceNum||0);
+    return nums.length ? Math.max(...nums)+1 : 1;
+}
+
+// =====================================================
+// NOTATKI GŁOSOWE
+// =====================================================
+function startVoiceRecord(photoId, pos) {
+    if (voiceActive) { toast('Najpierw zatrzymaj bieżące nagranie','err'); return; }
+    voicePhotoId = photoId;
+    voicePoint   = pos;
+    liveTranscript = '';
+    document.getElementById('voice-transcript-live').textContent = '🎤 Mów...';
+
+    // Web Speech API — live transcript
+    if (CAN_SPEECH) {
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SR();
+        recognition.lang = 'pl-PL';
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.onresult = ev => {
+            let interim='', final='';
+            for (let i=ev.resultIndex;i<ev.results.length;i++) {
+                const t=ev.results[i][0].transcript;
+                if (ev.results[i].isFinal) final+=t;
+                else interim+=t;
+            }
+            liveTranscript += final;
+            document.getElementById('voice-transcript-live').textContent = liveTranscript + interim;
+        };
+        recognition.onerror = () => {};
+        recognition.start();
+    }
+
+    // MediaRecorder — nagranie audio
+    if (CAN_RECORD) {
+        navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})
+        .then(stream => {
+            voiceChunks=[];
+            const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm';
+            voiceRecorder=new MediaRecorder(stream,{mimeType:mime});
+            voiceRecorder.ondataavailable=ev=>{if(ev.data.size>0)voiceChunks.push(ev.data);};
+            voiceRecorder.onstop=()=>{
+                const blob=new Blob(voiceChunks,{type:voiceRecorder.mimeType});
+                const reader=new FileReader();
+                reader.onload=ev2=>{
+                    finalizeVoiceNote(photoId, pos, ev2.target.result, liveTranscript);
+                };
+                reader.readAsDataURL(blob);
+                stream.getTracks().forEach(t=>t.stop());
+            };
+            voiceRecorder.start(100);
+            voiceActive=true;
+            updateVoiceOverlay();
+        })
+        .catch(err=>{ toast('Brak mikrofonu: '+err.message,'err'); });
+    } else {
+        // Tylko transkrypcja bez audio
+        voiceActive=true;
+        updateVoiceOverlay();
+        toast('Brak nagrywania (file://) — transkrypcja tekstowa');
+    }
+}
+
+function stopVoiceRecord() {
+    if (!voiceActive) return;
+    if (recognition) { try{recognition.stop();}catch(e){} recognition=null; }
+    if (voiceRecorder && voiceRecorder.state!=='inactive') {
+        voiceRecorder.stop();
+    } else {
+        finalizeVoiceNote(voicePhotoId, voicePoint, null, liveTranscript);
+    }
+    voiceActive=false;
+    updateVoiceOverlay();
+}
+
+function finalizeVoiceNote(photoId, pos, audioDataUrl, transcript) {
+    const ph=getPhoto(photoId); if(!ph) return;
+    const num=nextVoiceNum(ph);
+    const id=newId();
+    const radius = Math.max(activeCanvas ? activeCanvas.width*0.025 : 36, 28);
+
+    ph.shapes.push({
+        id, type:'voice',
+        x1:pos.x, y1:pos.y,
+        color: currentColor,
+        width: 3,
+        radius,
+        voiceNum: num,
+        transcript: transcript || ''
+    });
+
+    if (audioDataUrl) ph.audioStore[id]=audioDataUrl;
+
+    voiceActive=false; voiceRecorder=null;
+    redraw(); saveHistory(ph);
+    renderPhotoList();
+    toast(`Notatka głosowa ① ${num} dodana`,'ok');
+}
+
+function updateVoiceOverlay() {
+    const ov=document.getElementById('voice-overlay');
+    ov.className = voiceActive ? 'show' : '';
+}
+
+function playAudio(photoId, shapeId) {
+    const ph=getPhoto(photoId); if(!ph) return;
+    const data=ph.audioStore[shapeId]; if(!data) return;
+    const a=new Audio(data); a.play();
+}
+
+function saveTranscript(photoId, shapeId, text) {
+    const ph=getPhoto(photoId); if(!ph) return;
+    const s=ph.shapes.find(s=>s.id===shapeId); if(!s) return;
+    s.transcript=text;
+}
+
+// =====================================================
+// EKSPORT / IMPORT / PRINT / EMAIL
+// =====================================================
+function printDoc() {
+    // Przed drukiem — zmerguj canvas ze zdjęciem w każdym photo-frame
+    preparePrintCanvases();
+    window.print();
+    toast('Otwarto okno drukowania');
+}
+
+function preparePrintCanvases() {
+    photos.forEach(ph => {
+        const frame = document.querySelector(`.photo-frame[data-id="${ph.id}"]`);
+        if (!frame) return;
+        const img = frame.querySelector('.layer-img');
+        const annotCanvas = frame.querySelector('.layer-canvas');
+
+        // Utwórz merged canvas (zdjęcie + adnotacje) do druku
+        let merged = frame.querySelector('.print-canvas');
+        if (!merged) {
+            merged = document.createElement('canvas');
+            merged.className = 'print-canvas';
+            merged.style.display = 'none';
+            frame.appendChild(merged);
+        }
+        merged.width  = ph.naturalW;
+        merged.height = ph.naturalHeight || ph.naturalW * (img.naturalHeight / img.naturalWidth);
+        const mc = merged.getContext('2d');
+
+        // Rysuj zdjęcie
+        mc.drawImage(img, 0, 0, merged.width, merged.height);
+
+        // Warstwa jasności
+        if (ph.brightness > 0) {
+            mc.fillStyle = `rgba(255,255,255,${ph.brightness/100})`;
+            mc.fillRect(0,0,merged.width,merged.height);
+        }
+
+        // Rysuj adnotacje (przeskalowane)
+        const sx = merged.width  / annotCanvas.width;
+        const sy = merged.height / (annotCanvas.height||1);
+        mc.save(); mc.scale(sx,sy);
+        ph.shapes.forEach(s => drawShape(mc,s,false,ph.audioStore));
+        mc.restore();
+
+        merged.style.display  = 'block';
+        merged.style.width    = '100%';
+        annotCanvas.style.display = 'none';
+        img.style.display         = 'none';
+    });
+}
+
+function exportJSON() {
+    const name = prompt('Nazwa pliku:', 'adnotacje_zdjec');
+    if (!name) return;
+    const data = { type:'adnotacje-zdjecia', version:'1.0', exportDate:new Date().toISOString(), photos };
+    const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href=url; a.download=name.endsWith('.json')?name:name+'.json';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+    toast('Zapisano plik JSON','ok');
+}
+
+function importJSON(event) {
+    const file=event.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+        try {
+            const data=JSON.parse(ev.target.result);
+            if (data.type!=='adnotacje-zdjecia'||!data.photos) { alert('Nieprawidłowy format'); return; }
+            photos=data.photos;
+            activePhotoId=photos.length?photos[0].id:null;
+            activeCanvas=null; activeCtx=null;
+            const area=document.getElementById('canvas-area');
+            area.querySelectorAll('.photo-frame,.transcript-page').forEach(el=>el.remove());
+            renderPhotoList();
+            renderCanvasArea();
+            if (activePhotoId) switchPhoto(activePhotoId);
+            const total=photos.reduce((n,p)=>n+Object.keys(p.audioStore||{}).length,0);
+            toast(`Wczytano ${photos.length} zdjęć, ${total} nagrań`,'ok');
+        } catch(err) { alert('Błąd: '+err.message); }
+    };
+    reader.readAsText(file);
+    event.target.value='';
+}
+
+function sendEmail() {
+    const subject=encodeURIComponent('WALABI — Adnotacje Zdjęć');
+    const body=encodeURIComponent('Dzień dobry,\n\nW załączeniu przesyłam plik z adnotacjami.\n\nZ poważaniem,\nWALABI Sp. z o.o. Sp.k.');
+    window.open(`mailto:?subject=${subject}&body=${body}`,'_blank');
+    toast('Otwarto klienta email');
+}
+
+// =====================================================
+// START
+// =====================================================
+setTool('select');
+</script>
+</body>
+</html>
