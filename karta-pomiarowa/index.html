@@ -1079,6 +1079,8 @@
                     <option value="3">3px</option>
                     <option value="5">5px</option>
                 </select>
+                <button id="btnCopy" onclick="copySelected()" title="Kopiuj zaznaczony element (Ctrl+C)">📋 Kopiuj</button>
+                <button id="btnPaste" onclick="pasteShape()" title="Wklej (Ctrl+V)" style="display:none;">📌 Wklej</button>
                 <button onclick="undoSketch()">↩ Cofnij</button>
                 <button onclick="clearCanvas()">🗑 Wyczyść</button>
             </div>
@@ -1311,6 +1313,7 @@
 
         drawGrid();
         redraw();
+        updateCopyBtn();
 
         canvas.addEventListener('mousedown', onDown);
         canvas.addEventListener('mousemove', onMove);
@@ -1756,6 +1759,7 @@
                 selectedIdx = -1;
             }
             redraw();
+            updateCopyBtn();
             return;
         }
 
@@ -1912,6 +1916,60 @@
             if (s.x2 !== undefined) { s.x2 += dx; s.y2 += dy; }
         }
     }
+
+    // ===== KOPIOWANIE =====
+    let clipboard = null; // głęboka kopia zaznaczonego kształtu
+
+    function updateCopyBtn() {
+        const btn = document.getElementById('btnCopy');
+        if (!btn) return;
+        btn.style.opacity = selectedIdx >= 0 ? '1' : '0.4';
+        btn.style.pointerEvents = selectedIdx >= 0 ? 'auto' : 'none';
+        document.getElementById('btnPaste').style.display = clipboard ? 'inline-block' : 'none';
+    }
+
+    window.copySelected = function() {
+        if (selectedIdx < 0 || !shapes[selectedIdx]) return;
+        clipboard = JSON.parse(JSON.stringify(shapes[selectedIdx]));
+        document.getElementById('btnPaste').style.display = 'inline-block';
+        toast('Skopiowano element');
+    };
+
+    window.pasteShape = function() {
+        if (!clipboard) return;
+        const copy = JSON.parse(JSON.stringify(clipboard));
+        const offset = 40; // przesunięcie wklejonej kopii
+        moveShape(copy, offset, offset);
+        shapes.push(copy);
+        selectedIdx = shapes.length - 1;
+        redraw();
+        saveHistory();
+        updateCopyBtn();
+        toast('Wklejono element');
+    };
+
+    // Skróty klawiszowe Ctrl+C / Ctrl+V (tylko gdy canvas aktywny)
+    document.addEventListener('keydown', function(e) {
+        if (!canvas) return;
+        // Nie przechwytuj gdy fokus jest na input/textarea
+        if (['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'c' && (e.ctrlKey || e.metaKey)) {
+            copySelected();
+            e.preventDefault();
+        }
+        if (e.key === 'v' && (e.ctrlKey || e.metaKey)) {
+            pasteShape();
+            e.preventDefault();
+        }
+        if ((e.key === 'Delete' || e.key === 'Backspace') && currentTool === 'select' && selectedIdx >= 0) {
+            shapes.splice(selectedIdx, 1);
+            selectedIdx = -1;
+            redraw();
+            saveHistory();
+            updateCopyBtn();
+            e.preventDefault();
+        }
+    });
 
     // ===== HISTORIA =====
     function saveHistory() {
