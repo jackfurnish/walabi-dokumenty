@@ -1052,6 +1052,8 @@
                 <button id="toolRect" onclick="setTool('rect')">⬜ Prostokąt</button>
                 <button id="toolText" onclick="setTool('text')">T Tekst</button>
                 <button id="toolCircle" onclick="setTool('circle')">⭕ Koło</button>
+                <button id="toolArrow" onclick="setTool('arrow')">➤ Strzałka</button>
+                <button id="toolDimension" onclick="setTool('dimension')">↔ Wymiar</button>
                 <button id="toolEraser" onclick="setTool('eraser')">🧹 Gumka</button>
                 <label>Kolor:</label>
                 <input type="color" id="strokeColor" value="#2D2E2E" oninput="updateColor()">
@@ -1379,6 +1381,94 @@
             const cx = (s.x1 + s.x2) / 2, cy = (s.y1 + s.y2) / 2;
             const r  = Math.hypot(s.x2 - s.x1, s.y2 - s.y1) / 2;
             c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.stroke();
+        } else if (s.type === 'arrow') {
+            // Linia ze strzałką na końcu
+            const ax = s.x2 - s.x1, ay = s.y2 - s.y1;
+            const len = Math.hypot(ax, ay);
+            if (len < 2) { c.restore(); return; }
+            const ux = ax / len, uy = ay / len;
+            const hw = Math.max(s.width * 5, 18); // długość głowicy strzałki
+            const hh = Math.max(s.width * 3, 10); // szerokość połówki głowicy
+            c.beginPath(); c.moveTo(s.x1, s.y1); c.lineTo(s.x2, s.y2); c.stroke();
+            // Głowica strzałki (wypełniony trójkąt)
+            c.beginPath();
+            c.moveTo(s.x2, s.y2);
+            c.lineTo(s.x2 - ux*hw + uy*hh, s.y2 - uy*hw - ux*hh);
+            c.lineTo(s.x2 - ux*hw - uy*hh, s.y2 - uy*hw + ux*hh);
+            c.closePath(); c.fill();
+            // Etykieta tekstowa nad strzałką
+            if (s.text) {
+                c.save();
+                const mx = (s.x1 + s.x2) / 2, my = (s.y1 + s.y2) / 2;
+                const angle = Math.atan2(ay, ax);
+                c.translate(mx, my);
+                // Obróć tak, aby tekst zawsze był "w górę"
+                let rot = angle;
+                if (rot > Math.PI/2 || rot < -Math.PI/2) rot += Math.PI;
+                c.rotate(rot);
+                c.font = `300 ${s.fontSize || 28}px Barlow Condensed, sans-serif`;
+                c.fillStyle = s.color;
+                c.textAlign = 'center';
+                c.fillText(s.text, 0, -8);
+                c.restore();
+            }
+        } else if (s.type === 'dimension') {
+            // Linia wymiarowa w stylu CAD
+            const dx = s.x2 - s.x1, dy = s.y2 - s.y1;
+            const len = Math.hypot(dx, dy);
+            if (len < 2) { c.restore(); return; }
+            const ux = dx / len, uy = dy / len;
+            // Prostopadły wektor (linie pomocnicze)
+            const nx = -uy, ny = ux;
+            const ext = 20; // wysunięcie linii pomocniczych
+            const ovr = 8;  // wysunięcie powyżej linii wymiarowej
+            // Linie pomocnicze
+            c.lineWidth = Math.max(s.width * 0.7, 1);
+            c.beginPath();
+            c.moveTo(s.x1 + nx * ovr, s.y1 + ny * ovr);
+            c.lineTo(s.x1 + nx * (ext + ovr), s.y1 + ny * (ext + ovr));
+            c.moveTo(s.x2 + nx * ovr, s.y2 + ny * ovr);
+            c.lineTo(s.x2 + nx * (ext + ovr), s.y2 + ny * (ext + ovr));
+            c.stroke();
+            // Linia wymiarowa
+            const p1x = s.x1 + nx * (ext + ovr - 4), p1y = s.y1 + ny * (ext + ovr - 4);
+            const p2x = s.x2 + nx * (ext + ovr - 4), p2y = s.y2 + ny * (ext + ovr - 4);
+            c.lineWidth = s.width;
+            c.beginPath(); c.moveTo(p1x, p1y); c.lineTo(p2x, p2y); c.stroke();
+            // Strzałki na końcach linii wymiarowej
+            const hw = Math.max(s.width * 5, 16);
+            const hh = Math.max(s.width * 2.5, 7);
+            // Strzałka lewa (w kierunku x1)
+            c.beginPath();
+            c.moveTo(p1x, p1y);
+            c.lineTo(p1x + ux*hw + ny*hh, p1y + uy*hw - nx*hh);
+            c.lineTo(p1x + ux*hw - ny*hh, p1y + uy*hw + nx*hh);
+            c.closePath(); c.fill();
+            // Strzałka prawa (w kierunku x2)
+            c.beginPath();
+            c.moveTo(p2x, p2y);
+            c.lineTo(p2x - ux*hw + ny*hh, p2y - uy*hw - nx*hh);
+            c.lineTo(p2x - ux*hw - ny*hh, p2y - uy*hw + nx*hh);
+            c.closePath(); c.fill();
+            // Etykieta z wymiarem
+            const mx = (p1x + p2x) / 2, my = (p1y + p2y) / 2;
+            const dimMm = s.text || (Math.round(len / MM_TO_PX) + ' mm');
+            c.save();
+            c.translate(mx, my);
+            let rot = Math.atan2(dy, dx);
+            if (rot > Math.PI/2 || rot < -Math.PI/2) rot += Math.PI;
+            c.rotate(rot);
+            const fs = s.fontSize || 26;
+            c.font = `600 ${fs}px Barlow Condensed, sans-serif`;
+            c.fillStyle = s.color;
+            c.textAlign = 'center';
+            // Białe tło pod tekstem
+            const tw = c.measureText(dimMm).width;
+            c.fillStyle = 'rgba(255,255,255,0.85)';
+            c.fillRect(-tw/2 - 4, -fs - 2, tw + 8, fs + 4);
+            c.fillStyle = s.color;
+            c.fillText(dimMm, 0, -6);
+            c.restore();
         } else if (s.type === 'text') {
             c.font = `300 ${s.fontSize}px Barlow Condensed, sans-serif`;
             c.fillText(s.text, s.x1, s.y1);
@@ -1425,6 +1515,10 @@
             const r  = Math.hypot(s.x2 - s.x1, s.y2 - s.y1) / 2;
             return { x: cx - r, y: cy - r, w: r * 2 || 1, h: r * 2 || 1 };
         }
+        if (s.type === 'arrow' || s.type === 'dimension') {
+            const x = Math.min(s.x1, s.x2), y = Math.min(s.y1, s.y2);
+            return { x: x - 30, y: y - 30, w: Math.abs(s.x2 - s.x1) + 60 || 1, h: Math.abs(s.y2 - s.y1) + 60 || 1 };
+        }
         const x = Math.min(s.x1, s.x2), y = Math.min(s.y1, s.y2);
         return { x, y, w: Math.abs(s.x2 - s.x1) || 1, h: Math.abs(s.y2 - s.y1) || 1 };
     }
@@ -1444,6 +1538,13 @@
             const cx = (s.x1 + s.x2) / 2, cy = (s.y1 + s.y2) / 2;
             const r  = Math.hypot(s.x2 - s.x1, s.y2 - s.y1) / 2;
             return Math.abs(Math.hypot(px - cx, py - cy) - r) < pad;
+        }
+        if (s.type === 'arrow' || s.type === 'dimension') {
+            const dx = s.x2 - s.x1, dy = s.y2 - s.y1;
+            const len2 = dx*dx + dy*dy;
+            if (len2 === 0) return Math.hypot(px-s.x1, py-s.y1) < pad;
+            const t = Math.max(0, Math.min(1, ((px-s.x1)*dx + (py-s.y1)*dy) / len2));
+            return Math.hypot(px - (s.x1+t*dx), py - (s.y1+t*dy)) < pad + 20;
         }
         return px >= bb.x - pad && px <= bb.x + bb.w + pad &&
                py >= bb.y - pad && py <= bb.y + bb.h + pad;
@@ -1466,7 +1567,7 @@
         cctx.arc(snapped.x, snapped.y, 5, 0, Math.PI*2);
         cctx.stroke();
 
-        if (isDrawing && (currentTool === 'line' || currentTool === 'rect' || currentTool === 'circle')) {
+        if (isDrawing && (currentTool === 'line' || currentTool === 'rect' || currentTool === 'circle' || currentTool === 'arrow' || currentTool === 'dimension')) {
             cctx.strokeStyle = 'rgba(184,134,11,0.45)';
             cctx.lineWidth = 1;
             cctx.setLineDash([6, 4]);
@@ -1478,13 +1579,17 @@
                 const cx = (startX + snapped.x) / 2, cy = (startY + snapped.y) / 2;
                 const r  = Math.hypot(snapped.x - startX, snapped.y - startY) / 2;
                 cctx.beginPath(); cctx.arc(cx, cy, r, 0, Math.PI * 2); cctx.stroke();
+            } else if (currentTool === 'arrow' || currentTool === 'dimension') {
+                cctx.beginPath(); cctx.moveTo(startX, startY); cctx.lineTo(snapped.x, snapped.y); cctx.stroke();
             }
             cctx.setLineDash([]);
-            const dx = Math.abs(snapped.x-startX)/MM_TO_PX, dy = Math.abs(snapped.y-startY)/MM_TO_PX;
+            const ddx = Math.abs(snapped.x-startX)/MM_TO_PX, ddy = Math.abs(snapped.y-startY)/MM_TO_PX;
+            const diagMm = Math.round(Math.hypot(snapped.x-startX, snapped.y-startY)/MM_TO_PX);
             let lbl;
-            if (currentTool === 'line') lbl = `${Math.round(Math.sqrt(dx*dx+dy*dy))} mm`;
-            else if (currentTool === 'circle') lbl = `⌀ ${Math.round(Math.hypot(dx, dy))} mm`;
-            else lbl = `${Math.round(dx)} × ${Math.round(dy)} mm`;
+            if (currentTool === 'line' || currentTool === 'arrow') lbl = `${diagMm} mm`;
+            else if (currentTool === 'circle') lbl = `⌀ ${Math.round(Math.hypot(ddx, ddy))} mm`;
+            else if (currentTool === 'dimension') lbl = `↔ ${diagMm} mm`;
+            else lbl = `${Math.round(ddx)} × ${Math.round(ddy)} mm`;
             cctx.font = 'bold 22px Plus Jakarta Sans, sans-serif';
             cctx.fillStyle = 'rgba(184,134,11,0.95)';
             cctx.textAlign = 'left';
@@ -1608,6 +1713,16 @@
             shapes.push({ type:'rect', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth });
         } else if (currentTool === 'circle') {
             shapes.push({ type:'circle', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth });
+        } else if (currentTool === 'arrow') {
+            const txt = prompt('Tekst strzałki (zostaw puste jeśli brak):', '');
+            const fs = currentWidth * 8 + 12;
+            shapes.push({ type:'arrow', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth, text: txt || '', fontSize: fs });
+        } else if (currentTool === 'dimension') {
+            const autoMm = Math.round(Math.hypot(pos.x - startX, pos.y - startY) / MM_TO_PX) + ' mm';
+            const txt = prompt('Wartość wymiaru:', autoMm);
+            if (txt === null) { redraw(); saveHistory(); return; }
+            const fs = currentWidth * 6 + 18;
+            shapes.push({ type:'dimension', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth, text: txt || autoMm, fontSize: fs });
         }
 
         redraw();
@@ -1622,15 +1737,17 @@
         if (isDrawing)  { onUp(); }
     }
 
-    // Podwójny klik na tekst — edycja
+    // Podwójny klik na tekst / strzałkę / wymiar — edycja
     function onDblClick(e) {
         if (currentTool !== 'select') return;
         const raw = getRawPos(e);
         for (let i = shapes.length-1; i >= 0; i--) {
-            if (shapes[i].type === 'text' && hitTest(shapes[i], raw.x, raw.y)) {
-                const newTxt = prompt('Edytuj tekst:', shapes[i].text);
+            const s = shapes[i];
+            if ((s.type === 'text' || s.type === 'arrow' || s.type === 'dimension') && hitTest(s, raw.x, raw.y)) {
+                const label = s.type === 'dimension' ? 'Edytuj wymiar:' : 'Edytuj tekst:';
+                const newTxt = prompt(label, s.text || '');
                 if (newTxt !== null) {
-                    shapes[i].text = newTxt;
+                    s.text = newTxt;
                     redraw();
                     saveHistory();
                 }
