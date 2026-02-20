@@ -1051,6 +1051,7 @@
                 <button id="toolLine" onclick="setTool('line')">📏 Linia</button>
                 <button id="toolRect" onclick="setTool('rect')">⬜ Prostokąt</button>
                 <button id="toolText" onclick="setTool('text')">T Tekst</button>
+                <button id="toolCircle" onclick="setTool('circle')">⭕ Koło</button>
                 <button id="toolEraser" onclick="setTool('eraser')">🧹 Gumka</button>
                 <label>Kolor:</label>
                 <input type="color" id="strokeColor" value="#2D2E2E" oninput="updateColor()">
@@ -1068,10 +1069,11 @@
                 <label>Siatka:</label>
                 <select id="gridSize" onchange="updateGrid()">
                     <option value="0">Brak</option>
-                    <option value="53" selected>10 mm</option>
-                    <option value="106">20 mm</option>
-                    <option value="159">30 mm</option>
-                    <option value="265">50 mm</option>
+                    <option value="43">5 mm</option>
+                    <option value="85" selected>10 mm</option>
+                    <option value="170">20 mm</option>
+                    <option value="255">30 mm</option>
+                    <option value="425">50 mm</option>
                 </select>
                 <button id="snapBtn" class="active" onclick="toggleSnap()">🧲 Snap do siatki</button>
                 <span id="coordsDisplay" style="font-size:var(--font-size-xs);color:var(--color-secondary);margin-left:8px;min-width:80px;"></span>
@@ -1373,6 +1375,10 @@
             c.beginPath(); c.moveTo(s.x1, s.y1); c.lineTo(s.x2, s.y2); c.stroke();
         } else if (s.type === 'rect') {
             c.strokeRect(s.x1, s.y1, s.x2 - s.x1, s.y2 - s.y1);
+        } else if (s.type === 'circle') {
+            const cx = (s.x1 + s.x2) / 2, cy = (s.y1 + s.y2) / 2;
+            const r  = Math.hypot(s.x2 - s.x1, s.y2 - s.y1) / 2;
+            c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.stroke();
         } else if (s.type === 'text') {
             c.font = `300 ${s.fontSize}px Barlow Condensed, sans-serif`;
             c.fillText(s.text, s.x1, s.y1);
@@ -1414,6 +1420,11 @@
             const w = ctx.measureText(s.text).width;
             return { x: s.x1, y: s.y1 - s.fontSize, w: w || 60, h: s.fontSize + 4 };
         }
+        if (s.type === 'circle') {
+            const cx = (s.x1 + s.x2) / 2, cy = (s.y1 + s.y2) / 2;
+            const r  = Math.hypot(s.x2 - s.x1, s.y2 - s.y1) / 2;
+            return { x: cx - r, y: cy - r, w: r * 2 || 1, h: r * 2 || 1 };
+        }
         const x = Math.min(s.x1, s.x2), y = Math.min(s.y1, s.y2);
         return { x, y, w: Math.abs(s.x2 - s.x1) || 1, h: Math.abs(s.y2 - s.y1) || 1 };
     }
@@ -1428,6 +1439,11 @@
             if (len2 === 0) return Math.hypot(px-s.x1, py-s.y1) < pad;
             const t = Math.max(0, Math.min(1, ((px-s.x1)*dx + (py-s.y1)*dy) / len2));
             return Math.hypot(px - (s.x1+t*dx), py - (s.y1+t*dy)) < pad;
+        }
+        if (s.type === 'circle') {
+            const cx = (s.x1 + s.x2) / 2, cy = (s.y1 + s.y2) / 2;
+            const r  = Math.hypot(s.x2 - s.x1, s.y2 - s.y1) / 2;
+            return Math.abs(Math.hypot(px - cx, py - cy) - r) < pad;
         }
         return px >= bb.x - pad && px <= bb.x + bb.w + pad &&
                py >= bb.y - pad && py <= bb.y + bb.h + pad;
@@ -1450,18 +1466,25 @@
         cctx.arc(snapped.x, snapped.y, 5, 0, Math.PI*2);
         cctx.stroke();
 
-        if (isDrawing && (currentTool === 'line' || currentTool === 'rect')) {
+        if (isDrawing && (currentTool === 'line' || currentTool === 'rect' || currentTool === 'circle')) {
             cctx.strokeStyle = 'rgba(184,134,11,0.45)';
             cctx.lineWidth = 1;
             cctx.setLineDash([6, 4]);
             if (currentTool === 'line') {
                 cctx.beginPath(); cctx.moveTo(startX, startY); cctx.lineTo(snapped.x, snapped.y); cctx.stroke();
-            } else {
+            } else if (currentTool === 'rect') {
                 cctx.strokeRect(startX, startY, snapped.x-startX, snapped.y-startY);
+            } else if (currentTool === 'circle') {
+                const cx = (startX + snapped.x) / 2, cy = (startY + snapped.y) / 2;
+                const r  = Math.hypot(snapped.x - startX, snapped.y - startY) / 2;
+                cctx.beginPath(); cctx.arc(cx, cy, r, 0, Math.PI * 2); cctx.stroke();
             }
             cctx.setLineDash([]);
             const dx = Math.abs(snapped.x-startX)/MM_TO_PX, dy = Math.abs(snapped.y-startY)/MM_TO_PX;
-            const lbl = currentTool === 'line' ? `${Math.round(Math.sqrt(dx*dx+dy*dy))} mm` : `${Math.round(dx)} × ${Math.round(dy)} mm`;
+            let lbl;
+            if (currentTool === 'line') lbl = `${Math.round(Math.sqrt(dx*dx+dy*dy))} mm`;
+            else if (currentTool === 'circle') lbl = `⌀ ${Math.round(Math.hypot(dx, dy))} mm`;
+            else lbl = `${Math.round(dx)} × ${Math.round(dy)} mm`;
             cctx.font = 'bold 22px Plus Jakarta Sans, sans-serif';
             cctx.fillStyle = 'rgba(184,134,11,0.95)';
             cctx.textAlign = 'left';
@@ -1583,6 +1606,8 @@
             shapes.push({ type:'line', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth });
         } else if (currentTool === 'rect') {
             shapes.push({ type:'rect', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth });
+        } else if (currentTool === 'circle') {
+            shapes.push({ type:'circle', x1:startX, y1:startY, x2:pos.x, y2:pos.y, color:currentColor, width:currentWidth });
         }
 
         redraw();
