@@ -1333,11 +1333,30 @@ function startVoiceRecord(photoId, pos) {
                 else interim+=t;
             }
             liveTranscript += final;
-            document.getElementById('voice-transcript-live').textContent = liveTranscript + interim;
+            document.getElementById('voice-transcript-live').textContent = liveTranscript + (interim ? '…'+interim : '');
         };
-        recognition.onerror = () => {};
-        recognition.start();
+        recognition.onerror = ev => {
+            // 'no-speech' i 'aborted' to normalne — nie przerywaj nagrania
+            if (ev.error === 'not-allowed') {
+                toast('Brak uprawnień do mikrofonu — otwórz na HTTPS','err');
+            }
+        };
+        // Chrome często kończy sesję po ciszy — automatycznie restartuj
+        recognition.onend = () => {
+            if (voiceActive) {
+                try { recognition.start(); } catch(e) {}
+            }
+        };
+        try {
+            recognition.start();
+        } catch(e) {
+            toast('Transkrypcja niedostępna: ' + e.message, 'err');
+        }
     }
+
+    // Ustaw aktywność od razu — recognition.onend musi to widzieć
+    voiceActive = true;
+    updateVoiceOverlay();
 
     // MediaRecorder — nagranie audio
     if (CAN_RECORD) {
@@ -1357,28 +1376,27 @@ function startVoiceRecord(photoId, pos) {
                 stream.getTracks().forEach(t=>t.stop());
             };
             voiceRecorder.start(100);
-            voiceActive=true;
-            updateVoiceOverlay();
         })
-        .catch(err=>{ toast('Brak mikrofonu: '+err.message,'err'); });
+        .catch(err=>{
+            voiceActive=false; updateVoiceOverlay();
+            toast('Brak mikrofonu: '+err.message,'err');
+        });
     } else {
-        // Tylko transkrypcja bez audio
-        voiceActive=true;
-        updateVoiceOverlay();
-        toast('Brak nagrywania (file://) — transkrypcja tekstowa');
+        toast('Nagrywanie audio niedostępne (wymagane HTTPS) — transkrypcja tekstowa');
     }
 }
 
 function stopVoiceRecord() {
     if (!voiceActive) return;
+    // Najpierw wyłącz flagę — recognition.onend nie będzie restartować
+    voiceActive=false;
+    updateVoiceOverlay();
     if (recognition) { try{recognition.stop();}catch(e){} recognition=null; }
     if (voiceRecorder && voiceRecorder.state!=='inactive') {
-        voiceRecorder.stop();
+        voiceRecorder.stop(); // onstop → finalizeVoiceNote
     } else {
         finalizeVoiceNote(voicePhotoId, voicePoint, null, liveTranscript);
     }
-    voiceActive=false;
-    updateVoiceOverlay();
 }
 
 function finalizeVoiceNote(photoId, pos, audioDataUrl, transcript) {
