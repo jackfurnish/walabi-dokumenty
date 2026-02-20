@@ -1470,22 +1470,24 @@
             c.lineTo(s.x2 - ux*hw + uy*hh, s.y2 - uy*hw - ux*hh);
             c.lineTo(s.x2 - ux*hw - uy*hh, s.y2 - uy*hw + ux*hh);
             c.closePath(); c.fill();
-            // Etykieta tekstowa — przy ogonie strzałki, lekko z boku
+            // Etykieta tekstowa — nad linią, zaczyna się od grotu (x2)
             if (s.text) {
                 c.save();
                 const angle = Math.atan2(ay, ax);
-                // Tekst przy początku strzałki, prostopadle przesunięty
-                const nx = -uy, ny = ux; // prostopadły
-                const tx = s.x1 + nx * (s.fontSize || 28) * 0.6;
-                const ty = s.y1 + ny * (s.fontSize || 28) * 0.6;
-                c.translate(tx, ty);
+                const nx = -uy, ny = ux; // prostopadły "w górę" względem kierunku strzałki
+                const fs = s.fontSize || 28;
+                const gap = Math.max(fs * 0.5, 10); // odstęp nad linią
+                // Punkt startowy: grot (x2,y2) przesunięty prostopadle w górę
+                c.translate(s.x2 + nx * gap, s.y2 + ny * gap);
                 let rot = angle;
                 if (rot > Math.PI/2 || rot < -Math.PI/2) rot += Math.PI;
                 c.rotate(rot);
-                c.font = `400 ${s.fontSize || 28}px Barlow Condensed, sans-serif`;
+                c.font = `400 ${fs}px Barlow Condensed, sans-serif`;
                 c.fillStyle = s.color;
-                c.textAlign = 'left';
-                c.fillText(s.text, 0, 0);
+                // textAlign 'right' — tekst ciągnie się w lewo od grotu (gdy strzałka →)
+                // po auto-flip tekst zawsze idzie od grotu w kierunku ogona
+                c.textAlign = 'right';
+                c.fillText(' ' + s.text, 0, 0);
                 c.restore();
             }
         } else if (s.type === 'dimension') {
