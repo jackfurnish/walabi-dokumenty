@@ -1063,9 +1063,23 @@
                 <button onclick="undoSketch()">↩ Cofnij</button>
                 <button onclick="clearCanvas()">🗑 Wyczyść</button>
             </div>
+            <div class="sketch-toolbar no-print" style="margin-top:2px;">
+                <label>Siatka:</label>
+                <select id="gridSize" onchange="updateGrid()">
+                    <option value="0">Brak</option>
+                    <option value="53" selected>10 mm</option>
+                    <option value="106">20 mm</option>
+                    <option value="159">30 mm</option>
+                    <option value="265">50 mm</option>
+                </select>
+                <button id="snapBtn" class="active" onclick="toggleSnap()">🧲 Snap do siatki</button>
+                <span id="coordsDisplay" style="font-size:var(--font-size-xs);color:var(--color-secondary);margin-left:8px;min-width:80px;"></span>
+            </div>
 
-            <div class="sketch-canvas-wrap">
-                <canvas id="sketchCanvas" width="1587" height="2100"></canvas>
+            <div class="sketch-canvas-wrap" style="position:relative;">
+                <canvas id="sketchCanvas" width="1587" height="2100" style="position:relative;z-index:1;"></canvas>
+                <canvas id="gridCanvas"   width="1587" height="2100" style="position:absolute;top:0;left:0;width:100%;pointer-events:none;z-index:2;"></canvas>
+                <canvas id="cursorCanvas" width="1587" height="2100" style="position:absolute;top:0;left:0;width:100%;pointer-events:none;z-index:3;"></canvas>
             </div>
 
             <div style="margin-top:var(--spacing-md);font-size:var(--font-size-xs);color:var(--color-secondary);">
@@ -1231,7 +1245,6 @@
         document.getElementById('sketchRoom').textContent = document.getElementById('locationRoom').value || '—';
     }
 
-    // Odświeżaj meta przy zmianie pól
     ['docNumber','clientName','locationRoom'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', syncSketchMeta);
@@ -1239,6 +1252,8 @@
 
     // ===== CANVAS =====
     let canvas, ctx;
+    let gridCanvas, gctx;
+    let cursorCanvas, cctx;
     let isDrawing = false;
     let currentTool = 'pen';
     let currentColor = '#2D2E2E';
@@ -1246,26 +1261,40 @@
     let startX, startY;
     let snapshot;
     let history = [];
+    let snapEnabled = true;
+
+    // Canvas 1587px szerokości = 186mm (210mm A4 minus marginesy 2×12mm)
+    const MM_TO_PX = 1587 / 186; // ≈ 8.53 px/mm
+    let gridStep = Math.round(10 * MM_TO_PX); // domyślnie 10mm
+
+    function mmToPx(mm) { return Math.round(mm * MM_TO_PX); }
 
     function initCanvas() {
-        if (canvas) return; // już zainicjowany
+        if (canvas) return;
         canvas = document.getElementById('sketchCanvas');
-        ctx = canvas.getContext('2d');
+        ctx    = canvas.getContext('2d');
+        gridCanvas   = document.getElementById('gridCanvas');
+        gctx         = gridCanvas.getContext('2d');
+        cursorCanvas = document.getElementById('cursorCanvas');
+        cctx         = cursorCanvas.getContext('2d');
 
-        // Ustaw canvas na pełną szerokość kontenera (pikselowo)
+        // Synchronizuj wysokość CSS canvasów
         const wrap = canvas.parentElement;
-        const w = wrap.clientWidth;
-        const ratio = canvas.width / w;
-        canvas.style.height = (canvas.height / ratio) + 'px';
+        const ratio = canvas.width / wrap.clientWidth;
+        const cssH = canvas.height / ratio;
+        [canvas, gridCanvas, cursorCanvas].forEach(c => {
+            c.style.height = cssH + 'px';
+        });
 
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         saveHistory();
+        drawGrid();
 
         canvas.addEventListener('mousedown', onDown);
         canvas.addEventListener('mousemove', onMove);
         canvas.addEventListener('mouseup', onUp);
-        canvas.addEventListener('mouseleave', onUp);
+        canvas.addEventListener('mouseleave', onLeave);
 
         canvas.addEventListener('touchstart', e => { e.preventDefault(); onDown(toMouse(e)); }, { passive: false });
         canvas.addEventListener('touchmove',  e => { e.preventDefault(); onMove(toMouse(e)); }, { passive: false });
@@ -1277,16 +1306,128 @@
         return { clientX: t.clientX, clientY: t.clientY };
     }
 
+    function snapToGrid(x, y) {
+        if (!snapEnabled || gridStep === 0) return { x, y };
+        return {
+            x: Math.round(x / gridStep) * gridStep,
+            y: Math.round(y / gridStep) * gridStep
+        };
+    }
+
     function getPos(e) {
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width;
         const scaleY = canvas.height / rect.height;
-        return {
+        const raw = {
             x: (e.clientX - rect.left) * scaleX,
-            y: (e.clientY - rect.top) * scaleY
+            y: (e.clientY - rect.top)  * scaleY
+        };
+        return snapToGrid(raw.x, raw.y);
+    }
+
+    function getRawPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+            x: (e.clientX - rect.left) * (canvas.width / rect.width),
+            y: (e.clientY - rect.top)  * (canvas.height / rect.height)
         };
     }
 
+    // ===== SIATKA =====
+    function drawGrid() {
+        gctx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+        if (gridStep === 0) return;
+
+        const W = gridCanvas.width, H = gridCanvas.height;
+        const gridMm = parseInt(document.getElementById('gridSize').value) || 10;
+
+        // Co 10 wierszy/kolumn — linia grubsza (co 100mm)
+        for (let x = 0; x <= W; x += gridStep) {
+            const isMajor = Math.round(x / gridStep) % 10 === 0;
+            gctx.beginPath();
+            gctx.moveTo(x, 0);
+            gctx.lineTo(x, H);
+            gctx.strokeStyle = isMajor ? 'rgba(180,180,180,0.7)' : 'rgba(210,210,210,0.5)';
+            gctx.lineWidth = isMajor ? 1.5 : 0.8;
+            gctx.stroke();
+        }
+        for (let y = 0; y <= H; y += gridStep) {
+            const isMajor = Math.round(y / gridStep) % 10 === 0;
+            gctx.beginPath();
+            gctx.moveTo(0, y);
+            gctx.lineTo(W, y);
+            gctx.strokeStyle = isMajor ? 'rgba(180,180,180,0.7)' : 'rgba(210,210,210,0.5)';
+            gctx.lineWidth = isMajor ? 1.5 : 0.8;
+            gctx.stroke();
+        }
+
+        // Etykiety co 100mm wzdłuż osi X i Y
+        gctx.font = '18px Plus Jakarta Sans, sans-serif';
+        gctx.fillStyle = 'rgba(150,150,150,0.8)';
+        gctx.textAlign = 'center';
+        for (let x = gridStep * 10; x < W; x += gridStep * 10) {
+            gctx.fillText(Math.round(x / MM_TO_PX) + 'mm', x, 20);
+        }
+        gctx.textAlign = 'right';
+        for (let y = gridStep * 10; y < H; y += gridStep * 10) {
+            gctx.fillText(Math.round(y / MM_TO_PX) + 'mm', 46, y + 6);
+        }
+    }
+
+    // ===== KURSOR / PODGLĄD =====
+    function drawCursor(x, y) {
+        cctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+        if (gridStep === 0 || !snapEnabled) return;
+
+        // Krzyżyk na węźle siatki
+        const snapped = snapToGrid(x, y);
+        cctx.strokeStyle = 'rgba(184,134,11,0.85)';
+        cctx.lineWidth = 1.5;
+        const s = 14;
+        cctx.beginPath();
+        cctx.moveTo(snapped.x - s, snapped.y); cctx.lineTo(snapped.x + s, snapped.y);
+        cctx.moveTo(snapped.x, snapped.y - s); cctx.lineTo(snapped.x, snapped.y + s);
+        cctx.stroke();
+
+        // Kółko
+        cctx.beginPath();
+        cctx.arc(snapped.x, snapped.y, 5, 0, Math.PI * 2);
+        cctx.strokeStyle = 'rgba(184,134,11,0.9)';
+        cctx.stroke();
+
+        // Podgląd linii podczas rysowania (tylko dla line/rect)
+        if (isDrawing && (currentTool === 'line' || currentTool === 'rect')) {
+            cctx.strokeStyle = 'rgba(184,134,11,0.5)';
+            cctx.lineWidth = 1;
+            cctx.setLineDash([6, 4]);
+            if (currentTool === 'line') {
+                cctx.beginPath();
+                cctx.moveTo(startX, startY);
+                cctx.lineTo(snapped.x, snapped.y);
+                cctx.stroke();
+            } else {
+                cctx.strokeRect(startX, startY, snapped.x - startX, snapped.y - startY);
+            }
+            cctx.setLineDash([]);
+
+            // Wymiar w mm
+            const dx = Math.abs(snapped.x - startX) / MM_TO_PX;
+            const dy = Math.abs(snapped.y - startY) / MM_TO_PX;
+            const label = currentTool === 'line'
+                ? `${Math.round(Math.sqrt(dx*dx+dy*dy))} mm`
+                : `${Math.round(dx)} × ${Math.round(dy)} mm`;
+            cctx.font = 'bold 22px Plus Jakarta Sans, sans-serif';
+            cctx.fillStyle = 'rgba(184,134,11,0.95)';
+            cctx.textAlign = 'left';
+            cctx.fillText(label, snapped.x + 12, snapped.y - 8);
+        }
+    }
+
+    function clearCursor() {
+        if (cctx) cctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+    }
+
+    // ===== RYSOWANIE =====
     function onDown(e) {
         const pos = getPos(e);
         startX = pos.x; startY = pos.y;
@@ -1297,7 +1438,7 @@
             isDrawing = false;
             const txt = prompt('Wpisz tekst:');
             if (txt) {
-                ctx.font = `${currentWidth * 8 + 10}px Plus Jakarta Sans, sans-serif`;
+                ctx.font = `bold ${currentWidth * 8 + 10}px Plus Jakarta Sans, sans-serif`;
                 ctx.fillStyle = currentColor;
                 ctx.fillText(txt, startX, startY);
                 saveHistory();
@@ -1310,28 +1451,38 @@
     }
 
     function onMove(e) {
+        const raw = getRawPos(e);
+        const pos = snapToGrid(raw.x, raw.y);
+        drawCursor(raw.x, raw.y);
+
+        // Współrzędne w mm
+        const coordsEl = document.getElementById('coordsDisplay');
+        if (coordsEl) {
+            const mx = Math.round(pos.x / MM_TO_PX);
+            const my = Math.round(pos.y / MM_TO_PX);
+            coordsEl.textContent = `X: ${mx} mm  Y: ${my} mm`;
+        }
+
         if (!isDrawing) return;
-        const pos = getPos(e);
 
         if (currentTool === 'pen' || currentTool === 'eraser') {
             ctx.lineTo(pos.x, pos.y);
             ctx.strokeStyle = currentTool === 'eraser' ? '#ffffff' : currentColor;
-            ctx.lineWidth = currentTool === 'eraser' ? currentWidth * 8 : currentWidth;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
+            ctx.lineWidth  = currentTool === 'eraser' ? currentWidth * 8 : currentWidth;
+            ctx.lineCap    = 'round';
+            ctx.lineJoin   = 'round';
             ctx.stroke();
         } else {
             ctx.putImageData(snapshot, 0, 0);
             ctx.strokeStyle = currentColor;
-            ctx.lineWidth = currentWidth;
-            ctx.lineCap = 'round';
+            ctx.lineWidth   = currentWidth;
+            ctx.lineCap     = 'round';
             if (currentTool === 'line') {
                 ctx.beginPath();
                 ctx.moveTo(startX, startY);
                 ctx.lineTo(pos.x, pos.y);
                 ctx.stroke();
             } else if (currentTool === 'rect') {
-                ctx.beginPath();
                 ctx.strokeRect(startX, startY, pos.x - startX, pos.y - startY);
             }
         }
@@ -1340,7 +1491,15 @@
     function onUp() {
         if (!isDrawing) return;
         isDrawing = false;
+        clearCursor();
         saveHistory();
+    }
+
+    function onLeave() {
+        clearCursor();
+        const coordsEl = document.getElementById('coordsDisplay');
+        if (coordsEl) coordsEl.textContent = '';
+        if (isDrawing) { isDrawing = false; saveHistory(); }
     }
 
     function saveHistory() {
@@ -1375,6 +1534,20 @@
 
     window.updateLineWidth = function() {
         currentWidth = parseInt(document.getElementById('lineWidth').value);
+    };
+
+    window.updateGrid = function() {
+        const sel = document.getElementById('gridSize');
+        const mm = parseInt(sel.options[sel.selectedIndex].text); // np. "10 mm" → 10
+        gridStep = isNaN(mm) ? 0 : Math.round(mm * MM_TO_PX);
+        if (gctx) drawGrid();
+    };
+
+    window.toggleSnap = function() {
+        snapEnabled = !snapEnabled;
+        const btn = document.getElementById('snapBtn');
+        if (btn) btn.classList.toggle('active', snapEnabled);
+        toast(snapEnabled ? 'Snap włączony' : 'Snap wyłączony');
     };
 </script>
 
