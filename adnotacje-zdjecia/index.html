@@ -1038,7 +1038,7 @@ function drawShape(c, s, selected, audioStore) {
         c.strokeStyle = 'white'; c.stroke();
         // Numer
         c.fillStyle = 'white';
-        c.font = `bold ${Math.round(r*1.1)}px Plus Jakarta Sans, sans-serif`;
+        c.font = `600 ${Math.round(r*0.75)}px Plus Jakarta Sans, sans-serif`;
         c.textAlign = 'center';
         c.textBaseline = 'middle';
         c.fillText(s.voiceNum, s.x1, s.y1);
@@ -1385,7 +1385,7 @@ function finalizeVoiceNote(photoId, pos, audioDataUrl, transcript) {
     const ph=getPhoto(photoId); if(!ph) return;
     const num=nextVoiceNum(ph);
     const id=newId();
-    const radius = Math.max(activeCanvas ? activeCanvas.width*0.025 : 36, 28);
+    const radius = Math.max(activeCanvas ? activeCanvas.width*0.014 : 24, 18);
 
     ph.shapes.push({
         id, type:'voice',
