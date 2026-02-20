@@ -1385,7 +1385,10 @@ function finalizeVoiceNote(photoId, pos, audioDataUrl, transcript) {
     const ph=getPhoto(photoId); if(!ph) return;
     const num=nextVoiceNum(ph);
     const id=newId();
-    const radius = Math.max(activeCanvas ? activeCanvas.width*0.014 : 24, 18);
+    // Promień w pikselach canvas = ~18px na ekranie, przeliczony przez skalę
+    const displayW = activeCanvas ? parseFloat(activeCanvas.style.width) || activeCanvas.width : 600;
+    const scale = activeCanvas ? activeCanvas.width / displayW : 1;
+    const radius = Math.round(18 * scale);
 
     ph.shapes.push({
         id, type:'voice',
