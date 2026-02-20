@@ -1054,8 +1054,21 @@
                 <button id="toolCircle" onclick="setTool('circle')">⭕ Koło</button>
                 <button id="toolArrow" onclick="setTool('arrow')">➤ Strzałka</button>
                 <button id="toolDimension" onclick="setTool('dimension')">↔ Wymiar</button>
-                <button id="toolSocket" onclick="setTool('socket')">⚡ Gniazdko</button>
-                <button id="toolValve" onclick="setTool('valve')">⊗ Zawór</button>
+                <select id="symbolPicker" onchange="setSymbolTool()" style="padding:3px 6px;font-size:var(--font-size-label);font-family:var(--font-primary);border:1px solid var(--color-border);border-radius:3px;background:var(--color-white);">
+                    <option value="">— Symbol —</option>
+                    <optgroup label="Elektryczne">
+                        <option value="socket230">Gniazdko 230V (Schuko)</option>
+                        <option value="socket400">Gniazdko 400V (3-faz.)</option>
+                        <option value="switch">Wyłącznik</option>
+                        <option value="lamp">Oprawa oświetleniowa</option>
+                    </optgroup>
+                    <optgroup label="Instalacyjne">
+                        <option value="valve">Zawór</option>
+                        <option value="valveAngle">Zawór kątowy</option>
+                        <option value="drain">Odpływ / Syfon</option>
+                    </optgroup>
+                </select>
+                <button id="toolSymbol" onclick="activateSymbolTool()" style="display:none;">⬛ Wstaw</button>
                 <button id="toolEraser" onclick="setTool('eraser')">🧹 Gumka</button>
                 <label>Kolor:</label>
                 <input type="color" id="strokeColor" value="#2D2E2E" oninput="updateColor()">
@@ -1463,66 +1476,127 @@
             c.fillStyle = s.color;
             c.fillText(dimMm, 0, -4);
             c.restore();
-        } else if (s.type === 'socket') {
-            // Symbol gniazdka elektrycznego (widok z boku na ścianie)
-            // Okrąg + dwie kreski pionowe (otwory) + pozioma kreska bazowa
+        } else if (s.type === 'symbol') {
             const cx = s.x1, cy = s.y1;
-            const r = s.size || 28;
-            // Okrąg
-            c.lineWidth = s.width;
-            c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.stroke();
-            // Dwie kreski — otwory wtyczki
-            const pinW = r * 0.22, pinH = r * 0.38, pinY = cy - r * 0.08;
-            c.lineWidth = Math.max(s.width * 1.2, 2);
-            c.beginPath();
-            c.moveTo(cx - pinW, pinY - pinH); c.lineTo(cx - pinW, pinY + pinH);
-            c.moveTo(cx + pinW, pinY - pinH); c.lineTo(cx + pinW, pinY + pinH);
-            c.stroke();
-            // Kreska bazowa (montaż do ściany) — półłuk dolny
-            c.lineWidth = Math.max(s.width * 1.5, 2.5);
-            c.beginPath();
-            c.arc(cx, cy, r * 0.55, Math.PI * 0.15, Math.PI * 0.85);
-            c.stroke();
-            // Etykieta
-            if (s.text) {
-                c.font = `400 ${Math.round(r * 0.8)}px Barlow Condensed, sans-serif`;
-                c.fillStyle = s.color;
-                c.textAlign = 'center';
-                c.fillText(s.text, cx, cy + r + Math.round(r * 0.9));
+            const r = s.size || 32;
+            const lw = Math.max(s.width, 1.5);
+            c.lineWidth = lw;
+
+            if (s.subtype === 'socket230') {
+                // Gniazdko Schuko 230V — styl z obrazka
+                // Okrąg zewnętrzny
+                c.beginPath(); c.arc(cx, cy, r, 0, Math.PI*2); c.stroke();
+                // Okrąg wewnętrzny (mniejszy)
+                c.beginPath(); c.arc(cx, cy, r * 0.62, 0, Math.PI*2); c.stroke();
+                // Dwa otwory wtyczki — kółeczka wypełnione
+                c.beginPath(); c.arc(cx - r*0.27, cy - r*0.05, r*0.09, 0, Math.PI*2); c.fill();
+                c.beginPath(); c.arc(cx + r*0.27, cy - r*0.05, r*0.09, 0, Math.PI*2); c.fill();
+                // Uziemienie — kółeczko na dole
+                c.beginPath(); c.arc(cx, cy + r*0.33, r*0.09, 0, Math.PI*2); c.fill();
+                // Bolce boczne Schuko (dwa prostokąty po bokach wewnętrznego okręgu)
+                c.fillRect(cx - r*0.74, cy - r*0.13, r*0.14, r*0.26);
+                c.fillRect(cx + r*0.60, cy - r*0.13, r*0.14, r*0.26);
+
+            } else if (s.subtype === 'socket400') {
+                // Gniazdko 400V 3-fazowe — okrąg + 5 otworów
+                c.beginPath(); c.arc(cx, cy, r, 0, Math.PI*2); c.stroke();
+                c.beginPath(); c.arc(cx, cy, r * 0.60, 0, Math.PI*2); c.stroke();
+                // 5 otworów rozmieszczonych po okręgu
+                const angles400 = [270, 342, 54, 126, 198].map(a => a * Math.PI/180);
+                angles400.forEach(a => {
+                    c.beginPath();
+                    c.arc(cx + Math.cos(a)*r*0.35, cy + Math.sin(a)*r*0.35, r*0.08, 0, Math.PI*2);
+                    c.fill();
+                });
+                // Bolce boczne
+                c.fillRect(cx - r*0.74, cy - r*0.12, r*0.14, r*0.24);
+                c.fillRect(cx + r*0.60, cy - r*0.12, r*0.14, r*0.24);
+
+            } else if (s.subtype === 'switch') {
+                // Wyłącznik — okrąg z kreską i łukiem
+                c.beginPath(); c.arc(cx, cy, r*0.35, 0, Math.PI*2); c.stroke();
+                // Kreska wyłącznika
+                c.lineWidth = lw * 1.3;
+                c.beginPath();
+                c.moveTo(cx, cy - r*0.35);
+                c.lineTo(cx, cy - r*0.9);
+                c.stroke();
+                // Mały łuk otwarcia styku
+                c.beginPath();
+                c.arc(cx, cy - r*0.9, r*0.25, Math.PI*0.2, Math.PI*0.8);
+                c.stroke();
+                // Linie przyłączeniowe
+                c.lineWidth = lw;
+                c.beginPath();
+                c.moveTo(cx - r, cy); c.lineTo(cx - r*0.35, cy);
+                c.moveTo(cx + r*0.35, cy); c.lineTo(cx + r, cy);
+                c.stroke();
+
+            } else if (s.subtype === 'lamp') {
+                // Oprawa oświetleniowa — okrąg z X
+                c.beginPath(); c.arc(cx, cy, r*0.55, 0, Math.PI*2); c.stroke();
+                c.lineWidth = lw;
+                const d = r * 0.55 * 0.707;
+                c.beginPath();
+                c.moveTo(cx-d, cy-d); c.lineTo(cx+d, cy+d);
+                c.moveTo(cx+d, cy-d); c.lineTo(cx-d, cy+d);
+                c.stroke();
+                // Linia bazowa (montaż do sufitu)
+                c.lineWidth = lw * 1.8;
+                c.beginPath();
+                c.moveTo(cx - r*0.7, cy - r*0.55);
+                c.lineTo(cx + r*0.7, cy - r*0.55);
+                c.stroke();
+
+            } else if (s.subtype === 'valve') {
+                // Zawór — dwa trójkąty stykające się wierzchołkami
+                c.beginPath();
+                c.moveTo(cx - r, cy - r*0.7); c.lineTo(cx, cy); c.lineTo(cx - r, cy + r*0.7);
+                c.closePath(); c.stroke();
+                c.beginPath();
+                c.moveTo(cx + r, cy - r*0.7); c.lineTo(cx, cy); c.lineTo(cx + r, cy + r*0.7);
+                c.closePath(); c.stroke();
+                // Linia rury
+                c.lineWidth = lw * 1.3;
+                c.beginPath(); c.moveTo(cx-r, cy); c.lineTo(cx+r, cy); c.stroke();
+                // Trzonek
+                c.lineWidth = lw;
+                c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx, cy - r*0.7); c.stroke();
+
+            } else if (s.subtype === 'valveAngle') {
+                // Zawór kątowy — trójkąt pionowy + poziomy
+                c.beginPath();
+                c.moveTo(cx, cy - r); c.lineTo(cx, cy); c.lineTo(cx + r*0.7, cy);
+                c.stroke();
+                // Kółko zamknięcia
+                c.beginPath(); c.arc(cx, cy, r*0.18, 0, Math.PI*2); c.fill();
+                // Linie rur
+                c.lineWidth = lw * 1.2;
+                c.beginPath(); c.moveTo(cx, cy - r); c.lineTo(cx, cy - r*1.3); c.stroke();
+                c.beginPath(); c.moveTo(cx + r*0.7, cy); c.lineTo(cx + r, cy); c.stroke();
+
+            } else if (s.subtype === 'drain') {
+                // Odpływ / Syfon — okrąg z krzyżem i kółkiem centralnym
+                c.beginPath(); c.arc(cx, cy, r*0.7, 0, Math.PI*2); c.stroke();
+                c.beginPath(); c.arc(cx, cy, r*0.2, 0, Math.PI*2); c.fill();
+                // Krzyż (kratka odpływu)
+                c.lineWidth = lw * 0.8;
+                c.beginPath();
+                c.moveTo(cx - r*0.7, cy); c.lineTo(cx + r*0.7, cy);
+                c.moveTo(cx, cy - r*0.7); c.lineTo(cx, cy + r*0.7);
+                c.stroke();
+                // Linia rury w dół
+                c.lineWidth = lw * 1.3;
+                c.beginPath(); c.moveTo(cx, cy + r*0.7); c.lineTo(cx, cy + r*1.2); c.stroke();
             }
-        } else if (s.type === 'valve') {
-            // Symbol zaworu — dwa trójkąty stykające się wierzchołkami (motyl)
-            const cx = s.x1, cy = s.y1;
-            const r = s.size || 28;
-            c.lineWidth = s.width;
-            // Lewy trójkąt
-            c.beginPath();
-            c.moveTo(cx - r, cy - r * 0.75);
-            c.lineTo(cx,     cy);
-            c.lineTo(cx - r, cy + r * 0.75);
-            c.closePath(); c.stroke();
-            // Prawy trójkąt
-            c.beginPath();
-            c.moveTo(cx + r, cy - r * 0.75);
-            c.lineTo(cx,     cy);
-            c.lineTo(cx + r, cy + r * 0.75);
-            c.closePath(); c.stroke();
-            // Pozioma linia rury (przez oba trójkąty)
-            c.lineWidth = Math.max(s.width * 1.3, 2);
-            c.beginPath();
-            c.moveTo(cx - r, cy); c.lineTo(cx + r, cy);
-            c.stroke();
-            // Kreska trzonka (górna)
-            c.lineWidth = Math.max(s.width, 1.5);
-            c.beginPath();
-            c.moveTo(cx, cy - r * 0.05); c.lineTo(cx, cy - r * 0.75);
-            c.stroke();
-            // Etykieta
+
+            // Etykieta pod symbolem
             if (s.text) {
-                c.font = `400 ${Math.round(r * 0.8)}px Barlow Condensed, sans-serif`;
+                c.lineWidth = lw;
+                c.font = `400 ${Math.round(r * 0.75)}px Barlow Condensed, sans-serif`;
                 c.fillStyle = s.color;
                 c.textAlign = 'center';
-                c.fillText(s.text, cx, cy + r + Math.round(r * 0.9));
+                c.fillText(s.text, cx, cy + r * 1.5);
             }
         } else if (s.type === 'text') {
             c.font = `300 ${s.fontSize}px Barlow Condensed, sans-serif`;
@@ -1574,10 +1648,9 @@
             const x = Math.min(s.x1, s.x2), y = Math.min(s.y1, s.y2);
             return { x: x - 30, y: y - 30, w: Math.abs(s.x2 - s.x1) + 60 || 1, h: Math.abs(s.y2 - s.y1) + 60 || 1 };
         }
-        if (s.type === 'socket' || s.type === 'valve') {
-            const r = (s.size || 28) + 10;
-            const rh = s.type === 'valve' ? r * 0.85 : r;
-            return { x: s.x1 - r, y: s.y1 - rh, w: r * 2, h: rh + r * 1.8 };
+        if (s.type === 'symbol') {
+            const r = (s.size || 32) + 10;
+            return { x: s.x1 - r, y: s.y1 - r, w: r * 2, h: r * 2.5 };
         }
         const x = Math.min(s.x1, s.x2), y = Math.min(s.y1, s.y2);
         return { x, y, w: Math.abs(s.x2 - s.x1) || 1, h: Math.abs(s.y2 - s.y1) || 1 };
@@ -1606,8 +1679,8 @@
             const t = Math.max(0, Math.min(1, ((px-s.x1)*dx + (py-s.y1)*dy) / len2));
             return Math.hypot(px - (s.x1+t*dx), py - (s.y1+t*dy)) < pad + 20;
         }
-        if (s.type === 'socket' || s.type === 'valve') {
-            return Math.hypot(px - s.x1, py - s.y1) < (s.size || 28) + pad;
+        if (s.type === 'symbol') {
+            return Math.hypot(px - s.x1, py - s.y1) < (s.size || 32) + pad;
         }
         return px >= bb.x - pad && px <= bb.x + bb.w + pad &&
                py >= bb.y - pad && py <= bb.y + bb.h + pad;
@@ -1701,13 +1774,12 @@
             return;
         }
 
-        if (currentTool === 'socket' || currentTool === 'valve') {
+        if (currentTool === 'symbol') {
             isDrawing = false;
-            const label = currentTool === 'socket' ? 'Etykieta gniazdka (opcjonalnie):' : 'Etykieta zaworu (opcjonalnie):';
-            const txt = prompt(label, '');
-            if (txt === null) return; // anulowano
-            const sz = currentWidth * 10 + 18;
-            shapes.push({ type: currentTool, x1: pos.x, y1: pos.y, color: currentColor, width: Math.max(currentWidth, 1.5), size: sz, text: txt || '' });
+            const txt = prompt('Etykieta (opcjonalnie):', '');
+            if (txt === null) return;
+            const sz = currentWidth * 10 + 22;
+            shapes.push({ type: 'symbol', subtype: currentSymbol, x1: pos.x, y1: pos.y, color: currentColor, width: Math.max(currentWidth, 1.5), size: sz, text: txt || '' });
             redraw();
             saveHistory();
             return;
@@ -1818,7 +1890,7 @@
         const raw = getRawPos(e);
         for (let i = shapes.length-1; i >= 0; i--) {
             const s = shapes[i];
-            if ((s.type === 'text' || s.type === 'arrow' || s.type === 'dimension' || s.type === 'socket' || s.type === 'valve') && hitTest(s, raw.x, raw.y)) {
+            if ((s.type === 'text' || s.type === 'arrow' || s.type === 'dimension' || s.type === 'symbol') && hitTest(s, raw.x, raw.y)) {
                 const label = s.type === 'dimension' ? 'Edytuj wymiar:' : 'Edytuj etykietę:';
                 const newTxt = prompt(label, s.text || '');
                 if (newTxt !== null) {
@@ -1871,6 +1943,13 @@
         const btn = document.getElementById('tool' + tool.charAt(0).toUpperCase() + tool.slice(1));
         if (btn) btn.classList.add('active');
         canvas.style.cursor = tool === 'select' ? 'default' : 'crosshair';
+        // Schowaj przycisk "Wstaw" jeśli wybrano inne narzędzie
+        if (tool !== 'symbol') {
+            const symBtn = document.getElementById('toolSymbol');
+            if (symBtn) symBtn.style.display = 'none';
+            const symPicker = document.getElementById('symbolPicker');
+            if (symPicker) symPicker.value = '';
+        }
     };
 
     window.updateColor = function() { currentColor = document.getElementById('strokeColor').value; };
@@ -1881,6 +1960,25 @@
         const mm = parseInt(sel.options[sel.selectedIndex].text);
         gridStep = isNaN(mm) ? 0 : Math.round(mm * MM_TO_PX);
         if (gctx) drawGrid();
+    };
+
+    // ===== SYMBOLE =====
+    let currentSymbol = 'socket230';
+
+    window.setSymbolTool = function() {
+        const sel = document.getElementById('symbolPicker');
+        const val = sel.value;
+        if (!val) return;
+        currentSymbol = val;
+        // Aktywuj przycisk "Wstaw" i przełącz narzędzie
+        const btn = document.getElementById('toolSymbol');
+        btn.style.display = 'inline-block';
+        btn.textContent = '↙ Wstaw: ' + sel.options[sel.selectedIndex].text;
+        setTool('symbol');
+    };
+
+    window.activateSymbolTool = function() {
+        setTool('symbol');
     };
 
     window.toggleSnap = function() {
