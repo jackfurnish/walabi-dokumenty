@@ -792,12 +792,10 @@ function appendPhotoBlock(ph) {
     cvs.className = 'layer-canvas';
 
     img.onload = () => {
-        const w = img.offsetWidth  || img.naturalWidth;
-        const h = img.offsetHeight || img.naturalHeight;
         cvs.width  = img.naturalWidth;
         cvs.height = img.naturalHeight;
-        cvs.style.width  = img.offsetWidth  + 'px';
-        cvs.style.height = img.offsetHeight + 'px';
+        // CSS rozmiar ustawi ResizeObserver
+        syncCanvasSize();
         if (ph.id === activePhotoId) {
             activeCanvas = cvs;
             activeCtx    = cvs.getContext('2d');
@@ -808,9 +806,19 @@ function appendPhotoBlock(ph) {
         }
     };
 
+    function syncCanvasSize() {
+        // Poczekaj na layout jeśli offsetWidth jeszcze 0
+        if (img.offsetWidth > 0) {
+            cvs.style.width  = img.offsetWidth  + 'px';
+            cvs.style.height = img.offsetHeight + 'px';
+        } else {
+            requestAnimationFrame(syncCanvasSize);
+        }
+    }
+
     // Obsługa resize (gdy okno zmienia rozmiar)
     const ro = new ResizeObserver(() => {
-        if (img.offsetWidth) {
+        if (img.offsetWidth > 0) {
             cvs.style.width  = img.offsetWidth  + 'px';
             cvs.style.height = img.offsetHeight + 'px';
         }
@@ -1130,8 +1138,8 @@ function onDown(e, photoId) {
         selectedIdx = found;
         if (found>=0) {
             isDragging=true;
-            const bb=getBBox(ph.shapes[found]);
-            dragOffX=pos.x-bb.x; dragOffY=pos.y-bb.y;
+            // Zapamiętaj punkt kliknięcia — dragOff to pozycja myszy przy starcie
+            dragOffX=pos.x; dragOffY=pos.y;
         }
         redraw();
         updatePasteBtn();
@@ -1161,8 +1169,9 @@ function onMove(e, photoId) {
 
     if (isDragging && selectedIdx>=0) {
         const s=ph.shapes[selectedIdx];
-        const bb=getBBox(s);
-        moveShape(s, pos.x-dragOffX-bb.x, pos.y-dragOffY-bb.y);
+        const dx=pos.x-dragOffX, dy=pos.y-dragOffY;
+        moveShape(s, dx, dy);
+        dragOffX=pos.x; dragOffY=pos.y;
         redraw(); return;
     }
     if (!isDrawing) return;
