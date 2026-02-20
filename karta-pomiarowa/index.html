@@ -1218,11 +1218,16 @@
 
         const exportData = {
             type: 'karta-pomiarowa',
-            version: '1.0',
+            version: '2.0',
             exportDate: new Date().toISOString(),
             docNumber: docNum,
             client: client,
-            formData: data
+            formData: data,
+            sketch: {
+                shapes:          shapes          || [],
+                audioStore:      audioStore      || {},
+                shapeIdCounter:  shapeIdCounter  || 0
+            }
         };
 
         const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
@@ -1234,6 +1239,7 @@
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+        toast('Plik zapisany — zawiera formularz, szkic i notatki głosowe', 'success');
     }
 
     function importFromJSON(event) {
@@ -1244,11 +1250,37 @@
         reader.onload = function(e) {
             try {
                 const importData = JSON.parse(e.target.result);
-                if (importData.formData) {
-                    restoreFormData(importData.formData);
-                    alert('Dane zaimportowane pomyślnie');
+                if (!importData.formData) { alert('Nieprawidłowy format pliku'); return; }
+
+                restoreFormData(importData.formData);
+
+                // Przywróć szkic jeśli jest w pliku
+                if (importData.sketch) {
+                    const sk = importData.sketch;
+                    // Upewnij się że canvas jest zainicjowany
+                    const page = document.getElementById('sketchPage');
+                    if (!page.classList.contains('visible')) {
+                        page.classList.add('visible');
+                        syncSketchMeta();
+                        initCanvas();
+                    }
+                    shapes         = sk.shapes         || [];
+                    audioStore     = sk.audioStore      || {};
+                    shapeIdCounter = sk.shapeIdCounter  || shapes.length;
+                    selectedIdx    = -1;
+                    history        = [];
+                    saveHistory();
+                    redraw();
+                    updateCopyBtn();
+                    updateVoicePanel();
+
+                    const audioCount = Object.keys(audioStore).length;
+                    const msg = audioCount > 0
+                        ? `Zaimportowano dane, szkic i ${audioCount} notatkę/notatki głosowe`
+                        : 'Zaimportowano dane i szkic';
+                    toast(msg, 'success');
                 } else {
-                    alert('Nieprawidłowy format pliku');
+                    toast('Dane formularza zaimportowane', 'success');
                 }
             } catch (err) {
                 alert('Błąd wczytywania pliku: ' + err.message);
