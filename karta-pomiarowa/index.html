@@ -1060,6 +1060,7 @@
                         <option value="socket230">Gniazdko 230V (Schuko)</option>
                         <option value="socket400">Gniazdko 400V (3-faz.)</option>
                         <option value="switch">Wyłącznik</option>
+                        <option value="bulb">Żarówka</option>
                         <option value="lamp">Oprawa oświetleniowa</option>
                     </optgroup>
                     <optgroup label="Instalacyjne">
@@ -1514,6 +1515,40 @@
                 // Bolce boczne
                 c.fillRect(cx - r*0.74, cy - r*0.12, r*0.14, r*0.24);
                 c.fillRect(cx + r*0.60, cy - r*0.12, r*0.14, r*0.24);
+
+            } else if (s.subtype === 'bulb') {
+                // Żarówka — okrąg z X wewnątrz + gwint (prostokąt) + podstawa
+                // Okrąg (bańka)
+                c.beginPath(); c.arc(cx, cy - r*0.18, r*0.62, 0, Math.PI*2); c.stroke();
+                // X wewnątrz okręgu
+                const xd = r * 0.62 * 0.6;
+                c.beginPath();
+                c.moveTo(cx - xd, cy - r*0.18 - xd); c.lineTo(cx + xd, cy - r*0.18 + xd);
+                c.moveTo(cx + xd, cy - r*0.18 - xd); c.lineTo(cx - xd, cy - r*0.18 + xd);
+                c.stroke();
+                // Gwint (trzy poziome kreski — podstawa żarówki)
+                const gw = r * 0.38, gy0 = cy + r*0.44, gh = r*0.16;
+                c.lineWidth = Math.max(lw * 0.8, 1);
+                for (let gi = 0; gi < 3; gi++) {
+                    c.beginPath();
+                    c.moveTo(cx - gw, gy0 + gi * gh * 0.6);
+                    c.lineTo(cx + gw, gy0 + gi * gh * 0.6);
+                    c.stroke();
+                }
+                // Boczne ściany gwintu
+                c.lineWidth = lw;
+                c.beginPath();
+                c.moveTo(cx - gw, gy0);
+                c.lineTo(cx - gw, gy0 + gh * 1.2);
+                c.moveTo(cx + gw, gy0);
+                c.lineTo(cx + gw, gy0 + gh * 1.2);
+                c.stroke();
+                // Podstawa (kontakty)
+                c.lineWidth = Math.max(lw * 1.5, 2);
+                c.beginPath();
+                c.moveTo(cx - gw * 0.6, gy0 + gh * 1.2);
+                c.lineTo(cx + gw * 0.6, gy0 + gh * 1.2);
+                c.stroke();
 
             } else if (s.subtype === 'switch') {
                 // Wyłącznik — okrąg z kreską i łukiem
