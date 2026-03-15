@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+
+@layer base {
+  :root {
+    --background: 40 20% 97%;
+    --foreground: 20 10% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 10% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 10% 15%;
+
+    --primary: 25 15% 22%;
+    --primary-foreground: 40 20% 96%;
+
+    --secondary: 35 12% 88%;
+    --secondary-foreground: 25 10% 30%;
+
+    --muted: 35 10% 92%;
+    --muted-foreground: 25 8% 50%;
+
+    --accent: 28 35% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 35 12% 88%;
+    --input: 35 12% 88%;
+    --ring: 28 30% 50%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-stone-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-stone-400;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Premium card style */
+  .card-premium {
+    @apply bg-white border border-stone-200 rounded-xl shadow-sm;
+  }
+
+  /* Subtle divider */
+  .divider-soft {
+    @apply border-t border-stone-100;
+  }
+
+  /* Section label */
+  .label-overline {
+    @apply text-xs font-medium tracking-widest uppercase text-stone-400;
+  }
+
+  /* Animate fade in */
+  .animate-in {
+    animation: fade-in 0.4s ease-out both;
+  }
+
+  /* Tag / Badge */
+  .tag-neutral {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-stone-100 text-stone-600;
+  }
+
+  .tag-accent {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-100;
+  }
+
+  .tag-success {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100;
+  }
+}
+
+/* Pipeline step progress */
+.pipeline-step {
+  @apply flex items-center gap-2 text-sm text-stone-500;
+}
+
+.pipeline-step.active {
+  @apply text-stone-800 font-medium;
+}
+
+.pipeline-step.complete {
+  @apply text-emerald-600;
+}
