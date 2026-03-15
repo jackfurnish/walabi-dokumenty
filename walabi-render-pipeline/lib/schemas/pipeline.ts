@@ -16,7 +16,10 @@ export const SpaceAnalysisSchema = z.object({
   summary: z.string(),
 })
 
-export const RedesignActionSchema = z.enum(['keep', 'replace', 'add', 'remove'])
+// AI sometimes returns 'modify' or 'update' — catch and coerce to 'replace'
+export const RedesignActionSchema = z
+  .enum(['keep', 'replace', 'add', 'remove', 'modify', 'update'])
+  .transform((v) => (v === 'modify' || v === 'update' ? 'replace' : v) as 'keep' | 'replace' | 'add' | 'remove')
 
 export const FurnitureRecommendationSchema = z.object({
   item: z.string(),
