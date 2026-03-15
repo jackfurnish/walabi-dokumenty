@@ -8,11 +8,15 @@ import Link from 'next/link'
 import { PlusIcon, FlaskConical } from 'lucide-react'
 import { toast } from '@/components/ui/Toaster'
 import { buildDemoProject } from '@/lib/utils/demoProject'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { t } from '@/lib/i18n/translations'
 
 export default function ProjectsPage() {
   const { projects, deleteProject, createProject } = useProjectStore()
   const [mounted, setMounted] = useState(false)
   useEffect(() => { setMounted(true) }, [])
+
+  const { lang } = useLanguage()
 
   // Seed demo project on first visit if library is empty
   useEffect(() => {
@@ -24,9 +28,9 @@ export default function ProjectsPage() {
   }, [])
 
   const handleDelete = (id: string) => {
-    if (confirm('Delete this project? This cannot be undone.')) {
+    if (confirm(t('projects', 'deleteConfirm', lang))) {
       deleteProject(id)
-      toast({ title: 'Project deleted', variant: 'default' })
+      toast({ title: t('projects', 'projectDeleted', lang), variant: 'default' })
     }
   }
 
@@ -34,9 +38,9 @@ export default function ProjectsPage() {
     const hasDemo = projects.some(p => p.id === 'demo-project-walabi-001')
     if (!hasDemo) {
       createProject(buildDemoProject())
-      toast({ title: 'Demo project loaded', description: 'Grand Majestic Hotel · Japandi Suite', variant: 'success' })
+      toast({ title: t('projects', 'demoLoaded', lang), description: 'Grand Majestic Hotel · Japandi Suite', variant: 'success' })
     } else {
-      toast({ title: 'Demo project already in library', variant: 'default' })
+      toast({ title: t('projects', 'demoAlreadyIn', lang), variant: 'default' })
     }
   }
 
@@ -48,19 +52,23 @@ export default function ProjectsPage() {
     </PageWrapper>
   )
 
+  const projectCountLabel = projects.length === 1
+    ? `1 ${t('projects', 'projectSaved', lang)}`
+    : `${projects.length} ${t('projects', 'projectsSaved', lang)}`
+
   return (
     <PageWrapper>
       {/* Header */}
       <div className="flex items-end justify-between mb-10">
         <div>
-          <p className="label-overline mb-3">Project Library</p>
+          <p className="label-overline mb-3">{t('projects', 'overline', lang)}</p>
           <h1 className="font-display text-4xl font-medium text-stone-800">
-            Your Redesign Concepts
+            {t('projects', 'heading', lang)}
           </h1>
           <p className="text-stone-500 mt-2">
             {projects.length === 0
-              ? 'No projects yet. Start by creating your first redesign concept.'
-              : `${projects.length} project${projects.length !== 1 ? 's' : ''} saved locally`}
+              ? t('projects', 'noProjectsYet', lang)
+              : projectCountLabel}
           </p>
         </div>
 
@@ -70,14 +78,14 @@ export default function ProjectsPage() {
             className="flex items-center gap-2 px-4 py-2.5 border border-stone-200 bg-white text-stone-600 rounded-xl text-sm font-medium hover:bg-stone-50 transition-colors"
           >
             <FlaskConical className="w-4 h-4" />
-            Load Demo
+            {t('projects', 'loadDemo', lang)}
           </button>
           <Link
             href="/new"
             className="flex items-center gap-2 px-5 py-2.5 bg-stone-800 text-stone-50 rounded-xl text-sm font-semibold hover:bg-stone-700 transition-colors"
           >
             <PlusIcon className="w-4 h-4" />
-            New Project
+            {t('projects', 'newProject', lang)}
           </Link>
         </div>
       </div>
@@ -89,10 +97,9 @@ export default function ProjectsPage() {
             🏨
           </div>
           <div className="text-center">
-            <p className="text-stone-600 font-medium mb-1">No redesign concepts yet</p>
+            <p className="text-stone-600 font-medium mb-1">{t('projects', 'emptyTitle', lang)}</p>
             <p className="text-sm text-stone-400 max-w-sm">
-              Upload a hotel room photo and configure the redesign parameters
-              to generate your first concept package.
+              {t('projects', 'emptyBody', lang)}
             </p>
           </div>
           <div className="flex items-center gap-3 mt-2">
@@ -101,14 +108,14 @@ export default function ProjectsPage() {
               className="flex items-center gap-2 px-5 py-2.5 border border-stone-300 text-stone-600 rounded-xl text-sm font-medium hover:bg-stone-50 transition-colors"
             >
               <FlaskConical className="w-4 h-4" />
-              View Demo Project
+              {t('projects', 'viewDemoProject', lang)}
             </button>
             <Link
               href="/new"
               className="flex items-center gap-2 px-6 py-3 bg-stone-800 text-stone-50 rounded-xl text-sm font-semibold hover:bg-stone-700 transition-colors"
             >
               <PlusIcon className="w-4 h-4" />
-              Start a Redesign
+              {t('projects', 'startRedesign', lang)}
             </Link>
           </div>
         </div>

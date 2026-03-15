@@ -18,6 +18,8 @@ import { CopyButton } from '@/components/ui/CopyButton'
 import type { ProjectRecord } from '@/lib/schemas/project'
 import { usePipeline } from '@/domain/services/pipelineService'
 import { generateMarkdownExport } from '@/lib/utils/export'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { t } from '@/lib/i18n/translations'
 
 interface ResultsWorkspaceProps {
   project: ProjectRecord
@@ -25,6 +27,7 @@ interface ResultsWorkspaceProps {
 
 export function ResultsWorkspace({ project }: ResultsWorkspaceProps) {
   const { runPipeline } = usePipeline()
+  const { lang } = useLanguage()
 
   // Auto-run pipeline on first load if not yet complete
   useEffect(() => {
@@ -66,7 +69,7 @@ export function ResultsWorkspace({ project }: ResultsWorkspaceProps) {
             <div className="rounded-2xl overflow-hidden border border-stone-200 bg-stone-100 aspect-[4/3]">
               <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-stone-50">
                 <div className="w-10 h-10 rounded-xl bg-stone-200 flex items-center justify-center text-xl">🏨</div>
-                <span className="text-xs text-stone-400">No room photo uploaded</span>
+                <span className="text-xs text-stone-400">{t('workspace', 'noRoomPhoto', lang)}</span>
               </div>
             </div>
           )}
@@ -82,9 +85,9 @@ export function ResultsWorkspace({ project }: ResultsWorkspaceProps) {
 
             <div className="space-y-2">
               {[
-                { label: 'Room', value: getRoomTypeLabel(input.roomType) },
-                { label: 'Style', value: getStyleLabel(input.style) },
-                { label: 'Budget', value: getBudgetTierLabel(input.budgetTier) },
+                { label: t('workspace', 'roomLabel', lang),   value: getRoomTypeLabel(input.roomType, lang) },
+                { label: t('workspace', 'styleLabel', lang),  value: getStyleLabel(input.style, lang) },
+                { label: t('workspace', 'budgetLabel', lang), value: getBudgetTierLabel(input.budgetTier, lang) },
               ].map((item) => (
                 <div key={item.label} className="flex items-center justify-between">
                   <span className="text-xs text-stone-400">{item.label}</span>
@@ -114,11 +117,11 @@ export function ResultsWorkspace({ project }: ResultsWorkspaceProps) {
                 className="w-full"
               >
                 <Download className="w-4 h-4" />
-                Export as Markdown
+                {t('workspace', 'exportMarkdown', lang)}
               </Button>
               <CopyButton
                 text={generateMarkdownExport(project)}
-                label="Copy full package"
+                label={t('copy', 'copyFullPackage', lang)}
                 size="md"
                 className="w-full justify-center"
               />
@@ -137,16 +140,16 @@ export function ResultsWorkspace({ project }: ResultsWorkspaceProps) {
         {/* Error state */}
         {status === 'error' && (
           <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-            <p className="text-sm font-medium text-red-700 mb-2">Pipeline failed</p>
+            <p className="text-sm font-medium text-red-700 mb-2">{t('workspace', 'pipelineFailed', lang)}</p>
             <p className="text-xs text-red-500 mb-4">
-              An error occurred while generating the concept package.
+              {t('workspace', 'pipelineError', lang)}
             </p>
             <Button
               variant="outline"
               size="sm"
               onClick={() => runPipeline(project.id)}
             >
-              Retry
+              {t('workspace', 'retry', lang)}
             </Button>
           </div>
         )}

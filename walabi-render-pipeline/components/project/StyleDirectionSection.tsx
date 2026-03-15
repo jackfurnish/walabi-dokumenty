@@ -1,15 +1,35 @@
+'use client'
+
 import { Palette } from 'lucide-react'
 import { CollapsibleSection } from '@/components/ui/CollapsibleSection'
 import type { StyleDirection } from '@/lib/schemas/pipeline'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { t } from '@/lib/i18n/translations'
 
 interface StyleDirectionSectionProps {
   data: StyleDirection
 }
 
 export function StyleDirectionSection({ data }: StyleDirectionSectionProps) {
+  const { lang } = useLanguage()
+
+  const colorPaletteLabels: Record<string, { pl: string; en: string }> = {
+    Primary:   { pl: 'Główny',     en: 'Primary' },
+    Secondary: { pl: 'Wtórny',     en: 'Secondary' },
+    Accent:    { pl: 'Akcent',     en: 'Accent' },
+    Neutral:   { pl: 'Neutralny',  en: 'Neutral' },
+  }
+
+  const materialLabels: Record<string, { pl: string; en: string }> = {
+    Wood:    { pl: 'Drewno',   en: 'Wood' },
+    Textile: { pl: 'Tekstylia', en: 'Textile' },
+    Metal:   { pl: 'Metal',    en: 'Metal' },
+    Stone:   { pl: 'Kamień',   en: 'Stone' },
+  }
+
   return (
     <CollapsibleSection
-      title="WALABI Style Direction"
+      title={t('sections', 'styleDirection', lang)}
       subtitle={data.styleFamily}
       icon={<Palette className="w-4 h-4" />}
     >
@@ -21,7 +41,7 @@ export function StyleDirectionSection({ data }: StyleDirectionSectionProps) {
           {/* Color Palette */}
           <div>
             <p className="text-xs font-semibold text-stone-600 uppercase tracking-wide mb-3">
-              Color Palette
+              {lang === 'pl' ? 'Paleta kolorów' : 'Color Palette'}
             </p>
             <div className="space-y-2">
               {Object.entries({
@@ -31,7 +51,9 @@ export function StyleDirectionSection({ data }: StyleDirectionSectionProps) {
                 Neutral:   data.colorPalette.neutral,
               }).map(([key, value]) => (
                 <div key={key} className="flex items-center gap-3">
-                  <span className="text-xs text-stone-400 w-16 flex-shrink-0">{key}</span>
+                  <span className="text-xs text-stone-400 w-16 flex-shrink-0">
+                    {colorPaletteLabels[key]?.[lang] ?? key}
+                  </span>
                   <span className="text-xs font-medium text-stone-700">{value}</span>
                 </div>
               ))}
@@ -44,7 +66,7 @@ export function StyleDirectionSection({ data }: StyleDirectionSectionProps) {
           {/* Material Palette */}
           <div>
             <p className="text-xs font-semibold text-stone-600 uppercase tracking-wide mb-3">
-              Materials
+              {lang === 'pl' ? 'Materiały' : 'Materials'}
             </p>
             <div className="space-y-2">
               {Object.entries({
@@ -54,7 +76,9 @@ export function StyleDirectionSection({ data }: StyleDirectionSectionProps) {
                 Stone:   data.materialPalette.stone,
               }).map(([key, value]) => (
                 <div key={key} className="flex items-center gap-3">
-                  <span className="text-xs text-stone-400 w-16 flex-shrink-0">{key}</span>
+                  <span className="text-xs text-stone-400 w-16 flex-shrink-0">
+                    {materialLabels[key]?.[lang] ?? key}
+                  </span>
                   <span className="text-xs font-medium text-stone-700">{value}</span>
                 </div>
               ))}
@@ -65,7 +89,7 @@ export function StyleDirectionSection({ data }: StyleDirectionSectionProps) {
         {/* Mood Keywords */}
         <div>
           <p className="text-xs font-semibold text-stone-600 uppercase tracking-wide mb-3">
-            Mood Keywords
+            {lang === 'pl' ? 'Słowa kluczowe nastroju' : 'Mood Keywords'}
           </p>
           <div className="flex flex-wrap gap-2">
             {data.moodKeywords.map((kw, i) => (
@@ -78,7 +102,7 @@ export function StyleDirectionSection({ data }: StyleDirectionSectionProps) {
         <div className="grid grid-cols-2 gap-6">
           <div>
             <p className="text-xs font-semibold text-stone-600 uppercase tracking-wide mb-2">
-              Decor Rules
+              {lang === 'pl' ? 'Zasady dekoracji' : 'Decor Rules'}
             </p>
             <ul className="space-y-1.5">
               {data.decorRules.map((rule, i) => (
@@ -91,7 +115,7 @@ export function StyleDirectionSection({ data }: StyleDirectionSectionProps) {
           </div>
           <div>
             <p className="text-xs font-semibold text-stone-600 uppercase tracking-wide mb-2">
-              Forbidden Patterns
+              {lang === 'pl' ? 'Zakazane wzorce' : 'Forbidden Patterns'}
             </p>
             <ul className="space-y-1.5">
               {data.forbiddenPatterns.map((fp, i) => (

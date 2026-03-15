@@ -1,24 +1,29 @@
+'use client'
+
 import { ScanSearch, AlertCircle, Star, Zap } from 'lucide-react'
 import { CollapsibleSection } from '@/components/ui/CollapsibleSection'
 import type { SpaceAnalysis } from '@/lib/schemas/pipeline'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { t } from '@/lib/i18n/translations'
 
 interface SpaceAnalysisSectionProps {
   data: SpaceAnalysis
 }
 
 const lightingLabels = {
-  poor:      { label: 'Poor',      color: 'text-red-500' },
-  average:   { label: 'Average',   color: 'text-amber-500' },
-  good:      { label: 'Good',      color: 'text-emerald-500' },
-  excellent: { label: 'Excellent', color: 'text-emerald-600' },
+  poor:      { pl: 'Słabe',     en: 'Poor',      color: 'text-red-500' },
+  average:   { pl: 'Średnie',   en: 'Average',   color: 'text-amber-500' },
+  good:      { pl: 'Dobre',     en: 'Good',      color: 'text-emerald-500' },
+  excellent: { pl: 'Doskonałe', en: 'Excellent', color: 'text-emerald-600' },
 }
 
 export function SpaceAnalysisSection({ data }: SpaceAnalysisSectionProps) {
+  const { lang } = useLanguage()
   const lighting = lightingLabels[data.lightingQuality]
 
   return (
     <CollapsibleSection
-      title="Space Analysis"
+      title={t('sections', 'spaceAnalysis', lang)}
       subtitle={data.summary}
       badge={`${data.confidenceScore}% confidence`}
       badgeVariant="neutral"
@@ -36,7 +41,7 @@ export function SpaceAnalysisSection({ data }: SpaceAnalysisSectionProps) {
             <div className="flex items-center gap-2 mb-3">
               <AlertCircle className="w-3.5 h-3.5 text-amber-500" />
               <span className="text-xs font-semibold text-stone-600 uppercase tracking-wide">
-                Visual Issues
+                {lang === 'pl' ? 'Problemy wizualne' : 'Visual Issues'}
               </span>
             </div>
             <ul className="space-y-1.5">
@@ -54,7 +59,7 @@ export function SpaceAnalysisSection({ data }: SpaceAnalysisSectionProps) {
             <div className="flex items-center gap-2 mb-3">
               <Zap className="w-3.5 h-3.5 text-emerald-500" />
               <span className="text-xs font-semibold text-stone-600 uppercase tracking-wide">
-                Opportunities
+                {lang === 'pl' ? 'Możliwości' : 'Opportunities'}
               </span>
             </div>
             <ul className="space-y-1.5">
@@ -74,7 +79,7 @@ export function SpaceAnalysisSection({ data }: SpaceAnalysisSectionProps) {
             <div className="flex items-center gap-2 mb-3">
               <Star className="w-3.5 h-3.5 text-stone-400" />
               <span className="text-xs font-semibold text-stone-600 uppercase tracking-wide">
-                Existing Strengths
+                {lang === 'pl' ? 'Istniejące atuty' : 'Existing Strengths'}
               </span>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -88,15 +93,15 @@ export function SpaceAnalysisSection({ data }: SpaceAnalysisSectionProps) {
         {/* Meta */}
         <div className="flex items-center gap-6 pt-3 border-t border-stone-100">
           <div>
-            <p className="text-xs text-stone-400 mb-0.5">Focal Point</p>
+            <p className="text-xs text-stone-400 mb-0.5">{lang === 'pl' ? 'Punkt centralny' : 'Focal Point'}</p>
             <p className="text-xs font-medium text-stone-700">{data.focalPoint}</p>
           </div>
           <div>
-            <p className="text-xs text-stone-400 mb-0.5">Lighting</p>
-            <p className={`text-xs font-medium ${lighting.color}`}>{lighting.label}</p>
+            <p className="text-xs text-stone-400 mb-0.5">{lang === 'pl' ? 'Oświetlenie' : 'Lighting'}</p>
+            <p className={`text-xs font-medium ${lighting.color}`}>{lighting[lang]}</p>
           </div>
           <div>
-            <p className="text-xs text-stone-400 mb-0.5">Notes</p>
+            <p className="text-xs text-stone-400 mb-0.5">{lang === 'pl' ? 'Uwagi' : 'Notes'}</p>
             <p className="text-xs text-stone-600">{data.lightingNotes}</p>
           </div>
         </div>

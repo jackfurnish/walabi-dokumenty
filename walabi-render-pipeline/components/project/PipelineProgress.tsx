@@ -1,17 +1,23 @@
+'use client'
+
 import { cn } from '@/lib/utils/cn'
 import type { PipelineStatus } from '@/lib/schemas/project'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { t, translations } from '@/lib/i18n/translations'
 
 interface PipelineProgressProps {
   status: PipelineStatus
 }
 
-const PIPELINE_STEPS: { key: PipelineStatus; label: string }[] = [
-  { key: 'analyzing',    label: 'Analyzing space' },
-  { key: 'strategizing', label: 'Building strategy' },
-  { key: 'styling',      label: 'Defining style' },
-  { key: 'concepting',   label: 'Concepting furniture' },
-  { key: 'prompting',    label: 'Generating prompt' },
-  { key: 'summarizing',  label: 'Writing summary' },
+type PipelineLabelKey = keyof typeof translations['pipeline']
+
+const PIPELINE_STEP_KEYS: { key: PipelineStatus; labelKey: PipelineLabelKey }[] = [
+  { key: 'analyzing',    labelKey: 'analyzing' },
+  { key: 'strategizing', labelKey: 'strategizing' },
+  { key: 'styling',      labelKey: 'styling' },
+  { key: 'concepting',   labelKey: 'concepting' },
+  { key: 'prompting',    labelKey: 'prompting' },
+  { key: 'summarizing',  labelKey: 'summarizing' },
 ]
 
 const ORDER = ['idle', 'analyzing', 'strategizing', 'styling', 'concepting', 'prompting', 'summarizing', 'complete']
@@ -22,14 +28,15 @@ function getStepIndex(status: PipelineStatus): number {
 
 export function PipelineProgress({ status }: PipelineProgressProps) {
   const currentIndex = getStepIndex(status)
+  const { lang } = useLanguage()
 
   return (
     <div className="bg-white border border-stone-200 rounded-xl p-6">
       <p className="text-xs font-semibold text-stone-600 uppercase tracking-wide mb-5">
-        Pipeline Running
+        {t('pipeline', 'running', lang)}
       </p>
       <div className="space-y-3">
-        {PIPELINE_STEPS.map((step) => {
+        {PIPELINE_STEP_KEYS.map((step) => {
           const stepIndex = getStepIndex(step.key)
           const isDone    = stepIndex < currentIndex
           const isActive  = step.key === status
@@ -59,7 +66,7 @@ export function PipelineProgress({ status }: PipelineProgressProps) {
                 isActive  && 'text-stone-800 font-medium',
                 isPending && 'text-stone-400',
               )}>
-                {step.label}
+                {t('pipeline', step.labelKey, lang)}
               </span>
             </div>
           )

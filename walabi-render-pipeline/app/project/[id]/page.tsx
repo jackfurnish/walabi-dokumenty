@@ -8,6 +8,8 @@ import { Footer } from '@/components/layout/Footer'
 import { ResultsWorkspace } from '@/components/project/ResultsWorkspace'
 import { useProjectStore } from '@/store/projectStore'
 import { ArrowLeft } from 'lucide-react'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { t } from '@/lib/i18n/translations'
 
 const Spinner = () => (
   <div className="min-h-screen flex flex-col bg-[#faf9f7]">
@@ -27,6 +29,7 @@ export default function ProjectPage() {
   const [mounted, setMounted] = useState(false)
   useEffect(() => { setMounted(true) }, [])
 
+  const { lang } = useLanguage()
   const project = useProjectStore((s) => s.projects.find((p) => p.id === id))
 
   if (!mounted) return <Spinner />
@@ -36,9 +39,9 @@ export default function ProjectPage() {
       <div className="min-h-screen flex flex-col bg-[#faf9f7]">
         <Header />
         <main className="flex-1 flex flex-col items-center justify-center gap-4 text-center px-6">
-          <p className="text-stone-400 text-sm">Project not found</p>
+          <p className="text-stone-400 text-sm">{t('project', 'notFound', lang)}</p>
           <Link href="/projects" className="text-sm font-medium text-stone-700 underline underline-offset-2">
-            Back to Projects
+            {t('project', 'backToProjects', lang)}
           </Link>
         </main>
         <Footer />
@@ -57,7 +60,7 @@ export default function ProjectPage() {
             className="inline-flex items-center gap-2 text-xs text-stone-400 hover:text-stone-700 transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            Back to Projects
+            {t('project', 'backToProjects', lang)}
           </Link>
           <h1 className="font-display text-3xl font-medium text-stone-800 mt-3">
             {project.input.projectName}

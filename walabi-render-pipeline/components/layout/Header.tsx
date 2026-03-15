@@ -4,13 +4,16 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils/cn'
 import { PlusIcon, FolderOpenIcon } from 'lucide-react'
-
-const navLinks = [
-  { href: '/projects', label: 'Projects', icon: FolderOpenIcon },
-]
+import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { t } from '@/lib/i18n/translations'
 
 export function Header() {
   const pathname = usePathname()
+  const { lang, setLang } = useLanguage()
+
+  const navLinks = [
+    { href: '/projects', label: t('nav', 'projects', lang), icon: FolderOpenIcon },
+  ]
 
   return (
     <header className="sticky top-0 z-50 bg-[#faf9f7]/90 backdrop-blur-sm border-b border-stone-200">
@@ -24,7 +27,7 @@ export function Header() {
           <div className="leading-none">
             <span className="text-sm font-semibold text-stone-800 tracking-wide">WALABI</span>
             <span className="block text-[10px] text-stone-400 tracking-widest uppercase">
-              Render Pipeline
+              {t('header', 'renderPipeline', lang)}
             </span>
           </div>
         </Link>
@@ -57,8 +60,35 @@ export function Header() {
             )}
           >
             <PlusIcon className="w-4 h-4" />
-            New Project
+            {t('nav', 'newProject', lang)}
           </Link>
+
+          {/* Language switcher */}
+          <div className="flex items-center gap-0 ml-3 border border-stone-200 rounded-lg overflow-hidden text-xs font-medium">
+            <button
+              onClick={() => setLang('pl')}
+              className={cn(
+                'px-2.5 py-1.5 transition-colors',
+                lang === 'pl'
+                  ? 'bg-stone-800 text-stone-50'
+                  : 'text-stone-500 hover:text-stone-800 hover:bg-stone-100'
+              )}
+            >
+              PL
+            </button>
+            <span className="text-stone-200 select-none">|</span>
+            <button
+              onClick={() => setLang('en')}
+              className={cn(
+                'px-2.5 py-1.5 transition-colors',
+                lang === 'en'
+                  ? 'bg-stone-800 text-stone-50'
+                  : 'text-stone-500 hover:text-stone-800 hover:bg-stone-100'
+              )}
+            >
+              EN
+            </button>
+          </div>
         </nav>
       </div>
     </header>

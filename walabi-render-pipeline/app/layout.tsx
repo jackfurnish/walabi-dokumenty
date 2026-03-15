@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import { cn } from '@/lib/utils/cn'
 import { Toaster } from '@/components/ui/Toaster'
+import { LanguageProvider } from '@/lib/i18n/LanguageContext'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -35,8 +36,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn(inter.variable, playfair.variable)}>
       <body className="min-h-screen bg-[#faf9f7] text-stone-800">
-        {children}
-        <Toaster />
+        <LanguageProvider>
+          {children}
+          <Toaster />
+        </LanguageProvider>
       </body>
     </html>
   )

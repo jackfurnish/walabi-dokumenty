@@ -6,6 +6,8 @@ import { StatusBadge } from '@/components/ui/StatusBadge'
 import { getRoomTypeLabel, getStyleLabel, getBudgetTierLabel } from '@/constants/options'
 import { formatDate } from '@/lib/utils/helpers'
 import type { ProjectRecord } from '@/lib/schemas/project'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { t } from '@/lib/i18n/translations'
 
 interface ProjectCardProps {
   project: ProjectRecord
@@ -14,6 +16,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, onDelete }: ProjectCardProps) {
   const { input } = project
+  const { lang } = useLanguage()
 
   return (
     <div className="bg-white border border-stone-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow group">
@@ -28,7 +31,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <span className="text-xs text-stone-400">No image</span>
+            <span className="text-xs text-stone-400">{t('card', 'noImage', lang)}</span>
           </div>
         )}
       </div>
@@ -44,9 +47,9 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
 
         <div className="flex flex-wrap gap-1.5 mb-4">
           {[
-            getRoomTypeLabel(input.roomType),
-            getStyleLabel(input.style),
-            getBudgetTierLabel(input.budgetTier),
+            getRoomTypeLabel(input.roomType, lang),
+            getStyleLabel(input.style, lang),
+            getBudgetTierLabel(input.budgetTier, lang),
           ].map((tag) => (
             <span key={tag} className="tag-neutral">{tag}</span>
           ))}
@@ -65,6 +68,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
                 onDelete(project.id)
               }}
               className="w-7 h-7 rounded-lg flex items-center justify-center text-stone-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+              aria-label={t('card', 'delete', lang)}
             >
               <Trash2 className="w-3.5 h-3.5" />
             </button>
@@ -73,7 +77,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
               href={`/project/${project.id}`}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-stone-800 text-stone-50 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors"
             >
-              Open
+              {t('card', 'open', lang)}
               <ArrowRight className="w-3 h-3" />
             </Link>
           </div>

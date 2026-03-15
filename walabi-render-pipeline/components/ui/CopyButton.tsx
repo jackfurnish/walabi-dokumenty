@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { Copy, Check } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { t } from '@/lib/i18n/translations'
 
 interface CopyButtonProps {
   text: string
@@ -13,11 +15,15 @@ interface CopyButtonProps {
 
 export function CopyButton({
   text,
-  label = 'Copy',
+  label,
   className,
   size = 'md',
 }: CopyButtonProps) {
   const [copied, setCopied] = useState(false)
+  const { lang } = useLanguage()
+
+  const displayLabel = label ?? t('copy', 'copy', lang)
+  const copiedLabel = t('copy', 'copied', lang)
 
   const handleCopy = async () => {
     try {
@@ -62,12 +68,12 @@ export function CopyButton({
       {copied ? (
         <>
           <Check className={iconSize[size]} />
-          Copied
+          {copiedLabel}
         </>
       ) : (
         <>
           <Copy className={iconSize[size]} />
-          {label}
+          {displayLabel}
         </>
       )}
     </button>

@@ -13,20 +13,23 @@ import { Button } from '@/components/ui/Button'
 import { useProjectStore } from '@/store/projectStore'
 import { toast } from '@/components/ui/Toaster'
 import type { ProjectRecord } from '@/lib/schemas/project'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { t } from '@/lib/i18n/translations'
 
 type FormStep = 'photo' | 'room' | 'style' | 'budget' | 'confirm'
-
-const STEPS: { id: FormStep; label: string }[] = [
-  { id: 'photo',   label: 'Room Photo' },
-  { id: 'room',    label: 'Room Type' },
-  { id: 'style',   label: 'Design Style' },
-  { id: 'budget',  label: 'Budget Tier' },
-  { id: 'confirm', label: 'Confirm' },
-]
 
 export function NewProjectForm() {
   const router = useRouter()
   const { createProject } = useProjectStore()
+  const { lang } = useLanguage()
+
+  const STEPS: { id: FormStep; label: string }[] = [
+    { id: 'photo',   label: t('form', 'stepPhoto', lang) },
+    { id: 'room',    label: t('form', 'stepRoom', lang) },
+    { id: 'style',   label: t('form', 'stepStyle', lang) },
+    { id: 'budget',  label: t('form', 'stepBudget', lang) },
+    { id: 'confirm', label: t('form', 'stepConfirm', lang) },
+  ]
 
   const [currentStep, setCurrentStep] = useState<FormStep>('photo')
   const [imageDataUrls, setImageDataUrls] = useState<string[]>([])
@@ -52,7 +55,7 @@ export function NewProjectForm() {
 
   const handleNext = () => {
     if (currentStep === 'photo' && imageDataUrls.length === 0) {
-      setImageError('Please upload at least one room photo to continue.')
+      setImageError(t('form', 'uploadRequired', lang))
       return
     }
     setImageError(undefined)
@@ -67,7 +70,7 @@ export function NewProjectForm() {
 
   const onSubmit = async (data: NewProjectFormValues) => {
     if (imageDataUrls.length === 0) {
-      setImageError('At least one room photo is required.')
+      setImageError(t('form', 'uploadRequiredSubmit', lang))
       setCurrentStep('photo')
       return
     }
@@ -93,26 +96,26 @@ export function NewProjectForm() {
     }
 
     createProject(record)
-    toast({ title: 'Project created', description: 'Running redesign pipeline…', variant: 'success' })
+    toast({ title: t('form', 'projectCreated', lang), description: t('form', 'pipelineRunning', lang), variant: 'success' })
     router.push(`/project/${record.id}`)
   }
 
   const roomTypeOptions = ROOM_TYPES.map(r => ({
     value: r.value,
-    label: r.label,
-    description: r.description,
+    label: lang === 'pl' ? r.labelPl : r.label,
+    description: lang === 'pl' ? r.descriptionPl : r.description,
   }))
 
   const styleOptions = DESIGN_STYLES.map(s => ({
     value: s.value,
-    label: s.label,
-    description: s.description,
+    label: lang === 'pl' ? s.labelPl : s.label,
+    description: lang === 'pl' ? s.descriptionPl : s.description,
   }))
 
   const budgetOptions = BUDGET_TIERS.map(b => ({
     value: b.value,
-    label: b.label,
-    description: b.description,
+    label: lang === 'pl' ? b.labelPl : b.label,
+    description: lang === 'pl' ? b.descriptionPl : b.description,
     badge: b.rangeNote,
   }))
 
@@ -140,10 +143,10 @@ export function NewProjectForm() {
         {currentStep === 'photo' && (
           <div className="space-y-6 animate-in">
             <div>
-              <p className="label-overline mb-2">Step 1 of 5</p>
-              <h2 className="font-display text-2xl font-medium text-stone-800 mb-2">Upload a Room Photo</h2>
+              <p className="label-overline mb-2">{t('form', 'step1of5', lang)}</p>
+              <h2 className="font-display text-2xl font-medium text-stone-800 mb-2">{t('form', 'uploadTitle', lang)}</h2>
               <p className="text-sm text-stone-500">
-                Provide a clear photo of the existing hotel room. This will be analyzed for redesign opportunities.
+                {t('form', 'uploadBody', lang)}
               </p>
             </div>
             <ImageUpload
@@ -163,9 +166,9 @@ export function NewProjectForm() {
         {currentStep === 'room' && (
           <div className="space-y-6 animate-in">
             <div>
-              <p className="label-overline mb-2">Step 2 of 5</p>
-              <h2 className="font-display text-2xl font-medium text-stone-800 mb-2">Room Type</h2>
-              <p className="text-sm text-stone-500">Select the type of space you want to redesign.</p>
+              <p className="label-overline mb-2">{t('form', 'step2of5', lang)}</p>
+              <h2 className="font-display text-2xl font-medium text-stone-800 mb-2">{t('form', 'roomTypeTitle', lang)}</h2>
+              <p className="text-sm text-stone-500">{t('form', 'roomTypeBody', lang)}</p>
             </div>
             <OptionSelector
               options={roomTypeOptions}
@@ -181,9 +184,9 @@ export function NewProjectForm() {
         {currentStep === 'style' && (
           <div className="space-y-6 animate-in">
             <div>
-              <p className="label-overline mb-2">Step 3 of 5</p>
-              <h2 className="font-display text-2xl font-medium text-stone-800 mb-2">Design Style</h2>
-              <p className="text-sm text-stone-500">Choose the aesthetic direction for the redesign.</p>
+              <p className="label-overline mb-2">{t('form', 'step3of5', lang)}</p>
+              <h2 className="font-display text-2xl font-medium text-stone-800 mb-2">{t('form', 'styleTitle', lang)}</h2>
+              <p className="text-sm text-stone-500">{t('form', 'styleBody', lang)}</p>
             </div>
             <OptionSelector
               options={styleOptions}
@@ -199,9 +202,9 @@ export function NewProjectForm() {
         {currentStep === 'budget' && (
           <div className="space-y-6 animate-in">
             <div>
-              <p className="label-overline mb-2">Step 4 of 5</p>
-              <h2 className="font-display text-2xl font-medium text-stone-800 mb-2">Budget Tier</h2>
-              <p className="text-sm text-stone-500">Select the investment scope for this redesign.</p>
+              <p className="label-overline mb-2">{t('form', 'step4of5', lang)}</p>
+              <h2 className="font-display text-2xl font-medium text-stone-800 mb-2">{t('form', 'budgetTitle', lang)}</h2>
+              <p className="text-sm text-stone-500">{t('form', 'budgetBody', lang)}</p>
             </div>
             <OptionSelector
               options={budgetOptions}
@@ -217,9 +220,9 @@ export function NewProjectForm() {
         {currentStep === 'confirm' && (
           <div className="space-y-6 animate-in">
             <div>
-              <p className="label-overline mb-2">Step 5 of 5</p>
-              <h2 className="font-display text-2xl font-medium text-stone-800 mb-2">Confirm & Generate</h2>
-              <p className="text-sm text-stone-500">Name your project and start the pipeline.</p>
+              <p className="label-overline mb-2">{t('form', 'step5of5', lang)}</p>
+              <h2 className="font-display text-2xl font-medium text-stone-800 mb-2">{t('form', 'confirmTitle', lang)}</h2>
+              <p className="text-sm text-stone-500">{t('form', 'confirmBody', lang)}</p>
             </div>
 
             {/* Summary */}
@@ -234,9 +237,24 @@ export function NewProjectForm() {
               )}
               <div className="grid grid-cols-3 gap-4">
                 {[
-                  { label: 'Room', value: ROOM_TYPES.find(r => r.value === watchedValues.roomType)?.label },
-                  { label: 'Style', value: DESIGN_STYLES.find(s => s.value === watchedValues.style)?.label },
-                  { label: 'Budget', value: BUDGET_TIERS.find(b => b.value === watchedValues.budgetTier)?.label },
+                  {
+                    label: t('form', 'roomLabel', lang),
+                    value: lang === 'pl'
+                      ? ROOM_TYPES.find(r => r.value === watchedValues.roomType)?.labelPl
+                      : ROOM_TYPES.find(r => r.value === watchedValues.roomType)?.label,
+                  },
+                  {
+                    label: t('form', 'styleLabel', lang),
+                    value: lang === 'pl'
+                      ? DESIGN_STYLES.find(s => s.value === watchedValues.style)?.labelPl
+                      : DESIGN_STYLES.find(s => s.value === watchedValues.style)?.label,
+                  },
+                  {
+                    label: t('form', 'budgetLabel', lang),
+                    value: lang === 'pl'
+                      ? BUDGET_TIERS.find(b => b.value === watchedValues.budgetTier)?.labelPl
+                      : BUDGET_TIERS.find(b => b.value === watchedValues.budgetTier)?.label,
+                  },
                 ].map(item => (
                   <div key={item.label}>
                     <p className="text-xs text-stone-400 mb-0.5">{item.label}</p>
@@ -249,12 +267,12 @@ export function NewProjectForm() {
             {/* Project name */}
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-1.5">
-                Project Name <span className="text-stone-400 font-normal">(optional)</span>
+                {t('form', 'projectName', lang)} <span className="text-stone-400 font-normal">{t('form', 'optional', lang)}</span>
               </label>
               <input
                 {...register('projectName')}
                 type="text"
-                placeholder="e.g. Grand Majestic · Japandi Suite"
+                placeholder={t('form', 'projectNamePlaceholder', lang)}
                 className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-800 placeholder:text-stone-400 bg-white focus:outline-none focus:ring-2 focus:ring-stone-400 focus:border-transparent transition"
               />
               {errors.projectName && (
@@ -265,12 +283,12 @@ export function NewProjectForm() {
             {/* Notes */}
             <div>
               <label className="block text-sm font-medium text-stone-700 mb-1.5">
-                Notes <span className="text-stone-400 font-normal">(optional)</span>
+                {t('form', 'notes', lang)} <span className="text-stone-400 font-normal">{t('form', 'optional', lang)}</span>
               </label>
               <textarea
                 {...register('notes')}
                 rows={3}
-                placeholder="Any specific constraints, client preferences, or context..."
+                placeholder={t('form', 'notesPlaceholder', lang)}
                 className="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm text-stone-800 placeholder:text-stone-400 bg-white focus:outline-none focus:ring-2 focus:ring-stone-400 resize-none transition"
               />
             </div>
@@ -285,16 +303,16 @@ export function NewProjectForm() {
             onClick={handleBack}
             disabled={stepIndex === 0}
           >
-            Back
+            {t('form', 'back', lang)}
           </Button>
 
           {currentStep !== 'confirm' ? (
             <Button type="button" variant="primary" onClick={handleNext}>
-              Continue
+              {t('form', 'continue', lang)}
             </Button>
           ) : (
             <Button type="submit" variant="primary" size="lg">
-              Generate Redesign Concept
+              {t('form', 'generate', lang)}
             </Button>
           )}
         </div>

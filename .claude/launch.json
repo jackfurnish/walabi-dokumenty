@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Furniture Pricing Agent",
+      "runtimeExecutable": "/Users/leszekborowski/furniture_agent/.venv/bin/python3.13",
+      "runtimeArgs": ["-m", "uvicorn", "app.main:app", "--reload", "--host", "127.0.0.1", "--port", "8000"],
+      "port": 8000,
+      "autoPort": false
+    },
+    {
+      "name": "WALABI Render Pipeline",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "/Users/leszekborowski/Library/Mobile Documents/com~apple~CloudDocs/CLAUDE_PROGRAMOWANIE/WWW/walabi-render-pipeline"],
+      "port": 3000
+    }
+  ]
+}

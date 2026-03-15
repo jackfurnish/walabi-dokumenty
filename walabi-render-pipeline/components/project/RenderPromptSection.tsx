@@ -1,18 +1,24 @@
+'use client'
+
 import { FileCode } from 'lucide-react'
 import { CollapsibleSection } from '@/components/ui/CollapsibleSection'
 import { CopyButton } from '@/components/ui/CopyButton'
 import type { RenderPromptPackage } from '@/lib/schemas/pipeline'
+import { useLanguage } from '@/lib/i18n/LanguageContext'
+import { t } from '@/lib/i18n/translations'
 
 interface RenderPromptSectionProps {
   data: RenderPromptPackage
 }
 
 export function RenderPromptSection({ data }: RenderPromptSectionProps) {
+  const { lang } = useLanguage()
+
   return (
     <CollapsibleSection
-      title="Render Master Prompt"
+      title={t('sections', 'renderPrompt', lang)}
       subtitle="Ready for Midjourney, DALL·E, Stable Diffusion"
-      badge="Copy-ready"
+      badge={lang === 'pl' ? 'Gotowy do kopiowania' : 'Copy-ready'}
       badgeVariant="accent"
       icon={<FileCode className="w-4 h-4" />}
     >
@@ -21,9 +27,9 @@ export function RenderPromptSection({ data }: RenderPromptSectionProps) {
         <div>
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs font-semibold text-stone-600 uppercase tracking-wide">
-              Master Prompt
+              {lang === 'pl' ? 'Master Prompt' : 'Master Prompt'}
             </p>
-            <CopyButton text={data.masterPrompt} label="Copy prompt" size="sm" />
+            <CopyButton text={data.masterPrompt} label={t('copy', 'copyPrompt', lang)} size="sm" />
           </div>
           <div className="bg-stone-900 rounded-xl p-4 font-mono text-xs text-stone-300 leading-relaxed whitespace-pre-wrap">
             {data.masterPrompt}
@@ -34,7 +40,7 @@ export function RenderPromptSection({ data }: RenderPromptSectionProps) {
         {data.styleModifiers.length > 0 && (
           <div>
             <p className="text-xs font-semibold text-stone-600 uppercase tracking-wide mb-2">
-              Style Modifiers
+              {lang === 'pl' ? 'Modyfikatory stylu' : 'Style Modifiers'}
             </p>
             <div className="flex flex-wrap gap-2">
               {data.styleModifiers.map((mod, i) => (
@@ -52,15 +58,15 @@ export function RenderPromptSection({ data }: RenderPromptSectionProps) {
         {/* Technical */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-xs text-stone-400 mb-1">Camera Angle</p>
+            <p className="text-xs text-stone-400 mb-1">{lang === 'pl' ? 'Kąt kamery' : 'Camera Angle'}</p>
             <p className="text-xs font-medium text-stone-700">{data.cameraAngle}</p>
           </div>
           <div>
-            <p className="text-xs text-stone-400 mb-1">Lighting</p>
+            <p className="text-xs text-stone-400 mb-1">{lang === 'pl' ? 'Oświetlenie' : 'Lighting'}</p>
             <p className="text-xs font-medium text-stone-700">{data.lightingInstructions}</p>
           </div>
           <div className="col-span-2">
-            <p className="text-xs text-stone-400 mb-1">Technical Spec</p>
+            <p className="text-xs text-stone-400 mb-1">{lang === 'pl' ? 'Specyfikacja techniczna' : 'Technical Spec'}</p>
             <p className="text-xs font-mono text-stone-600 bg-stone-50 rounded-lg px-3 py-2 border border-stone-100">
               {data.technicalSpec}
             </p>
@@ -72,9 +78,9 @@ export function RenderPromptSection({ data }: RenderPromptSectionProps) {
           <div>
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-semibold text-stone-600 uppercase tracking-wide">
-                Negative Prompt
+                {lang === 'pl' ? 'Prompt negatywny' : 'Negative Prompt'}
               </p>
-              <CopyButton text={data.negativePrompt} label="Copy" size="sm" />
+              <CopyButton text={data.negativePrompt} label={t('copy', 'copy', lang)} size="sm" />
             </div>
             <div className="bg-red-50/50 border border-red-100 rounded-xl p-3 font-mono text-xs text-red-700 leading-relaxed">
               {data.negativePrompt}
@@ -86,7 +92,7 @@ export function RenderPromptSection({ data }: RenderPromptSectionProps) {
         {data.promptVariants.length > 0 && (
           <div>
             <p className="text-xs font-semibold text-stone-600 uppercase tracking-wide mb-2">
-              Prompt Variants
+              {lang === 'pl' ? 'Warianty promptu' : 'Prompt Variants'}
             </p>
             <div className="space-y-2">
               {data.promptVariants.map((variant, i) => (
