@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { PageWrapper } from '@/components/layout/PageWrapper'
 import { ProjectCard } from '@/components/project/ProjectCard'
 import { useProjectStore } from '@/store/projectStore'
@@ -11,6 +11,8 @@ import { buildDemoProject } from '@/lib/utils/demoProject'
 
 export default function ProjectsPage() {
   const { projects, deleteProject, createProject } = useProjectStore()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
 
   // Seed demo project on first visit if library is empty
   useEffect(() => {
@@ -37,6 +39,14 @@ export default function ProjectsPage() {
       toast({ title: 'Demo project already in library', variant: 'default' })
     }
   }
+
+  if (!mounted) return (
+    <PageWrapper>
+      <div className="flex-1 flex items-center justify-center py-32">
+        <div className="w-6 h-6 rounded-full border-2 border-stone-300 border-t-stone-700 animate-spin" />
+      </div>
+    </PageWrapper>
+  )
 
   return (
     <PageWrapper>

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { Header } from '@/components/layout/Header'
@@ -8,23 +9,27 @@ import { ResultsWorkspace } from '@/components/project/ResultsWorkspace'
 import { useProjectStore } from '@/store/projectStore'
 import { ArrowLeft } from 'lucide-react'
 
+const Spinner = () => (
+  <div className="min-h-screen flex flex-col bg-[#faf9f7]">
+    <Header />
+    <main className="flex-1 flex items-center justify-center">
+      <div className="w-6 h-6 rounded-full border-2 border-stone-300 border-t-stone-700 animate-spin" />
+    </main>
+    <Footer />
+  </div>
+)
+
 export default function ProjectPage() {
   const params = useParams()
   const id = params.id as string
-  const hasHydrated = useProjectStore((s) => s._hasHydrated)
+  // mounted guard ensures first client render matches server render (both show spinner)
+  // preventing React 19 hydration mismatch from Zustand's synchronous localStorage read
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
+
   const project = useProjectStore((s) => s.projects.find((p) => p.id === id))
 
-  if (!hasHydrated) {
-    return (
-      <div className="min-h-screen flex flex-col bg-[#faf9f7]">
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="w-6 h-6 rounded-full border-2 border-stone-300 border-t-stone-700 animate-spin" />
-        </main>
-        <Footer />
-      </div>
-    )
-  }
+  if (!mounted) return <Spinner />
 
   if (!project) {
     return (
