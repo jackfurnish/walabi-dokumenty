@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+
+// Allow up to 60s for the full AI pipeline (Hobby plan limit)
+export const maxDuration = 60
 import { z } from 'zod'
 import { createProvider, type ImageInput } from '@/lib/ai/provider'
 import { PipelineOutputSchema } from '@/lib/schemas/pipeline'
@@ -174,17 +177,34 @@ export async function POST(req: NextRequest) {
 
 // ── Helper: parse AI JSON response with fallback ──────────
 function parseAIResponse<T>(raw: string, fallback: () => T): T {
+  // Attempt 1: strip code fences and parse directly
   try {
-    // Strip markdown code fences if Claude wrapped the response
     const cleaned = raw
-      .replace(/^```json\s*/i, '')
-      .replace(/^```\s*/i, '')
-      .replace(/\s*```$/i, '')
+      .replace(/^```json\s*/im, '')
+      .replace(/^```\s*/im, '')
+      .replace(/\s*```\s*$/im, '')
       .trim()
-
     return JSON.parse(cleaned) as T
-  } catch {
-    console.warn('[Pipeline API] Failed to parse AI response, using fallback')
-    return fallback()
-  }
+  } catch { /* try next strategy */ }
+
+  // Attempt 2: extract first {...} block (handles text before/after JSON)
+  try {
+    const start = raw.indexOf('{')
+    const end   = raw.lastIndexOf('}')
+    if (start !== -1 && end > start) {
+      return JSON.parse(raw.slice(start, end + 1)) as T
+    }
+  } catch { /* try next strategy */ }
+
+  // Attempt 3: extract first [...] block (array responses)
+  try {
+    const start = raw.indexOf('[')
+    const end   = raw.lastIndexOf(']')
+    if (start !== -1 && end > start) {
+      return JSON.parse(raw.slice(start, end + 1)) as T
+    }
+  } catch { /* fall through */ }
+
+  console.warn('[Pipeline API] Failed to parse AI response, using deterministic fallback')
+  return fallback()
 }
