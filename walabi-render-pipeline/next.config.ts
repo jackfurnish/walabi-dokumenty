@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     typedRoutes: false,
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
   },
 }
 

@@ -16,6 +16,32 @@ interface ImageUploadProps {
 export function ImageUpload({ onImagesChange, values, fileNames, error }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
+  // Compress image via Canvas: resize to max 1200px, JPEG 80%
+  const compressImage = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const img = new Image()
+        img.onload = () => {
+          const MAX_DIM = 1200
+          let { width, height } = img
+          if (width > MAX_DIM || height > MAX_DIM) {
+            if (width > height) { height = Math.round((height * MAX_DIM) / width); width = MAX_DIM }
+            else { width = Math.round((width * MAX_DIM) / height); height = MAX_DIM }
+          }
+          const canvas = document.createElement('canvas')
+          canvas.width = width
+          canvas.height = height
+          canvas.getContext('2d')!.drawImage(img, 0, 0, width, height)
+          resolve(canvas.toDataURL('image/jpeg', 0.80))
+        }
+        img.onerror = reject
+        img.src = e.target?.result as string
+      }
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
+
   const processFiles = useCallback(
     (files: FileList) => {
       const remaining = MAX_IMAGES - values.length
@@ -24,23 +50,14 @@ export function ImageUpload({ onImagesChange, values, fileNames, error }: ImageU
       const toProcess = Array.from(files).filter(f => f.type.startsWith('image/')).slice(0, remaining)
       if (toProcess.length === 0) return
 
-      let loaded = 0
-      const newUrls: string[] = []
-      const newNames: string[] = []
-
-      toProcess.forEach((file, i) => {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          newUrls[i] = e.target?.result as string
-          newNames[i] = file.name
-          loaded++
-          if (loaded === toProcess.length) {
-            onImagesChange([...values, ...newUrls], [...fileNames, ...newNames])
-          }
-        }
-        reader.readAsDataURL(file)
-      })
+      Promise.all(toProcess.map(f => compressImage(f)))
+        .then(newUrls => {
+          const newNames = toProcess.map(f => f.name)
+          onImagesChange([...values, ...newUrls], [...fileNames, ...newNames])
+        })
+        .catch(console.error)
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [values, fileNames, onImagesChange]
   )
 
