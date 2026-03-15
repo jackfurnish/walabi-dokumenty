@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     'AI-assisted hotel room redesign tool for generating photorealistic concept packages and investor-facing summaries.',
   keywords: ['WALABI', 'hotel redesign', 'interior design', 'render pipeline', 'hospitality'],
   robots: 'noindex, nofollow',
+  icons: {
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%232D2E2E'/><text x='16' y='22' font-size='18' text-anchor='middle' fill='%23E8D5B0' font-family='serif' font-weight='bold'>W</text></svg>",
+  },
 }
 
 export default function RootLayout({

@@ -1,19 +1,16 @@
 'use client'
 
-import { use } from 'react'
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { ResultsWorkspace } from '@/components/project/ResultsWorkspace'
 import { useProjectStore } from '@/store/projectStore'
 import { ArrowLeft } from 'lucide-react'
 
-interface ProjectPageProps {
-  params: Promise<{ id: string }>
-}
-
-export default function ProjectPage({ params }: ProjectPageProps) {
-  const { id } = use(params)
+export default function ProjectPage() {
+  const params = useParams()
+  const id = params.id as string
   const hasHydrated = useProjectStore((s) => s._hasHydrated)
   const project = useProjectStore((s) => s.projects.find((p) => p.id === id))
 
