@@ -12,6 +12,7 @@ export async function GET() {
     provider: hasKey ? 'anthropic' : 'mock',
     keyConfigured: hasKey,
     keyPreview,
-    model: process.env.ANTHROPIC_MODEL ?? 'claude-opus-4-6 (default)',
+    model: process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-5 (default)',
+    modelEnvSet: !!process.env.ANTHROPIC_MODEL,
   })
 }
