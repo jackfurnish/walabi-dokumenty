@@ -14,7 +14,9 @@ export function spaceAnalyzerPrompt(input: ProjectInput, hasImage: boolean): str
   const styleTarget = getStyleLabel(input.style)
   const budgetLabel = getBudgetTierLabel(input.budgetTier)
 
-  return `${hasImage ? 'Analyse the attached room photo.' : 'Analyse this hotel room type based on the parameters provided.'} The room is a ${roomLabel}. The target redesign style is ${styleTarget}. The budget tier is ${budgetLabel}.
+  return `Odpowiedź MUSI być w języku polskim.
+
+${hasImage ? 'Analyse the attached room photo.' : 'Analyse this hotel room type based on the parameters provided.'} The room is a ${roomLabel}. The target redesign style is ${styleTarget}. The budget tier is ${budgetLabel}.
 
 Return ONLY this JSON structure — no additional text:
 
@@ -42,7 +44,9 @@ export function redesignStrategistPrompt(
   input: ProjectInput,
   spaceAnalysis: SpaceAnalysis
 ): string {
-  return `Based on this space analysis, generate a redesign strategy.
+  return `Odpowiedź MUSI być w języku polskim.
+
+Based on this space analysis, generate a redesign strategy.
 
 SPACE ANALYSIS:
 ${JSON.stringify(spaceAnalysis, null, 2)}
@@ -86,7 +90,9 @@ export function furnitureConceptPrompt(
   strategy: RedesignStrategy,
   style: StyleDirection
 ): string {
-  return `Generate a WALABI furniture concept for this hotel room redesign.
+  return `Odpowiedź MUSI być w języku polskim.
+
+Generate a WALABI furniture concept for this hotel room redesign.
 
 STYLE DIRECTION:
 - Style family: ${style.styleFamily}
@@ -140,7 +146,9 @@ export function renderPromptGeneratorPrompt(
   const heroPiece = furniture.heroPieces[0]
   const roomLabel = getRoomTypeLabel(input.roomType)
 
-  return `Write a production-ready render prompt for this WALABI hotel room redesign concept.
+  return `Odpowiedź MUSI być w języku polskim.
+
+Write a production-ready render prompt for this WALABI hotel room redesign concept.
 
 CONCEPT SUMMARY:
 - Room: ${roomLabel}
@@ -182,7 +190,9 @@ export function investorSummaryPrompt(
   style: StyleDirection,
   furniture: FurnitureConcept
 ): string {
-  return `Write an investor and hotel GM summary for this WALABI redesign concept.
+  return `Odpowiedź MUSI być w języku polskim.
+
+Write an investor and hotel GM summary for this WALABI redesign concept.
 
 PROJECT PARAMETERS:
 - Room: ${getRoomTypeLabel(input.roomType)}

@@ -32,23 +32,23 @@ const STYLE_LIBRARY: StyleLibrary = {
     },
 
     decorRules: [
-      'Curves over right angles wherever structure allows — arched headboard, rounded table edge',
-      'One organic form object per zone: a thrown ceramic, a natural wood object, a stone piece',
-      'Plants as considered design elements, not fillers — one architectural specimen over multiple small pots',
-      'Layered textiles: base layer, throw, one or two cushions. Never more.',
-      'Artwork: one considered piece per wall, not a gallery grid. Photography or abstract preferred.',
-      'Surfaces should breathe — not decorated, but not bare',
-      'Hardware in consistent warm brass — no chrome mixing',
+      'Krzywe zamiast kątów prostych wszędzie tam, gdzie pozwala na to konstrukcja — łukowy zagłówek, zaokrąglona krawędź stołu',
+      'Jeden obiekt o organicznej formie na strefę: ceramika ręcznie toczona, obiekt z naturalnego drewna, element kamienny',
+      'Rośliny jako przemyślane elementy projektu, nie wypełniacze — jeden architektoniczny okaz zamiast wielu małych doniczek',
+      'Warstwowe tkaniny: warstwa bazowa, narzuta, jedna lub dwie poduszki. Nigdy więcej.',
+      'Sztuka: jeden przemyślany element na ścianę, nie siatka galeryjna. Preferowana fotografia lub abstrakcja.',
+      'Powierzchnie powinny oddychać — nie zdekorowane, ale i nie gołe',
+      'Okucia w spójnym ciepłym mosiądzu — bez mieszania z chromem',
     ],
 
     forbiddenPatterns: [
-      'High-gloss lacquer furniture in any form',
-      'Chrome or cool-toned metal finishes',
-      'Pattern-heavy textiles (geometric, floral, stripe)',
-      'Matching furniture sets from a single manufacturer (\"suite\" look)',
-      'Artificial plants or dried florals',
-      'Hotel-white, bright white, or cool-toned linen',
-      'Symmetrical twin table lamp clichés without considered placement',
+      'Meble z lakierem wysokołyskowym w jakiejkolwiek formie',
+      'Wykończenia metalowe chromowane lub w chłodnych tonach',
+      'Tkaniny z dużymi wzorami (geometryczne, kwiatowe, w paski)',
+      'Dopasowane zestawy mebli od jednego producenta (wygląd \"kompletu\")',
+      'Sztuczne rośliny lub suszone kwiaty',
+      'Hotelowa biel, jaskrawa biel lub len w chłodnych tonach',
+      'Klisze symetrycznych lamp stołowych bez przemyślanego rozmieszczenia',
     ],
 
     keyReferences: [
@@ -57,7 +57,7 @@ const STYLE_LIBRARY: StyleLibrary = {
       'Nobu Hotel interiors — natural material luxury',
     ],
 
-    moodKeywords: ['tactile', 'grounded', 'warm', 'considered', 'alive', 'unhurried'],
+    moodKeywords: ['dotykowy', 'uziemiony', 'ciepły', 'przemyślany', 'żywy', 'nieśpieszny'],
   },
 
   // ---------------------------------------------------------------
@@ -83,23 +83,23 @@ const STYLE_LIBRARY: StyleLibrary = {
     },
 
     decorRules: [
-      'Headboard must be oversized and upholstered — it is the room\'s primary architectural statement',
-      'Layered textiles are non-negotiable: base sheet, coverlet or duvet, throw, minimum two cushions',
-      'Artwork framed in dark or gilded frame — adds to the sense of permanence',
-      'Books or objects on surfaces — the room should suggest a life lived, not a showroom staged',
-      'Full-length curtains to ceiling only — nothing that hovers above floor level',
-      'One statement lighting piece — oversized pendant or sculptural floor lamp',
-      'Brass hardware programme: door handle, towel hook, picture rail — consistent throughout',
+      'Zagłówek musi być ponadwymiarowy i tapicerowany — to główna architektoniczna wypowiedź pokoju',
+      'Warstwowe tkaniny są niezbędne: prześcieradło bazowe, narzuta lub kołdra, narzuta dekoracyjna, minimum dwie poduszki',
+      'Dzieła w ciemnej lub złoconej ramie — wzmacniają poczucie trwałości',
+      'Książki lub obiekty na powierzchniach — pokój powinien sugerować życie przeżyte, nie showroom wystawiony',
+      'Zasłony pełnej długości tylko do sufitu — nic, co unosi się nad poziomem podłogi',
+      'Jeden element oświetleniowy statement — ponadwymiarowa lampa wisząca lub rzeźbiarska lampa podłogowa',
+      'Program okuć mosiężnych: klamka, wieszak na ręcznik, listwa obrazowa — spójne w całym pomieszczeniu',
     ],
 
     forbiddenPatterns: [
-      'Flat-pack or laminate furniture of any kind',
-      'Chrome fittings — entirely incompatible with this palette',
-      'Minimalist restraint — this style requires generous layering',
-      'White or cool-toned upholstery as primary fabric',
-      'Roller blinds or synthetic curtains',
-      'Bare walls — artwork, mirror, or feature treatment required',
-      'Corporate \"business hotel\" desk configuration',
+      'Meble z płyty lub laminatu w jakiejkolwiek formie',
+      'Okucia chromowane — całkowicie niezgodne z tą paletą',
+      'Minimalistyczna powściągliwość — ten styl wymaga hojnego warstwowania',
+      'Biała lub chłodnoodcieniowa tapicerka jako główna tkanina',
+      'Rolety lub syntetyczne zasłony',
+      'Gołe ściany — wymagane dzieło, lustro lub akcentowe wykończenie',
+      'Korporacyjna konfiguracja biurka \"business hotel\"',
     ],
 
     keyReferences: [
@@ -108,7 +108,7 @@ const STYLE_LIBRARY: StyleLibrary = {
       'Rosewood properties — craft material story',
     ],
 
-    moodKeywords: ['generous', 'plush', 'self-assured', 'crafted', 'weighty', 'layered'],
+    moodKeywords: ['hojny', 'pluszowy', 'pewny siebie', 'rzemieślniczy', 'ciężki', 'warstwowy'],
   },
 
   // ---------------------------------------------------------------
@@ -134,23 +134,23 @@ const STYLE_LIBRARY: StyleLibrary = {
     },
 
     decorRules: [
-      'One object per surface — if there are two, one must be removed',
-      'Asymmetry preferred over symmetry wherever structure permits',
-      'Bed height low to ground — platform or minimal-leg frame reinforces horizontal calm',
-      'Curtains to ceiling in monochrome linen — no pattern, no hardware visible',
-      'Artwork: one piece, considered placement, significant breathing room around it',
-      'Ceramic or stone object for bedside — replaces flower arrangement or decorative excess',
-      'All storage concealed — visible clutter is a design failure at this tier',
+      'Jeden obiekt na powierzchnię — jeśli są dwa, jeden musi zostać usunięty',
+      'Asymetria preferowana nad symetrią wszędzie tam, gdzie pozwala na to konstrukcja',
+      'Wysokość łóżka nisko przy podłodze — platforma lub rama z minimalnymi nogami wzmacnia poziomy spokój',
+      'Zasłony do sufitu w monochromatycznym lnie — bez wzoru, bez widocznych okuć',
+      'Sztuka: jeden element, przemyślane rozmieszczenie, znaczna przestrzeń wokół niego',
+      'Ceramiczny lub kamienny obiekt przy łóżku — zastępuje bukiet kwiatów lub dekoracyjny nadmiar',
+      'Całe przechowywanie ukryte — widoczny bałagan jest błędem projektowym na tym poziomie',
     ],
 
     forbiddenPatterns: [
-      'Excessive decoration — if in doubt, remove it',
-      'Warm brass or gold hardware — incompatible with this palette',
-      'Pattern on any primary textile surface',
-      'Upholstered headboards in rich or bright tones',
-      'Multiple artwork pieces on one wall',
-      'Matching lamp sets that read as hotel-catalogue symmetry',
-      'Warm wood tones (walnut, oak with yellow undertone)',
+      'Nadmierna dekoracja — w razie wątpliwości, usuń to',
+      'Ciepłe mosiężne lub złote okucia — niezgodne z tą paletą',
+      'Wzór na jakiejkolwiek głównej powierzchni tekstylnej',
+      'Tapicerowane zagłówki w bogatych lub jasnych odcieniach',
+      'Wiele dzieł na jednej ścianie',
+      'Dopasowane zestawy lamp odczytywane jako symetria z katalogu hotelowego',
+      'Ciepłe odcienie drewna (orzech, dąb z żółtym podtonem)',
     ],
 
     keyReferences: [
@@ -159,7 +159,7 @@ const STYLE_LIBRARY: StyleLibrary = {
       'Zaborin Ryokan — considered object placement',
     ],
 
-    moodKeywords: ['precise', 'still', 'honest', 'unhurried', 'earned', 'quiet'],
+    moodKeywords: ['precyzyjny', 'cichy', 'szczery', 'nieśpieszny', 'zasłużony', 'spokojny'],
   },
 
   // ---------------------------------------------------------------
@@ -185,23 +185,23 @@ const STYLE_LIBRARY: StyleLibrary = {
     },
 
     decorRules: [
-      'Clean surfaces with one considered object — do not over-style, do not leave bare',
-      'Headboard present and scaled correctly — upholstered in cream, oat, or warm white',
-      'Bedding smooth, crisp, and properly pressed — photography quality is a key deliverable',
-      'One plant or organic element — adds life without visual complexity',
-      'Artwork: one piece per wall, simple frame, calm subject',
-      'Curtains in full drop — sheer layer for light softening, block-out behind',
-      'Timber flooring or warm-toned carpet visible — cold tile should be covered where possible',
+      'Czyste powierzchnie z jednym przemyślanym obiektem — nie przestylingować, nie pozostawiać pustych',
+      'Zagłówek obecny i we właściwej skali — tapicerowany w kremie, owsie lub ciepłej bieli',
+      'Pościel gładka, świeża i właściwie wyprasowana — jakość fotograficzna to kluczowy efekt',
+      'Jedna roślina lub element organiczny — dodaje życia bez wizualnej złożoności',
+      'Sztuka: jeden element na ścianę, prosta rama, spokojny temat',
+      'Zasłony w pełnym splocie — warstwa sheerska do złagodzenia światła, zaciemniające z tyłu',
+      'Widoczna podłoga drewniana lub dywany w ciepłych odcieniach — zimne kafle powinny być przykryte w miarę możliwości',
     ],
 
     forbiddenPatterns: [
-      'High-contrast bold patterns on any surface',
-      'Cold-toned greys, blues, or purples — palette must stay warm',
-      'Industrial elements: exposed pipe, bare concrete, raw metal',
-      'Overly ornate or decorative hardware',
-      'Dark, heavy furniture that compresses the room visually',
-      'Neon or strongly coloured artwork',
-      'Overly curated \"Instagram-trap\" styling — must feel genuine, not performed',
+      'Mocno kontrastowe wzory na jakiejkolwiek powierzchni',
+      'Chłodne szarości, błękity lub fiolety — paleta musi pozostać ciepła',
+      'Elementy industrialne: odsłonięte rury, gołe beton, surowy metal',
+      'Nadmiernie zdobne lub dekoracyjne okucia',
+      'Ciemne, ciężkie meble wizualnie ściskające pokój',
+      'Neonowe lub mocno kolorowe dzieła',
+      'Zbyt kuratorowany styling \"Instagram-trap\" — musi czuć się autentycznie, nie wyreżyserowanie',
     ],
 
     keyReferences: [
@@ -210,7 +210,7 @@ const STYLE_LIBRARY: StyleLibrary = {
       'Scandic Hotels premium tier — warm Scandinavian hospitality',
     ],
 
-    moodKeywords: ['clean', 'warm', 'approachable', 'fresh', 'genuine', 'comfortable'],
+    moodKeywords: ['czysty', 'ciepły', 'przystępny', 'świeży', 'autentyczny', 'komfortowy'],
   },
 }
 

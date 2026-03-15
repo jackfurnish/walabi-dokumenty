@@ -16,8 +16,8 @@ const BED_FRAMES: Record<DesignStyle, FurniturePiece> = {
     material: 'White Oak — wire-brushed, natural oil finish',
     finish: 'Natural Oil — open pore, matte',
     dimensions: '180×200 cm (King) / 160×200 cm (Queen) — headboard H: 110 cm',
-    notes: 'Arched headboard profile in solid oak with upholstered linen centre panel. Low leg clearance (18 cm) for grounded visual weight. Slat base integrated.',
-    manufacturabilityNote: 'WALABI standard production — 4–6 week lead time. Headboard panel upholstered in-house.',
+    notes: 'Łukowy profil zagłówka z litego dębu z tapicerowanym środkowym panelem lnianym. Niski prześwit nóg (18 cm) dla uziemionej masy wizualnej. Zintegrowana podstawa listewkowa.',
+    manufacturabilityNote: 'Standardowa produkcja WALABI — czas realizacji 4–6 tygodni. Tapicerowanie panelu zagłówka wykonywane we własnym zakresie.',
   },
   'arhaus-luxury': {
     name: 'Grand Tufted Bed Frame',
@@ -25,8 +25,8 @@ const BED_FRAMES: Record<DesignStyle, FurniturePiece> = {
     material: 'Solid Dark Walnut frame — performance velvet upholstery',
     finish: 'Satin lacquer on walnut components, cognac velvet headboard',
     dimensions: '180×200 cm — headboard H: 140 cm oversized',
-    notes: 'Button-tufted oversized headboard with walnut leg detail. Concealed storage drawer optional. Upholstered side rail for full premium finish.',
-    manufacturabilityNote: 'WALABI bespoke programme — 6–8 weeks. Upholstery COM option available for hotel brand alignment.',
+    notes: 'Ponadwymiarowy zagłówek z pikowaniem guzikowym i detalem nogi z orzecha. Opcjonalna szuflada ukryta. Tapicerowana listwa boczna dla pełnego premium wykończenia.',
+    manufacturabilityNote: 'Program na zamówienie WALABI — 6–8 tygodni. Dostępna opcja COM dla zgodności z marką hotelową.',
   },
   'japandi-hospitality': {
     name: 'Hira Platform Bed',
@@ -34,8 +34,8 @@ const BED_FRAMES: Record<DesignStyle, FurniturePiece> = {
     material: 'Ash — clear oil finish, natural grain',
     finish: 'Clear Oil — reveals grain, no sheen',
     dimensions: '180×200 cm — platform height 22 cm total, headboard H: 75 cm',
-    notes: 'Minimal platform frame with slatted headboard in ash. No upholstery — material honesty is the design statement. Extremely low profile for horizontal visual calm.',
-    manufacturabilityNote: 'WALABI standard production — 4–5 weeks. All joints exposed and crafted to display-quality tolerance.',
+    notes: 'Minimalna rama platformowa z listewkowym zagłówkiem z jesionu. Bez tapicerki — uczciwość materiałowa jest tu wypowiedzią projektową. Skrajnie niski profil dla poziomego wizualnego spokoju.',
+    manufacturabilityNote: 'Standardowa produkcja WALABI — 4–5 tygodni. Wszystkie złącza odsłonięte i wykonane z tolerancją jakości ekspozycyjnej.',
   },
   'boutique-warm-minimalism': {
     name: 'Nido Upholstered Bed',
@@ -43,8 +43,8 @@ const BED_FRAMES: Record<DesignStyle, FurniturePiece> = {
     material: 'White Oak frame with full upholstered headboard in cotton-linen blend',
     finish: 'Matte oil on oak, warm cream upholstery',
     dimensions: '180×200 cm — headboard H: 100 cm',
-    notes: 'Clean, channelled headboard design with oak leg reveal at base. Proportion-balanced for standard hotel room height. The most commercially transferable piece in the range.',
-    manufacturabilityNote: 'WALABI standard production — 4–5 weeks. COM/COL headboard option for hotel-specific fabric.',
+    notes: 'Czysty, kanałowy design zagłówka z widoczną nogą dębową przy podstawie. Proporcje zbalansowane dla standardowej wysokości pokoju hotelowego. Najbardziej komercyjnie transferowalny element w kolekcji.',
+    manufacturabilityNote: 'Standardowa produkcja WALABI — 4–5 tygodni. Opcja COM/COL zagłówka dla tkaniny specyficznej dla hotelu.',
   },
 }
 
@@ -57,8 +57,8 @@ const BEDSIDE_TABLES: Record<DesignStyle, FurniturePiece> = {
     material: 'White Oak — solid top with turned or tapered leg',
     finish: 'Natural Oil',
     dimensions: 'Ø 45 cm × H 55 cm — round form',
-    notes: 'Round table top eliminates corner-catching in tight room layouts. Single open shelf or drawer. USB-A/C integrated into surface as option.',
-    manufacturabilityNote: 'Standard production — 3–4 weeks. USB integration via third-party insert, WALABI sourced.',
+    notes: 'Okrągły blat eliminuje zahaczanie o narożniki w ciasnych układach pokoi. Pojedyncza otwarta półka lub szuflada. Opcja integracji USB-A/C w blacie.',
+    manufacturabilityNote: 'Produkcja standardowa — 3–4 tygodnie. Integracja USB przez wkładkę od zewnętrznego dostawcy, pozyskaną przez WALABI.',
   },
   'arhaus-luxury': {
     name: 'Marlowe Bedside Cabinet',
@@ -66,8 +66,8 @@ const BEDSIDE_TABLES: Record<DesignStyle, FurniturePiece> = {
     material: 'Dark Walnut — solid top, two-drawer cabinet, brass pull',
     finish: 'Satin lacquer, oil-rubbed brass hardware',
     dimensions: '50×40 cm × H 60 cm — cabinet form',
-    notes: 'Two-drawer cabinet with dovetail joinery visible at corners. Brass ring pull. Top surface with 3 mm chamfered edge. Drawer lining in suede-effect material.',
-    manufacturabilityNote: 'Bespoke programme — 5–6 weeks. Hardware sourced from WALABI supplier network.',
+    notes: 'Szafka dwuszufladowa z widocznym złączem jaskółczego ogona na narożnikach. Mosiężna uchwytka pierścieniowa. Blat z 3 mm sfazowaną krawędzią. Wyściółka szuflad w materiale imitującym zamsz.',
+    manufacturabilityNote: 'Program na zamówienie — 5–6 tygodni. Okucia pozyskiwane z sieci dostawców WALABI.',
   },
   'japandi-hospitality': {
     name: 'Shiro Floating Shelf Unit',
@@ -75,8 +75,8 @@ const BEDSIDE_TABLES: Record<DesignStyle, FurniturePiece> = {
     material: 'Ash — wall-mounted cantilevered shelf with concealed bracket',
     finish: 'Clear Oil',
     dimensions: '55×28 cm × H (single shelf) — adjustable installation height',
-    notes: 'Wall-mounted to free floor plane entirely. Single shelf with integrated cable channel for phone charging. Minimal hardware visible.',
-    manufacturabilityNote: 'Standard production — 3 weeks. Wall-mount brackets included, concrete or masonry fixings provided.',
+    notes: 'Montaż ścienny dla całkowitego uwolnienia płaszczyzny podłogi. Pojedyncza półka z zintegrowanym kanałem kablowym do ładowania telefonu. Minimalna widoczna instalacja.',
+    manufacturabilityNote: 'Produkcja standardowa — 3 tygodnie. Wsporniki ścienne w zestawie, zapewnione mocowania do betonu lub muru.',
   },
   'boutique-warm-minimalism': {
     name: 'Forma Bedside Table',
@@ -84,8 +84,8 @@ const BEDSIDE_TABLES: Record<DesignStyle, FurniturePiece> = {
     material: 'White Oak — rectangular top with single drawer and open shelf',
     finish: 'Natural Oil',
     dimensions: '45×38 cm × H 58 cm',
-    notes: 'Proportioned for use alongside Nido Bed. Drawer with push-to-open (no handle required). Lower shelf for styling object or reading material.',
-    manufacturabilityNote: 'Standard production — 3–4 weeks. Designed as matched pair production.',
+    notes: 'Proporcjonowany do użytku przy łóżku Nido. Szuflada z otwarciem push-to-open (bez uchwytu). Dolna półka na obiekt stylingowy lub materiał do czytania.',
+    manufacturabilityNote: 'Produkcja standardowa — 3–4 tygodnie. Projektowany do produkcji jako para dopasowana.',
   },
 }
 
@@ -98,8 +98,8 @@ const DESKS: Record<BudgetTier, FurniturePiece> = {
     material: 'Existing desk base retained — new surface styling only',
     finish: 'Desk pad in leather or cork added over existing surface',
     dimensions: 'Existing',
-    notes: 'At light refresh tier, desk replacement is not warranted. A considered desk pad, coordinated accessories tray, and lamp upgrade delivers the improvement required.',
-    manufacturabilityNote: 'No production required — sourced accessories only.',
+    notes: 'Na poziomie lekkiego odświeżenia wymiana biurka nie jest uzasadniona. Przemyślana mata biurkowa, skoordynowana taca na akcesoria i modernizacja lampy przynoszą wymaganą poprawę.',
+    manufacturabilityNote: 'Brak wymaganej produkcji — wyłącznie pozyskane akcesoria.',
   },
   'medium-upgrade': {
     name: 'Tana Desk',
@@ -107,8 +107,8 @@ const DESKS: Record<BudgetTier, FurniturePiece> = {
     material: 'White Oak or Ash — solid top with hairpin or tapered legs',
     finish: 'Natural Oil',
     dimensions: '120×55 cm × H 75 cm',
-    notes: 'Clean, unfussy desk proportioned for a working hotel room. Cable channel integrated at rear. Surface depth allows laptop + monitor if required.',
-    manufacturabilityNote: 'Standard production — 3–4 weeks. Leg finish matches bedside table programme.',
+    notes: 'Czyste, nieskomplikowane biurko proporcjonowane do funkcjonującego pokoju hotelowego. Zintegrowany kanał kablowy z tyłu. Głębokość blatu pozwala na laptop + monitor jeśli wymagane.',
+    manufacturabilityNote: 'Produkcja standardowa — 3–4 tygodnie. Wykończenie nóg zgodne z programem stolików nocnych.',
   },
   'premium-redesign': {
     name: 'Tana Desk — Full Zone',
@@ -116,8 +116,8 @@ const DESKS: Record<BudgetTier, FurniturePiece> = {
     material: 'Solid Oak top with integrated joinery surround — shelving and cable trunking built in',
     finish: 'Natural Oil on timber, matte black cable management elements',
     dimensions: '140×60 cm × H 75 cm, with 40 cm shelf above',
-    notes: 'Full desk zone design: work surface, integrated shelf unit, cable management trunking, and task light bracket. Designed as a considered joinery piece, not a standalone table.',
-    manufacturabilityNote: 'Bespoke joinery — 5–7 weeks. Requires wall fixing for shelf element.',
+    notes: 'Kompleksowy projekt strefy biurowej: blat roboczy, zintegrowany regał, prowadzenie kabli i wspornik lampy zadaniowej. Zaprojektowany jako przemyślany element stolarski, nie samodzielny stół.',
+    manufacturabilityNote: 'Stolarka na zamówienie — 5–7 tygodni. Wymaga mocowania ściennego dla elementu półki.',
   },
 }
 
@@ -131,8 +131,8 @@ const ACCENT_PIECES: Record<DesignStyle, FurniturePiece[]> = {
       material: 'Stoneware ceramic — wheel-thrown form, matte earth glaze',
       finish: 'Matte glaze in warm taupe or sand',
       dimensions: 'H 35 cm, shade Ø 40 cm linen drum',
-      notes: 'Organic form base communicates craft provenance. Linen shade in warm white.',
-      manufacturabilityNote: 'Sourced via WALABI artisan network. 2–3 week lead.',
+      notes: 'Organiczna forma podstawy komunikuje rzemieślnicze pochodzenie. Klosz lniany w ciepłej bieli.',
+      manufacturabilityNote: 'Pozyskiwane przez sieć rzemieślniczą WALABI. Czas realizacji 2–3 tygodnie.',
     },
   ],
   'arhaus-luxury': [
@@ -142,8 +142,8 @@ const ACCENT_PIECES: Record<DesignStyle, FurniturePiece[]> = {
       material: 'Aged brass stem — tripod or arc form — with heavyweight linen or empire shade',
       finish: 'Aged Brass — hand-finished',
       dimensions: 'H 160–175 cm',
-      notes: 'Statement piece for reading zone or corner. One per room maximum — not as a pair.',
-      manufacturabilityNote: 'Sourced. Lead time 2–4 weeks depending on stock.',
+      notes: 'Element statement dla strefy do czytania lub narożnika. Maksymalnie jeden na pokój — nie jako para.',
+      manufacturabilityNote: 'Pozyskiwane. Czas realizacji 2–4 tygodnie w zależności od stanu magazynowego.',
     },
   ],
   'japandi-hospitality': [
@@ -153,8 +153,8 @@ const ACCENT_PIECES: Record<DesignStyle, FurniturePiece[]> = {
       material: 'Honed travertine or sandstone — small block or sculptural form',
       finish: 'Honed natural surface, no polish',
       dimensions: 'Approx. 12×8 cm — tabletop object',
-      notes: 'Replaces flower arrangement. Permanent, does not require maintenance. Communicates design attention.',
-      manufacturabilityNote: 'Sourced via stone supplier. One-off procurement per project.',
+      notes: 'Zastępuje kompozycję kwiatową. Stały, niewymagający konserwacji. Komunikuje dbałość o projekt.',
+      manufacturabilityNote: 'Pozyskiwane od dostawcy kamienia. Jednorazowe zamówienie na projekt.',
     },
   ],
   'boutique-warm-minimalism': [
@@ -164,8 +164,8 @@ const ACCENT_PIECES: Record<DesignStyle, FurniturePiece[]> = {
       material: 'Terracotta or earthenware — simple cylindrical or tapered form',
       finish: 'Unglazed or single-tone matte glaze',
       dimensions: 'H 25–35 cm',
-      notes: 'Dried grass or single stem — not fresh flowers. Maintenance-free and photogenic.',
-      manufacturabilityNote: 'Sourced. Budget-conscious accent with high visual return.',
+      notes: 'Suszone trawy lub pojedyncza łodyga — nie świeże kwiaty. Bezobsługowy i fotogeniczny.',
+      manufacturabilityNote: 'Pozyskiwany. Oszczędny element akcentowy o wysokim zwrocie wizualnym.',
     },
   ],
 }
@@ -174,33 +174,33 @@ const ACCENT_PIECES: Record<DesignStyle, FurniturePiece[]> = {
 
 const TEXTILE_SPECS: Record<DesignStyle, string[]> = {
   'organic-modern': [
-    'Bedding: 200-thread-count stone-washed linen, oat or warm white. Two pillowcases, fitted sheet, flat sheet.',
-    'Duvet: Hungarian goose down alternative, weight 400 gsm, linen cover',
-    'Throw: Waffle-weave cotton in terracotta or clay — folded at bed foot',
-    'Cushions: 2× linen in complementary tones — 50×50 cm',
-    'Curtains: Linen-look fabric, full-length, off-white. Eyelet heading, ceiling-mounted track.',
+    'Pościel: prana kamieniem pościel lniana o 200 nitkach, owsiana lub ciepłobiała. Dwie poszewki, prześcieradło dopasowane, prześcieradło płaskie.',
+    'Kołdra: alternatywa dla puchu węgierskiej gęsi, waga 400 gsm, pokrowiec lniany',
+    'Narzuta: bawełna w splocie waflowym w kolorze terakoty lub gliny — złożona u stóp łóżka',
+    'Poduszki: 2× len w dopełniających odcieniach — 50×50 cm',
+    'Zasłony: tkanina o wyglądzie lnu, pełnej długości, złamana biel. Nagłówek oczka, szyna mocowana do sufitu.',
   ],
   'arhaus-luxury': [
-    'Bedding: Egyptian cotton sateen 400TC, deep ivory with contrast piping. Fully pressed.',
-    'Duvet: European goose down, 600 fill power, cotton casing',
-    'Coverlet: Matelassé cotton in champagne or warm cream — under duvet layer',
-    'Throw: Wool or cashmere blend in cognac or forest — draped at foot',
-    'Cushions: 3× set — velvet, woven, solid mix. 50×50 + 30×50 cm',
-    'Curtains: Full weight lined curtains, ceiling to floor, in coordinated fabric. Pinch pleat.',
+    'Pościel: satyna bawełniana egipska 400TC, głęboka kość słoniowa z kontrastowym obszyciem. W pełni wyprasowana.',
+    'Kołdra: europejski puch gęsi, 600 fill power, bawełniany pokrowiec',
+    'Narzuta: matelassé bawełniany w szampanie lub ciepłym kremie — pod warstwą kołdry',
+    'Narzuta dekoracyjna: wełna lub mieszanka kaszmiru w kolorze koniaku lub leśnym — draped u stóp',
+    'Poduszki: zestaw 3× — aksamit, tkanina, jednolita mieszanka. 50×50 + 30×50 cm',
+    'Zasłony: ciężkie podszyte zasłony, od sufitu do podłogi, w skoordynowanej tkaninie. Pinch pleat.',
   ],
   'japandi-hospitality': [
-    'Bedding: Stone-washed linen, warm grey or pale flax. Minimal. Properly pressed.',
-    'Duvet: Natural fibre fill, clean cover with no decoration',
-    'Throw: Single slim throw in muted sage or clay — folded precisely',
-    'Cushions: 1 only — linen, no pattern',
-    'Curtains: Linen-look pinch pleat, ceiling-mounted, monochrome. Full blackout lining.',
+    'Pościel: prana kamieniem pościel lniana, ciepła szarość lub jasny len. Minimalna. Właściwie wyprasowana.',
+    'Kołdra: wypełnienie z naturalnego włókna, czysty pokrowiec bez dekoracji',
+    'Narzuta: pojedyncza smukła narzuta w stonowanej szałwii lub glinie — złożona precyzyjnie',
+    'Poduszki: tylko 1 — len, bez wzoru',
+    'Zasłony: pinch pleat o wyglądzie lnu, mocowane do sufitu, monochromatyczne. Pełne podszewka zaciemniająca.',
   ],
   'boutique-warm-minimalism': [
-    'Bedding: Cotton percale 300TC, warm cream. Smooth finish, no decoration.',
-    'Duvet: Microfibre or down alternative — white, pressed',
-    'Throw: Light cotton knit or brushed cotton in warm sand — folded at foot',
-    'Cushions: 2× in coordinating neutral tones. 50×50 cm.',
-    'Curtains: Double system — sheer linen layer + block-out lining. Full drop, ceiling-mounted.',
+    'Pościel: bawełna percale 300TC, ciepły krem. Gładkie wykończenie, bez dekoracji.',
+    'Kołdra: mikrofibra lub alternatywa dla puchu — biała, prasowana',
+    'Narzuta: lekka bawełniana dzianina lub szczotkowana bawełna w ciepłym piasku — złożona u stóp',
+    'Poduszki: 2× w koordynujących neutralnych odcieniach. 50×50 cm.',
+    'Zasłony: podwójny system — sheerska warstwa lniana + zaciemniające podszewka. Pełny splot, mocowane do sufitu.',
   ],
 }
 
@@ -208,22 +208,22 @@ const TEXTILE_SPECS: Record<DesignStyle, string[]> = {
 
 const LIGHTING_SPECS: Record<BudgetTier, string[]> = {
   'light-refresh': [
-    'Bedside lamps: matched pair — ceramic or wood base, linen shade, E27 Edison bulb 2700K',
-    'Ceiling: replace bulb only — warm white 2700K, same fitting',
+    'Lampy przy łóżku: dopasowana para — ceramiczna lub drewniana podstawa, klosz lniany, żarówka E27 Edison 2700K',
+    'Sufit: wyłącznie wymiana żarówki — ciepła biel 2700K, ta sama oprawa',
   ],
   'medium-upgrade': [
-    'Ceiling: pendant in coordinating material — rattan, ceramic, or metal depending on style. Dimmable E27.',
-    'Bedside lamps: matched pair — base proportioned to new bed scale. Warm shade.',
-    'Desk: directional task lamp — matte black or brass to match hardware programme.',
-    'All bulbs: 2700K warm white. Dimmer on ceiling circuit.',
+    'Sufit: lampa wisząca w koordynującym materiale — rattanowa, ceramiczna lub metalowa zależnie od stylu. Ściemnialna E27.',
+    'Lampy przy łóżku: dopasowana para — podstawa proporcjonalna do nowej skali łóżka. Ciepły klosz.',
+    'Biurko: kierunkowa lampa zadaniowa — matowa czerń lub mosiądz zgodny z programem okuć.',
+    'Wszystkie żarówki: ciepła biel 2700K. Ściemniacz na obwodzie sufitu.',
   ],
   'premium-redesign': [
-    'Ambient: cove lighting behind headboard — 2700K LED strip, dimmable to 10%',
-    'Ceiling: statement pendant — custom or curated, matching design language',
-    'Bedside: integrated wall-mounted reading arms — retractable, directional',
-    'Desk: quality task lamp — in hardware programme finish',
-    'Floor lamp: one in reading or seating zone — statement piece',
-    'All circuits on dimmer. Scene programming for: arrival, sleep, morning.',
+    'Otoczenie: oświetlenie z karnisza za zagłówkiem — listwa LED 2700K, ściemniana do 10%',
+    'Sufit: lampa wisząca statement — na zamówienie lub dobrana, zgodna z językiem projektu',
+    'Przy łóżku: zintegrowane ścienne ramię do czytania — wysuwane, kierunkowe',
+    'Biurko: jakościowa lampa zadaniowa — w wykończeniu programu okuć',
+    'Lampa podłogowa: jedna w strefie czytania lub wypoczynkowej — element statement',
+    'Wszystkie obwody na ściemniaczach. Programowanie scen: przyjazd, sen, ranek.',
   ],
 }
 
@@ -255,12 +255,12 @@ export function runFurnitureConcept(
     textiles:     TEXTILE_SPECS[input.style],
     lighting:     LIGHTING_SPECS[input.budgetTier],
     practicalNotes: [
-      'All dimensions are indicative — confirm against as-built room survey before production',
-      'Bed frame to include anti-slip feet to protect floor finish',
-      'All timber components to be inspected and approved by client before finishing',
+      'Wszystkie wymiary są orientacyjne — przed produkcją należy potwierdzić na podstawie inwentaryzacji pokoju',
+      'Stelaż łóżka powinien posiadać antypoślizgowe nóżki chroniące wykończenie podłogi',
+      'Wszystkie elementy drewniane muszą być zaakceptowane przez klienta przed wykończeniem',
       input.budgetTier === 'premium-redesign'
-        ? 'Full installation by WALABI crew — delivery, assembly, positioning, punch list sign-off'
-        : 'Installation can be completed by hotel maintenance team with WALABI delivery checklist',
+        ? 'Pełna instalacja przez zespół WALABI — dostawa, montaż, ustawienie, odbiór z listą kontrolną'
+        : 'Instalacja może być wykonana przez zespół techniczny hotelu z listą kontrolną dostawy WALABI',
     ],
     walabiProductionNotes: productionNotes,
   }
@@ -269,11 +269,11 @@ export function runFurnitureConcept(
 function buildProductionNotes(input: ProjectInput): string {
   const tierNotes: Record<BudgetTier, string> = {
     'light-refresh':
-      'At light refresh scope, WALABI supplies and delivers accessories and textiles. No custom production required. Delivery within 5–7 business days of order confirmation.',
+      'W zakresie lekkiego odświeżenia WALABI dostarcza akcesoria i tkaniny. Bez wymaganej produkcji na zamówienie. Dostawa w ciągu 5–7 dni roboczych od potwierdzenia zamówienia.',
     'medium-upgrade':
-      'Standard production programme. Lead time 4–6 weeks from confirmed specification. WALABI coordinates delivery and provides installation checklist. Site supervision available on request.',
+      'Standardowy program produkcji. Czas realizacji 4–6 tygodni od potwierdzonej specyfikacji. WALABI koordynuje dostawę i dostarcza listę kontrolną instalacji. Nadzór na miejscu dostępny na życzenie.',
     'premium-redesign':
-      'Full bespoke programme. Production begins upon signed specification sheet and 50% deposit. WALABI project manager assigned at commission stage. Installation team manages full delivery, placement, and handover inspection.',
+      'Pełny program na zamówienie. Produkcja rozpoczyna się po podpisaniu arkusza specyfikacji i wpłacie 50% zaliczki. Kierownik projektu WALABI przydzielany na etapie zlecenia. Zespół instalacyjny zarządza pełną dostawą, ustawieniem i odbiorem.',
   }
   return tierNotes[input.budgetTier]
 }

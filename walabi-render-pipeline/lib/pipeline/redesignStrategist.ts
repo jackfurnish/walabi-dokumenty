@@ -8,63 +8,63 @@ import type { SpaceAnalysis, RedesignStrategy, FurnitureRecommendation } from '@
 // ============================================================
 
 const DESIGN_DIRECTIONS: Record<DesignStyle, string> = {
-  'organic-modern':            'Grounded warmth — introduce natural materials and organic form to create a room that feels genuinely lived-in and premium, not assembled from a catalogue.',
-  'arhaus-luxury':             'Layered American luxury — deep woods, plush upholstery, and brass accents build a room that communicates investment without appearing ostentatious.',
-  'japandi-hospitality':       'Disciplined calm — precise material choices and restrained form language create a space where every element earns its presence.',
-  'boutique-warm-minimalism':  'Edited comfort — a minimal framework with warm material moments: the room should feel like a considered retreat, not a neutral void.',
+  'organic-modern':            'Zakorzenione ciepło — wprowadzenie naturalnych materiałów i organicznych form tworzy pokój, który sprawia autentycznie zamieszkałe i premium wrażenie, nie zmontowane z katalogu.',
+  'arhaus-luxury':             'Warstwowy luksus w stylu amerykańskim — głębokie drewna, pluszowe tapicerki i akcenty z mosiądzu budują pokój komunikujący inwestycję bez ostentacji.',
+  'japandi-hospitality':       'Zdyscyplinowany spokój — precyzyjne wybory materiałowe i powściągliwy język form tworzą przestrzeń, w której każdy element zasługuje na swoje miejsce.',
+  'boutique-warm-minimalism':  'Edytowany komfort — minimalistyczna struktura z ciepłymi momentami materiałowymi: pokój powinien czuć się jak przemyślane schronienie, nie neutralna pustka.',
 }
 
 const GUEST_EMOTIONS: Record<DesignStyle, string> = {
-  'organic-modern':           'Rested, grounded, away from corporate sterility',
-  'arhaus-luxury':            'Pampered, impressed, willingness to extend the stay',
-  'japandi-hospitality':      'Calm, focused, grateful for the quiet quality',
-  'boutique-warm-minimalism': 'At ease, cosy without clutter, quietly pleased',
+  'organic-modern':           'Wypoczęty, uziemiony, daleko od korporacyjnej sterylności',
+  'arhaus-luxury':            'Rozpieszczony, pod wrażeniem, chętny do przedłużenia pobytu',
+  'japandi-hospitality':      'Spokojny, skupiony, wdzięczny za cichą jakość',
+  'boutique-warm-minimalism': 'Swobodny, przytulny bez bałaganu, cicho zadowolony',
 }
 
 const LIGHTING_RECS: Record<BudgetTier, string[]> = {
   'light-refresh': [
-    'Replace ceiling fixture bulbs with warm white (2700K) immediately',
-    'Introduce matching bedside table lamps with warm-toned shades',
-    'Add a simple reading lamp or wall bracket if bedside space allows',
+    'Natychmiastowa wymiana żarówek w oprawie sufitowej na ciepłą biel (2700K)',
+    'Wprowadzenie dopasowanych lamp stojących przy łóżku z ciepłymi kloszami',
+    'Dodanie prostej lampki do czytania lub kinkietu, jeśli pozwala na to miejsce przy łóżku',
   ],
   'medium-upgrade': [
-    'Replace ceiling fixture with a considered pendant or flush mount aligned with style',
-    'Specify bedside lamps as a matched pair — correct scale to the new bed',
-    'Add dimmer functionality to the main circuit',
-    'Consider cove or strip lighting behind headboard for ambient wash',
+    'Wymiana oprawy sufitowej na przemyślaną lampę wiszącą lub plafon zgodny ze stylem',
+    'Określenie lamp przy łóżku jako dopasowanej pary — właściwa skala do nowego łóżka',
+    'Dodanie funkcji ściemniacza do głównego obwodu',
+    'Rozważenie oświetlenia z karnisza lub listwy LED za zagłówkiem dla ambientowego rozmycia',
   ],
   'premium-redesign': [
-    'Full lighting design: ambient (cove/pendant), task (desk, reading), accent (artwork spot)',
-    'Specify warm LED strip for headboard cove — dimmable to 10%',
-    'Floor lamp in seating or reading zone',
-    'Replace all switches and sockets with premium finish aligned with hardware palette',
+    'Kompleksowy projekt oświetlenia: otoczenie (karnisz/wisząca), zadaniowe (biurko, czytanie), akcentowe (punkty na dzieła)',
+    'Ciepła listwa LED za zagłówkiem — ściemniana do 10%',
+    'Lampa podłogowa w strefie wypoczynkowej lub do czytania',
+    'Wymiana wszystkich wyłączników i gniazdek na premium wykończenie zgodne z paletą okuć',
   ],
 }
 
 const TEXTILE_RECS: Record<DesignStyle, string[]> = {
   'organic-modern': [
-    'Natural linen bedding in warm white or oat — not hotel-white',
-    'Textured throw at foot of bed: waffle-weave cotton or chunky knit',
-    'Sheer curtain layer added behind existing blind for softened light quality',
-    'Two accent cushions in complementary earthy tone',
+    'Naturalna lniana pościel w ciepłej bieli lub owsie — nie hotelowej bieli',
+    'Fakturowana narzuta u stóp łóżka: bawełna w splocie waflowym lub gruba dzianina',
+    'Dodatkowa warstwa z szeerskiej zasłony za istniejącą roletą dla złagodzonej jakości światła',
+    'Dwie poduszki akcentowe w dopełniającym ziemistym odcieniu',
   ],
   'arhaus-luxury': [
-    'High thread-count cotton bedding with contrast piping — deep ivory or champagne',
-    'Velvet or matelassé throw in warm cognac or forest tone',
-    'Full-length lined curtains with weighted hem — replacing synthetic roller',
-    'Three cushion set with mix of textures: velvet, woven, solid',
+    'Pościel z bawełny satynowej o wysokiej liczbie nitek z kontrastowym obszyciem — głęboka kość słoniowa lub szampan',
+    'Narzuta z aksamitu lub matelassé w ciepłym kolorze koniaku lub leśnej zieleni',
+    'Pełnej długości podszyte zasłony z obciążonym rąbkiem — zamiast syntetycznej rolety',
+    'Zestaw trzech poduszek z mieszanką faktur: aksamit, tkanina, jednolita',
   ],
   'japandi-hospitality': [
-    'Stone-washed linen bedding — no pattern, no bright white',
-    'Single slim throw in muted sage or warm clay',
-    'Linen-look pinch-pleat curtains to ceiling — maximum height illusion',
-    'One cushion accent only — material interest over quantity',
+    'Prana kamieniem pościel lniana — bez wzoru, bez jaskrawej bieli',
+    'Pojedyncza smukła narzuta w stonowanej szałwii lub ciepłej glinie',
+    'Zasłony lniane w stylu pinch-pleat do sufitu — maksymalna iluzja wysokości',
+    'Tylko jeden akcent poduszkowy — zainteresowanie materiałem ponad ilością',
   ],
   'boutique-warm-minimalism': [
-    'Cotton percale bedding in warm cream — smooth and fresh',
-    'Cotton knit or light wool throw — folded precisely at foot',
-    'Sheer + block-out double curtain system for light control flexibility',
-    'Two cushions maximum — solid tones, quality fabric',
+    'Pościel bawełniana percale w ciepłym kremie — gładka i świeża',
+    'Narzuta z bawełnianej dzianiny lub lekkiej wełny — złożona precyzyjnie u stóp',
+    'System podwójnych zasłon sheer + zaciemniające dla elastycznej kontroli światła',
+    'Maksymalnie dwie poduszki — jednolite odcienie, jakościowa tkanina',
   ],
 }
 
@@ -72,36 +72,36 @@ type FurnitureRecsMap = Record<BudgetTier, FurnitureRecommendation[]>
 
 const FURNITURE_RECS: FurnitureRecsMap = {
   'light-refresh': [
-    { item: 'Bed frame', action: 'keep', reason: 'Structurally sound; headboard textile upgrade sufficient at this tier' },
-    { item: 'Headboard cover / textile pad', action: 'replace', reason: 'Primary focal element — new upholstered panel dramatically changes first impression' },
-    { item: 'Bedside lamps', action: 'replace', reason: 'Current fixtures are lowest-cost hotel standard; lamp pair is highest-ROI light swap' },
-    { item: 'Bedding set', action: 'replace', reason: 'Immediate quality signal to guests — current synthetic visible in photos' },
-    { item: 'Ceiling fixture', action: 'keep', reason: 'Not critical at this tier; bulb swap to 2700K delivers improvement without electrician' },
-    { item: 'Decorative tray + objects', action: 'add', reason: 'Bedside styling depth for photography — currently bare' },
-    { item: 'Window curtain panel', action: 'replace', reason: 'Current roller blind is institutional; sheer drop panel adds softness at low cost' },
+    { item: 'Bed frame', action: 'keep', reason: 'Konstrukcyjnie sprawny; modernizacja tkaniny zagłówka wystarczająca na tym poziomie' },
+    { item: 'Headboard cover / textile pad', action: 'replace', reason: 'Główny element wiodący — nowy panel tapicerowany dramatycznie zmienia pierwsze wrażenie' },
+    { item: 'Bedside lamps', action: 'replace', reason: 'Obecne oprawy to najtańszy hotel standard; para lamp to wymiana oświetlenia o najwyższym ROI' },
+    { item: 'Bedding set', action: 'replace', reason: 'Natychmiastowy sygnał jakości dla gości — obecna tkanina syntetyczna widoczna na zdjęciach' },
+    { item: 'Ceiling fixture', action: 'keep', reason: 'Niekrytyczne na tym poziomie; wymiana żarówki na 2700K przynosi poprawę bez elektryka' },
+    { item: 'Decorative tray + objects', action: 'add', reason: 'Głębia stylingowa przy łóżku dla fotografii — obecnie puste' },
+    { item: 'Window curtain panel', action: 'replace', reason: 'Obecna roleta jest instytucjonalna; panel z sheerskiej tkaniny dodaje miękkości niskim kosztem' },
   ],
   'medium-upgrade': [
-    { item: 'Bed frame + headboard', action: 'replace', reason: 'Central statement — current piece communicates budget category immediately' },
-    { item: 'Bedside tables', action: 'replace', reason: 'Existing are undersized and mismatched; correct-scale pair needed for new bed' },
-    { item: 'Bedside lamps', action: 'replace', reason: 'Replace as matched pair aligned with new furniture style' },
-    { item: 'Desk / work surface', action: 'replace', reason: 'Laminate surface inconsistent with upgraded room material language' },
-    { item: 'Desk chair', action: 'replace', reason: 'Standard hotel chair undermines upgraded desk; simple upholstered option needed' },
-    { item: 'Ceiling fixture', action: 'replace', reason: 'Pendant or quality flush mount anchors the upgraded palette' },
-    { item: 'Minibar / shelf unit', action: 'keep', reason: 'Functional requirement; restyle surface with objects at this tier' },
-    { item: 'Full textile programme', action: 'add', reason: 'Bedding, curtains, throw, cushions — complete the visual upgrade' },
-    { item: 'Artwork — one piece', action: 'add', reason: 'Bed wall anchor; prevents freshly upgraded room from feeling bare' },
+    { item: 'Bed frame + headboard', action: 'replace', reason: 'Centralny element — obecny natychmiast komunikuje kategorię budżetową' },
+    { item: 'Bedside tables', action: 'replace', reason: 'Istniejące są zbyt małe i niedopasowane; potrzebna para we właściwej skali do nowego łóżka' },
+    { item: 'Bedside lamps', action: 'replace', reason: 'Wymiana jako dopasowana para zgodna z nowym stylem mebli' },
+    { item: 'Desk / work surface', action: 'replace', reason: 'Powierzchnia laminatowa niezgodna z uaktualnionym językiem materiałowym pokoju' },
+    { item: 'Desk chair', action: 'replace', reason: 'Standardowe krzesło hotelowe podważa zmodernizowane biurko; potrzebna prosta tapicerowana opcja' },
+    { item: 'Ceiling fixture', action: 'replace', reason: 'Lampa wisząca lub quality plafon zakotwicza zmodernizowaną paletę' },
+    { item: 'Minibar / shelf unit', action: 'keep', reason: 'Wymóg funkcjonalny; przestrylizowanie powierzchni obiektami na tym poziomie' },
+    { item: 'Full textile programme', action: 'add', reason: 'Pościel, zasłony, narzuta, poduszki — dopełnienie wizualnej modernizacji' },
+    { item: 'Artwork — one piece', action: 'add', reason: 'Kotew ściany za łóżkiem; zapobiega temu, by świeżo zmodernizowany pokój wyglądał pusto' },
   ],
   'premium-redesign': [
-    { item: 'Bed frame — custom WALABI', action: 'replace', reason: 'Signature hero piece; custom dimensions and upholstery to match brief' },
-    { item: 'Bedside tables — matched pair', action: 'replace', reason: 'Custom or curated pieces coordinated with bed design language' },
-    { item: 'Wardrobe surround / panel', action: 'replace', reason: 'Existing laminate finish incompatible with premium palette; veneer or lacquer replacement' },
-    { item: 'Desk + storage unit', action: 'replace', reason: 'Full desk zone redesign: surface, shelf, cable management integrated' },
-    { item: 'Desk chair', action: 'replace', reason: 'Quality upholstered piece — visible in room photography' },
-    { item: 'All lighting fixtures', action: 'replace', reason: 'Full lighting design: pendant, bedside, desk, accent' },
-    { item: 'Minibar unit', action: 'replace', reason: 'Integrate or rehouse in custom joinery — remove institutional appliance from view' },
-    { item: 'Full textile programme', action: 'add', reason: 'Premium bedding, lined curtains, throw, cushion set, bath textiles' },
-    { item: 'Art + object programme', action: 'add', reason: 'Curated artwork, mirror, statement objects — hotel brand story layer' },
-    { item: 'All hardware', action: 'replace', reason: 'Door handles, coat hooks, bathroom fittings — detail alignment critical at this tier' },
+    { item: 'Bed frame — custom WALABI', action: 'replace', reason: 'Sygnaturowy element wiodący; niestandardowe wymiary i tapicerka zgodna z briefem' },
+    { item: 'Bedside tables — matched pair', action: 'replace', reason: 'Niestandardowe lub dobrane elementy skoordynowane z językiem projektu łóżka' },
+    { item: 'Wardrobe surround / panel', action: 'replace', reason: 'Istniejące wykończenie laminatowe niezgodne z premium paletą; wymiana na fornir lub lakier' },
+    { item: 'Desk + storage unit', action: 'replace', reason: 'Pełny redesign strefy biurowej: blat, półka, zarządzanie kablami zintegrowane' },
+    { item: 'Desk chair', action: 'replace', reason: 'Jakościowy tapicerowany element — widoczny na zdjęciach pokoju' },
+    { item: 'All lighting fixtures', action: 'replace', reason: 'Kompleksowy projekt oświetlenia: wisząca, przy łóżku, biurko, akcentowe' },
+    { item: 'Minibar unit', action: 'replace', reason: 'Integracja lub przeniesienie do niestandardowej stolarki — usunięcie instytucjonalnego urządzenia z widoku' },
+    { item: 'Full textile programme', action: 'add', reason: 'Premium pościel, podszyte zasłony, narzuta, zestaw poduszek, tekstylia łazienkowe' },
+    { item: 'Art + object programme', action: 'add', reason: 'Kuratorowane dzieła, lustro, obiekty statement — warstwa historii marki hotelu' },
+    { item: 'All hardware', action: 'replace', reason: 'Klamki, wieszaki, okucia łazienkowe — spójność detali krytyczna na tym poziomie' },
   ],
 }
 
@@ -112,34 +112,34 @@ const COST_RATIOS: Record<BudgetTier, RedesignStrategy['costEffortRatio']> = {
 }
 
 const IMPACT_STATEMENTS: Record<BudgetTier, string> = {
-  'light-refresh':    'Significant improvement in online photography quality and perceived room tier — achievable without any tradespeople on site.',
-  'medium-upgrade':   'Visible tier upgrade in Booking.com and TripAdvisor guest photography. Room should read as a genuine 4★ rather than aspirational 3★.',
-  'premium-redesign': 'Transformational — room becomes a brand asset and revenue driver. Custom WALABI pieces differentiate the property from competing hotels in the category.',
+  'light-refresh':    'Znacząca poprawa jakości fotografii online i postrzeganego poziomu pokoju — osiągalna bez żadnych fachowców na miejscu.',
+  'medium-upgrade':   'Widoczny awans kategorii na zdjęciach gości Booking.com i TripAdvisor. Pokój powinien wyglądać jako autentyczne 4★, a nie aspiracyjne 3★.',
+  'premium-redesign': 'Transformacyjny — pokój staje się aktywem marki i generatorem przychodów. Niestandardowe elementy WALABI wyróżniają obiekt spośród konkurujących hoteli w kategorii.',
 }
 
 const PRIORITY_ACTIONS: Record<BudgetTier, string[]> = {
   'light-refresh': [
-    'Order bedside lamp pair (matched) — install immediately without electrician',
-    'Replace bedding set with natural-fibre alternative in warm white',
-    'Swap ceiling bulbs to 2700K warm white (same fitting, no cost)',
-    'Add linen-textured curtain drop over existing blind',
-    'Style bedside tray with 2–3 considered objects for photography',
+    'Zamówienie pary lamp przy łóżku (dopasowanych) — natychmiastowy montaż bez elektryka',
+    'Wymiana pościeli na alternatywę z naturalnego włókna w ciepłej bieli',
+    'Wymiana żarówek sufitowych na ciepłą biel 2700K (ta sama oprawa, zerowy koszt)',
+    'Dodanie zasłony o fakturze lnu nad istniejącą roletą',
+    'Zestylizowanie tacy przy łóżku z 2–3 przemyślanymi obiektami do fotografii',
   ],
   'medium-upgrade': [
-    'Specify and order custom or curated bed frame + headboard — longest lead time item',
-    'Select matched bedside table pair at correct scale to new bed',
-    'Commission ceiling pendant or quality flush mount',
-    'Order full textile programme coordinated with new palette',
-    'Source one artwork piece for bed wall before photography',
-    'Replace desk and task chair to complete material consistency',
+    'Określenie i zamówienie niestandardowego lub dobranego stelaża łóżka z zagłówkiem — najdłuższy czas realizacji',
+    'Wybór dopasowanej pary stolików nocnych we właściwej skali do nowego łóżka',
+    'Zamówienie lampy wiszącej lub quality plafonu',
+    'Zamówienie kompletnego programu tkanin skoordynowanego z nową paletą',
+    'Pozyskanie jednego dzieła sztuki na ścianę za łóżkiem przed sesją fotograficzną',
+    'Wymiana biurka i krzesła zadaniowego dla spójności materiałowej',
   ],
   'premium-redesign': [
-    'Commission WALABI custom bed frame — agree dimensions, material, finish',
-    'Complete furniture programme specification before any orders placed',
-    'Finalise lighting design with qualified designer — permit if cove work required',
-    'Brief textile consultant or source full programme through WALABI network',
-    'Art direction brief: agree artwork programme and installation plan',
-    'Schedule installation sequence: lighting first, furniture, textiles, objects',
+    'Zlecenie niestandardowego stelaża łóżka WALABI — uzgodnienie wymiarów, materiału, wykończenia',
+    'Kompletna specyfikacja programu meblowego przed złożeniem jakichkolwiek zamówień',
+    'Finalizacja projektu oświetlenia z wykwalifikowanym projektantem — pozwolenie jeśli wymagane prace w karniszu',
+    'Brief dla konsultanta tekstylnego lub pozyskanie kompletnego programu przez sieć WALABI',
+    'Brief art direction: uzgodnienie programu dzieł i planu instalacji',
+    'Zaplanowanie sekwencji instalacji: najpierw oświetlenie, meble, tkaniny, obiekty',
   ],
 }
 
@@ -162,16 +162,16 @@ export function runRedesignStrategist(
 
 function buildStrategySummary(input: ProjectInput): string {
   const styleNote: Record<string, string> = {
-    'organic-modern':           'natural material warmth and organic form',
-    'arhaus-luxury':            'layered luxury and material depth',
-    'japandi-hospitality':      'material precision and disciplined calm',
-    'boutique-warm-minimalism': 'edited comfort and warm restraint',
+    'organic-modern':           'ciepło naturalnych materiałów i organiczne formy',
+    'arhaus-luxury':            'warstwowy luksus i głębię materiałową',
+    'japandi-hospitality':      'precyzję materiałową i zdyscyplinowany spokój',
+    'boutique-warm-minimalism': 'edytowany komfort i ciepłe powściągnięcie',
   }
   const budgetFrame: Record<string, string> = {
-    'light-refresh':    'Within a light refresh budget, the strategy concentrates investment on the three highest-ROI touchpoints: lighting warmth, textile quality, and one focal statement element.',
-    'medium-upgrade':   'A medium upgrade allows a fundamental shift in the room\'s furniture language — replacing the primary pieces that currently communicate budget category.',
-    'premium-redesign': 'A premium redesign commissions WALABI\'s full capability: custom furniture, considered lighting design, and a complete material programme — delivering a room that becomes a brand differentiator.',
+    'light-refresh':    'W ramach budżetu lekkiego odświeżenia, strategia koncentruje inwestycję na trzech punktach o najwyższym ROI: ciepło oświetlenia, jakość tkanin i jeden wiodący element.',
+    'medium-upgrade':   'Średnia modernizacja pozwala na fundamentalną zmianę języka meblowego pokoju — wymianę głównych elementów, które obecnie komunikują kategorię budżetową.',
+    'premium-redesign': 'Premium redesign zleca pełne możliwości WALABI: niestandardowe meble, przemyślany projekt oświetlenia i kompletny program materiałowy — tworząc pokój, który staje się wyróżnikiem marki.',
   }
 
-  return `${budgetFrame[input.budgetTier]} The design direction leans into ${styleNote[input.style]}, with every decision serving the goal of improving guest perception and room photography quality.`
+  return `${budgetFrame[input.budgetTier]} Kierunek projektowy stawia na ${styleNote[input.style]}, przy czym każda decyzja służy celowi poprawy percepcji gości i jakości fotografii pokoju.`
 }

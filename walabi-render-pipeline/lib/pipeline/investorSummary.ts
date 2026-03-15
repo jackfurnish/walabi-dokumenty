@@ -16,132 +16,132 @@ import { getRoomTypeLabel, getStyleLabel, getBudgetTierLabel } from '@/constants
 
 const CONCEPT_TITLES: Record<DesignStyle, Record<RoomType, string>> = {
   'organic-modern': {
-    'hotel-room':        'The Grounded Room — Organic Material Upgrade',
-    'boutique-suite':    'The Living Suite — Organic Modern Transformation',
-    'apartment-bedroom': 'The Warm Apartment — Organic Residential Upgrade',
+    'hotel-room':        'Zakorzeniony Pokój — Modernizacja Materiałów Organicznych',
+    'boutique-suite':    'Żywy Apartament — Transformacja w Stylu Organic Modern',
+    'apartment-bedroom': 'Ciepła Sypialnia — Organiczna Modernizacja Mieszkalna',
   },
   'arhaus-luxury': {
-    'hotel-room':        'The Considered Room — Layered Luxury Upgrade',
-    'boutique-suite':    'The Grand Suite — American Craft Luxury Redesign',
-    'apartment-bedroom': 'The Generous Bedroom — Layered Material Programme',
+    'hotel-room':        'Przemyślany Pokój — Modernizacja Warstwowego Luksusu',
+    'boutique-suite':    'Grand Suite — Redesign w Stylu Amerykańskiego Rzemiosła',
+    'apartment-bedroom': 'Hojny Pokój — Warstwowy Program Materiałowy',
   },
   'japandi-hospitality': {
-    'hotel-room':        'The Quiet Room — Japandi Material Discipline',
-    'boutique-suite':    'The Still Suite — Japandi Hospitality Concept',
-    'apartment-bedroom': 'The Considered Bedroom — Disciplined Material Calm',
+    'hotel-room':        'Cichy Pokój — Japandi Dyscyplina Materiałowa',
+    'boutique-suite':    'Spokojny Apartament — Koncepcja Japandi Hospitality',
+    'apartment-bedroom': 'Przemyślana Sypialnia — Zdyscyplinowany Spokój Materiałowy',
   },
   'boutique-warm-minimalism': {
-    'hotel-room':        'The Clean Room — Warm Minimal Upgrade',
-    'boutique-suite':    'The Boutique Suite — Warm Minimalism Redesign',
-    'apartment-bedroom': 'The Edit — Boutique Warm Minimalism Programme',
+    'hotel-room':        'Czysty Pokój — Ciepła Minimalistyczna Modernizacja',
+    'boutique-suite':    'Boutique Suite — Redesign Ciepłego Minimalizmu',
+    'apartment-bedroom': 'Edycja — Program Butikowego Ciepłego Minimalizmu',
   },
 }
 
 const ELEVATOR_PITCHES: Record<BudgetTier, (style: string, room: string) => string> = {
   'light-refresh': (style, room) =>
-    `A targeted ${style} refresh transforms this ${room} from standard-issue to review-worthy — through textile quality, lighting warmth, and considered styling — without any tradespeople, structural change, or extended room closure.`,
+    `Ukierunkowane odświeżenie w stylu ${style} przekształca ten ${room} ze standardowego w warty recenzji — poprzez jakość tkanin, ciepło oświetlenia i przemyślany styling — bez żadnych fachowców, zmian konstrukcyjnych ani długiego zamknięcia pokoju.`,
 
   'medium-upgrade': (style, room) =>
-    `A selective ${style} furniture upgrade replaces the primary pieces communicating budget category in this ${room}, delivering a visible tier shift that guests recognise immediately — and photograph.`,
+    `Selektywna modernizacja mebli w stylu ${style} zastępuje główne elementy komunikujące kategorię budżetową w tym ${room}, dostarczając widoczny awans kategorii, który goście rozpoznają natychmiast — i fotografują.`,
 
   'premium-redesign': (style, room) =>
-    `A full ${style} redesign by WALABI converts this ${room} into a brand differentiator: custom-manufactured furniture, considered lighting design, and a complete material programme that sets the property apart from every competitor in its category.`,
+    `Pełny redesign w stylu ${style} przez WALABI przekształca ten ${room} w wyróżnik marki: meble wykonane na zamówienie, przemyślany projekt oświetlenia i kompletny program materiałowy, który wyróżnia obiekt spośród każdego konkurenta w swojej kategorii.`,
 }
 
 const DESIGN_NARRATIVES: Record<DesignStyle, string> = {
   'organic-modern':
-    'The redesign introduces natural material warmth as its primary language: white oak, linen, stoneware, and travertine replace the synthetic surfaces that currently communicate cost rather than care. The result is a room that feels as though it was assembled by someone with taste — not by a procurement team with a budget ceiling.',
+    'Redesign wprowadza ciepło naturalnych materiałów jako swój główny język: biały dąb, len, kamionka i trawertyn zastępują syntetyczne powierzchnie, które obecnie komunikują koszt zamiast starań. Efektem jest pokój, który sprawia wrażenie zmontowanego przez kogoś ze smakiem — nie przez zespół zakupów z limitem budżetowym.',
 
   'arhaus-luxury':
-    'The concept draws on the American craft furniture tradition: deep wood tones, plush upholstery, layered textiles, and brass details build a room that communicates investment without appearing showy. The guest understands the tier before reading the room card.',
+    'Koncepcja czerpie z tradycji amerykańskiego rzemiosła meblowego: głębokie odcienie drewna, pluszowa tapicerka, warstwowe tkaniny i detale z mosiądzu budują pokój komunikujący inwestycję bez ostentacji. Gość rozumie poziom, zanim przeczyta kartę pokoju.',
 
   'japandi-hospitality':
-    'The redesign applies material precision as its primary tool: each element present has earned its place, and each element absent was deliberately removed. The result is a room where guests feel the quality through the absence of compromise — the linen has weight, the wood has grain, the surfaces have texture.',
+    'Redesign stosuje precyzję materiałową jako swoje główne narzędzie: każdy obecny element zasłużył na swoje miejsce, a każdy nieobecny został celowo usunięty. Efektem jest pokój, w którym goście odczuwają jakość poprzez brak kompromisów — len ma ciężar, drewno ma usłojenie, powierzchnie mają fakturę.',
 
   'boutique-warm-minimalism':
-    'The concept creates a commercially legible premium — warm, clean, and genuinely comfortable, without the labour of extreme minimalism or the cost of full luxury. This is the style most likely to generate strong photography, high review scores, and repeat bookings across a broad guest demographic.',
+    'Koncepcja tworzy komercyjnie czytelne premium — ciepłe, czyste i autentycznie komfortowe, bez wysiłku ekstremalnego minimalizmu ani kosztów pełnego luksusu. To styl najbardziej prawdopodobny do generowania mocnej fotografii, wysokich ocen recenzji i ponownych rezerwacji w szerokim segmencie gości.',
 }
 
 const BUSINESS_IMPACTS: Record<BudgetTier, string> = {
   'light-refresh':
-    'At light refresh investment, the primary business return is photographic: improved room imagery on Booking.com, TripAdvisor, and the hotel\'s own website drives conversion from browse to book. Secondary impact is guest perception at check-in — the room exceeds expectation rather than confirming it. Expected review score improvement: 0.2–0.4 stars within 60 days of completion.',
+    'Przy inwestycji lekkiego odświeżenia, główny zwrot biznesowy jest fotograficzny: ulepszone zdjęcia pokoi na Booking.com, TripAdvisor i własnej stronie hotelu napędzają konwersję z przeglądania na rezerwację. Wtórny wpływ to percepcja gości przy zameldowaniu — pokój przekracza oczekiwania zamiast je potwierdzać. Oczekiwana poprawa oceny recenzji: 0,2–0,4 gwiazdki w ciągu 60 dni od zakończenia.',
 
   'medium-upgrade':
-    'A medium upgrade delivers tier reclassification in practice, if not in official category. Guests who book a 3★ room and encounter a 4★ space produce disproportionately positive reviews — and the hotel can begin to price accordingly. Booking platforms reward improved photography with improved search ranking. Expected ADR (average daily rate) opportunity: +8–15% depending on market. Payback period at 70% occupancy: typically 14–22 months.',
+    'Średnia modernizacja dostarcza praktyczną reklasyfikację kategorii, nawet jeśli nie oficjalną. Goście rezerwujący pokój 3★ i trafiający na przestrzeń 4★ wystawiają nieproporcjonalnie pozytywne recenzje — i hotel może zacząć odpowiednio wyceniać. Platformy rezerwacyjne nagradzają ulepszoną fotografię lepszą pozycją w wynikach wyszukiwania. Oczekiwana możliwość ADR (średnia dzienna stawka): +8–15% w zależności od rynku. Okres zwrotu przy 70% obłożeniu: zazwyczaj 14–22 miesiące.',
 
   'premium-redesign':
-    'A premium WALABI redesign creates a revenue asset: rooms at the new standard command a meaningful rate premium, attract media attention, support F&B and spa upsell, and provide the photography foundation for a brand repositioning. In portfolio hotels, a flagship redesigned room becomes the reference point that raises the perceived bar for the entire property. Expected ADR opportunity: +20–35% for the redesigned category. The investment is not a cost — it is a margin improvement programme.',
+    'Premium redesign WALABI tworzy aktywa przychodów: pokoje na nowym standardzie osiągają znaczącą premię cenową, przyciągają uwagę mediów, wspierają upselling F&B i spa oraz zapewniają fotograficzną podstawę dla repozycjonowania marki. W hotelach portfelowych flagowo przeprojektowany pokój staje się punktem odniesienia podnoszącym postrzeganą poprzeczkę dla całego obiektu. Oczekiwana możliwość ADR: +20–35% dla przeprojektowanej kategorii. Inwestycja to nie koszt — to program poprawy marży.',
 }
 
 const PROPOSED_SCOPES: Record<BudgetTier, string[]> = {
   'light-refresh': [
-    'Bedside lamp pair replacement (matched, warm-toned)',
-    'Full bedding programme: linen or cotton base, throw, cushions',
-    'Window treatment: sheer drop panel replacing existing roller blind',
-    'Bedside and surface styling: tray, ceramic object, considered accessories',
-    'Ceiling bulb replacement: 2700K warm white throughout',
+    'Wymiana pary lamp przy łóżku (dopasowane, ciepłe odcienie)',
+    'Kompletny program pościeli: baza lniana lub bawełniana, narzuta, poduszki',
+    'Zasłony: sheerski panel zastępujący istniejącą roletę',
+    'Styling przy łóżku i na powierzchniach: taca, ceramiczny obiekt, przemyślane akcesoria',
+    'Wymiana żarówek sufitowych: ciepła biel 2700K',
   ],
   'medium-upgrade': [
-    'Bed frame and upholstered headboard: new statement piece',
-    'Matched bedside table pair at correct scale',
-    'Ceiling pendant fixture and dimmer installation',
-    'Bedside lamp pair aligned with new style palette',
-    'Desk and desk chair replacement',
-    'Full textile programme: bedding, curtains, throw, cushions',
-    'One artwork piece for bed wall',
+    'Stelaż łóżka i tapicerowany zagłówek: nowy element statement',
+    'Dopasowana para stolików nocnych we właściwej skali',
+    'Lampa wisząca sufitowa i instalacja ściemniacza',
+    'Para lamp przy łóżku zgodna z nową paletą stylistyczną',
+    'Wymiana biurka i krzesła biurowego',
+    'Kompletny program tkanin: pościel, zasłony, narzuta, poduszki',
+    'Jeden element sztuki na ścianę za łóżkiem',
   ],
   'premium-redesign': [
-    'Custom WALABI bed frame and headboard — bespoke manufacture',
-    'Full furniture programme: bed, bedside tables, desk zone, wardrobe surround',
-    'Lighting design and installation: ambient, task, accent',
-    'Wardrobe surround and storage joinery in programme finish',
-    'Complete textile programme: bedding, curtains, bath textiles',
-    'Art and object programme: curated selection aligned with brand story',
-    'Hardware replacement: all visible fittings in consistent palette',
-    'WALABI project management: specification, production, delivery, installation, handover',
+    'Niestandardowy stelaż łóżka i zagłówek WALABI — produkcja na zamówienie',
+    'Kompletny program meblowy: łóżko, stoliki nocne, strefa biurkowa, obudowa szafy',
+    'Projekt i instalacja oświetlenia: otoczenie, zadaniowe, akcentowe',
+    'Stolarka szafy i przechowywania w wykończeniu programu',
+    'Kompletny program tkanin: pościel, zasłony, tekstylia łazienkowe',
+    'Program sztuki i obiektów: kuratorowany wybór zgodny z historią marki',
+    'Wymiana okuć: wszystkie widoczne elementy w spójnej palecie',
+    'Zarządzanie projektem WALABI: specyfikacja, produkcja, dostawa, instalacja, odbiór',
   ],
 }
 
 const TIMELINES: Record<BudgetTier, string> = {
-  'light-refresh':    '5–7 business days from order. No room closure required — accessories delivered and styled in under 3 hours.',
-  'medium-upgrade':   '4–6 weeks production lead time. Room closure: 1–2 days for furniture delivery and installation.',
-  'premium-redesign': '6–10 weeks from confirmed specification. Room closure: 3–5 days for full installation programme. WALABI project manager on site throughout.',
+  'light-refresh':    '5–7 dni roboczych od zamówienia. Nie wymagane zamknięcie pokoju — akcesoria dostarczone i zestylizowane w mniej niż 3 godziny.',
+  'medium-upgrade':   '4–6 tygodni czasu realizacji produkcji. Zamknięcie pokoju: 1–2 dni na dostawę i instalację mebli.',
+  'premium-redesign': '6–10 tygodni od potwierdzonej specyfikacji. Zamknięcie pokoju: 3–5 dni dla pełnego programu instalacji. Kierownik projektu WALABI na miejscu przez cały czas.',
 }
 
 const PERCEPTION_UPGRADES: Record<DesignStyle, string> = {
   'organic-modern':
-    'Guests report the room as "different from other hotels" — they notice the material quality, photograph it, and share it. The room begins generating its own marketing.',
+    'Goście opisują pokój jako „inny niż inne hotele" — zauważają jakość materiałów, fotografują go i udostępniają. Pokój zaczyna generować własny marketing.',
 
   'arhaus-luxury':
-    'Guests feel the investment without being told about it. The weight of the upholstery, the finish of the wood, the quality of the bedding — these register subconsciously and produce the review score you cannot buy with a better TV.',
+    'Goście odczuwają inwestycję bez informowania ich o niej. Ciężar tapicerki, wykończenie drewna, jakość pościeli — te elementy rejestrują się podświadomie i przynoszą ocenę recenzji, której nie można kupić lepszym telewizorem.',
 
   'japandi-hospitality':
-    'Guests seeking premium quietness — a growing and high-value demographic — recognise the design language immediately. They extend stays, return, and recommend to peers who share the same preference for material quality over decorative noise.',
+    'Goście poszukujący premium ciszy — rosnąca i wysokowartościowa demografia — natychmiast rozpoznają język projektu. Przedłużają pobyty, wracają i polecają rówieśnikom, którzy podzielają tę samą preferencję dla jakości materiałów nad dekoracyjnym hałasem.',
 
   'boutique-warm-minimalism':
-    'The room photographs clean, reads as premium, and feels genuinely comfortable. This combination — rare in the 3–4★ market — drives both online conversion and in-person satisfaction.',
+    'Pokój fotografuje się czysto, odczytuje jako premium i czuje autentycznie komfortowo. Ta kombinacja — rzadka na rynku 3–4★ — napędza zarówno konwersję online, jak i satysfakcję na miejscu.',
 }
 
 const WALABI_ROLE_STATEMENTS: Record<BudgetTier, string> = {
   'light-refresh':
-    'WALABI supplies, coordinates, and delivers the complete accessories and textile programme. Single point of contact for sourcing, quality control, and delivery logistics.',
+    'WALABI dostarcza, koordynuje i realizuje kompletny program akcesoriów i tkanin. Jeden punkt kontaktu dla pozyskiwania, kontroli jakości i logistyki dostaw.',
 
   'medium-upgrade':
-    'WALABI specifies, sources, and delivers the furniture programme with production coordination. WALABI acts as the hotel\'s design and procurement partner — removing the complexity of managing multiple suppliers.',
+    'WALABI specyfikuje, pozyskuje i dostarcza program meblowy z koordynacją produkcji. WALABI działa jako partner projektowy i zakupowy hotelu — usuwając złożoność zarządzania wieloma dostawcami.',
 
   'premium-redesign':
-    'WALABI designs, manufactures, and installs the complete room programme. From initial specification through production, delivery, and site installation — one partner, one responsibility. This is not a furniture supplier relationship; it is a project delivery relationship.',
+    'WALABI projektuje, produkuje i instaluje kompletny program pokoju. Od początkowej specyfikacji przez produkcję, dostawę i instalację na miejscu — jeden partner, jedna odpowiedzialność. To nie jest relacja dostawcy mebli; to relacja realizacji projektu.',
 }
 
 const CTAS: Record<BudgetTier, string> = {
   'light-refresh':
-    'Contact WALABI to confirm product selection, receive a finalised quote, and schedule delivery. Turnaround from first call to completed room: under two weeks.',
+    'Skontaktuj się z WALABI, aby potwierdzić wybór produktów, otrzymać ostateczną wycenę i zaplanować dostawę. Czas realizacji od pierwszej rozmowy do ukończonego pokoju: poniżej dwóch tygodni.',
 
   'medium-upgrade':
-    'Contact WALABI to begin specification. A brief on-site survey (half day) confirms dimensions and installation requirements. Production begins upon deposit confirmation.',
+    'Skontaktuj się z WALABI, aby rozpocząć specyfikację. Krótka wizja na miejscu (pół dnia) potwierdza wymiary i wymagania instalacyjne. Produkcja rozpoczyna się po potwierdzeniu zaliczki.',
 
   'premium-redesign':
-    'Schedule an initial consultation with WALABI\'s design team. We present a full specification proposal within five business days of site visit. Production begins upon client approval — no assumptions, no surprises.',
+    'Zaplanuj wstępną konsultację z zespołem projektowym WALABI. Przedstawiamy pełną propozycję specyfikacji w ciągu pięciu dni roboczych od wizyty na miejscu. Produkcja rozpoczyna się po zatwierdzeniu przez klienta — bez założeń, bez niespodzianek.',
 }
 
 export function runInvestorSummary(

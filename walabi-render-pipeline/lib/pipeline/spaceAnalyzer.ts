@@ -9,86 +9,86 @@ import type { SpaceAnalysis } from '@/lib/schemas/pipeline'
 
 const ROOM_ISSUES: Record<RoomType, string[]> = {
   'hotel-room': [
-    'Generic synthetic textile headboard dominates focal wall without visual weight',
-    'Overhead ceiling fixture provides flat, shadow-free light — eliminates depth and warmth',
-    'Laminate furniture surfaces reflect harshly, telegraphing low cost',
-    'Bedside tables mismatched or undersized relative to bed scale',
-    'Window treatment lacks layering — single roller blind removes all softness',
-    'Exposed cable routing on bedside panel is visible in photography',
-    'Minibar unit placement breaks the visual flow of the room',
+    'Generyczny zagłówek z tkaniny syntetycznej dominuje ścianę główną bez odpowiedniej masy wizualnej',
+    'Pojedyncza lampa sufitowa tworzy płaskie, bezcieniowe oświetlenie — eliminuje głębię i ciepło',
+    'Powierzchnie mebli z laminatu odbijają ostre światło, sygnalizując niski koszt wykonania',
+    'Stoliki nocne niedopasowane lub zbyt małe w stosunku do skali łóżka',
+    'Zasłony pozbawione warstwowości — pojedyncza roleta eliminuje całą miękkość',
+    'Widoczne prowadzenie kabli na panelu przy łóżku jest widoczne na zdjęciach',
+    'Umieszczenie minibarku zaburza wizualny przepływ w pokoju',
   ],
   'boutique-suite': [
-    'Sitting area lacks a defining anchor piece — reads as afterthought',
-    'Ceiling height potential unexploited — no vertical elements draw the eye',
-    'Multiple conflicting wood tones create visual noise',
-    'Lack of intentional lighting zones — single source illuminates everything equally',
-    'Bathroom threshold area visible and unresolved aesthetically',
-    'Textile layering absent — single bedspread is insufficient for the tier',
-    'Statement wall opportunity behind bed or sofa unused',
+    'Strefa wypoczynkowa pozbawiona wyraźnego elementu wiodącego — sprawia wrażenie dorobionej',
+    'Potencjał wysokości sufitu niewykorzystany — brak elementów pionowych przyciągających wzrok',
+    'Wiele sprzecznych odcieni drewna tworzy wizualny chaos',
+    'Brak celowych stref oświetleniowych — jedno źródło oświetla wszystko równomiernie',
+    'Strefa przejścia do łazienki widoczna i nierozwiązana estetycznie',
+    'Brak warstwowania tkanin — pojedyncza narzuta niewystarczająca dla tego segmentu',
+    'Niewykorzystana możliwość ściany wiodącej za łóżkiem lub sofą',
   ],
   'apartment-bedroom': [
-    'Layout prioritises circulation over composition — furniture placed for convenience, not staging',
-    'Storage solutions visible and non-decorative',
-    'No considered colour story — walls and furniture in unrelated neutrals',
-    'Bed headboard absent or too low — bed reads as mattress on frame',
-    'Natural light source blocked partially by furniture placement',
-    'Ceiling element (fan, basic fixture) diminishes perceived quality',
+    'Układ priorytetyzuje komunikację nad kompozycją — meble ustawione dla wygody, nie do ekspozycji',
+    'Rozwiązania przechowywania widoczne i niedekoracyjne',
+    'Brak przemyślanej palety kolorystycznej — ściany i meble w niezwiązanych ze sobą neutralach',
+    'Zagłówek łóżka nieobecny lub zbyt niski — łóżko wygląda jak materac na stelażu',
+    'Naturalne źródło światła częściowo zasłonięte przez ustawienie mebli',
+    'Element sufitu (wentylator, zwykły kinkiet) obniża postrzeganą jakość',
   ],
 }
 
 const ROOM_STRENGTHS: Record<RoomType, string[]> = {
   'hotel-room': [
-    'Adequate floor area for a considered redesign',
-    'Standard room proportions allow modular furniture placement',
-    'Window provides usable natural light',
+    'Odpowiednia powierzchnia podłogi dla przemyślanego redesignu',
+    'Standardowe proporcje pokoju pozwalają na modularne ustawienie mebli',
+    'Okno zapewnia użyteczne naturalne oświetlenie',
   ],
   'boutique-suite': [
-    'Room footprint allows distinct zone separation',
-    'Ceiling height above standard — supports pendant lighting',
-    'Multiple walls suitable for feature treatment',
+    'Powierzchnia pokoju pozwala na wyraźne rozdzielenie stref',
+    'Wysokość sufitu powyżej standardu — wspiera oświetlenie wiszące',
+    'Wiele ścian nadających się do akcentowego wykończenia',
   ],
   'apartment-bedroom': [
-    'Residential scale creates immediate warmth potential',
-    'Wardrobe integration possible without structural change',
-    'Natural light from window creates photography-friendly conditions',
+    'Skala mieszkalna natychmiast tworzy potencjał ciepła',
+    'Integracja szafy możliwa bez zmian konstrukcyjnych',
+    'Naturalne światło z okna stwarza warunki przyjazne fotografii',
   ],
 }
 
 const FOCAL_POINTS: Record<RoomType, string> = {
-  'hotel-room':        'Bed wall — primary composition axis for guest photography',
-  'boutique-suite':    'Seating area / feature wall visible from entry — first impression zone',
-  'apartment-bedroom': 'Bed wall with natural light cross-reference — Instagram focal axis',
+  'hotel-room':        'Ściana za łóżkiem — główna oś kompozycji dla fotografii gości',
+  'boutique-suite':    'Strefa wypoczynkowa / ściana wiodąca widoczna od wejścia — strefa pierwszego wrażenia',
+  'apartment-bedroom': 'Ściana za łóżkiem z naturalnym oświetleniem krzyżowym — oś fotograficzna',
 }
 
 const LIGHTING_NOTES: Record<RoomType, string> = {
-  'hotel-room':        'Single ceiling source creates flat, institutional quality. Warm bedside layering absent.',
-  'boutique-suite':    'Overhead dominance. No ambient/accent separation. Pendant and floor lamp opportunities unused.',
-  'apartment-bedroom': 'Reliant on single window and overhead. Evening atmosphere non-existent without intervention.',
+  'hotel-room':        'Pojedyncze źródło sufitowe tworzy płaską, instytucjonalną jakość oświetlenia. Brak ciepłego warstwowania przy łóżku.',
+  'boutique-suite':    'Dominacja oświetlenia górnego. Brak rozdzielenia światła otoczenia i akcentowego. Nieużyte możliwości dla lamp wiszących i podłogowych.',
+  'apartment-bedroom': 'Zależność od pojedynczego okna i oświetlenia górnego. Atmosfera wieczorna nieistniejąca bez interwencji.',
 }
 
 const OPPORTUNITIES: Record<BudgetTier, string[]> = {
   'light-refresh': [
-    'Replace textiles (bedding, cushions, curtains) to immediately shift perceived quality',
-    'Introduce warm-toned bedside lighting to eliminate institutional feel',
-    'Add one considered decor layer (tray, art print, plant) for photography depth',
-    'Replace synthetic curtain panel with linen-textured drop for softer light quality',
+    'Wymiana tkanin (pościel, poduszki, zasłony) natychmiast podnosi postrzeganą jakość',
+    'Wprowadzenie ciepłego oświetlenia przy łóżku eliminuje instytucjonalny charakter',
+    'Dodanie jednej przemyślanej warstwy dekoracyjnej (taca, grafika, roślina) dla głębi fotograficznej',
+    'Wymiana syntetycznej zasłony na tkaninę o fakturze lnu dla miękkiej jakości światła',
   ],
   'medium-upgrade': [
-    'Replace bed frame and headboard as primary focal element',
-    'Introduce matching bedside tables at correct scale',
-    'Upgrade lighting: bedside lamps + ceiling pendant or cove option',
-    'Replace hard-surface minibar or desk unit with warm-material alternative',
-    'Add layered textile programme: base layer, throw, accent cushions',
-    'Introduce one artwork piece anchoring the bed wall composition',
+    'Wymiana stelaża łóżka i zagłówka jako głównego elementu wiodącego',
+    'Wprowadzenie dopasowanych stolików nocnych we właściwej skali',
+    'Modernizacja oświetlenia: lampy przy łóżku + wisząca lub opcja karnisza',
+    'Wymiana jednostki minibarku lub biurka na alternatywę z ciepłego materiału',
+    'Dodanie warstwowego programu tkanin: warstwa bazowa, narzuta, poduszki akcentowe',
+    'Wprowadzenie jednego dzieła sztuki zakotwiczającego kompozycję ściany za łóżkiem',
   ],
   'premium-redesign': [
-    'Custom WALABI bed frame and headboard as signature piece',
-    'Full furniture programme: bed, bedside tables, desk, wardrobe surround',
-    'Considered lighting design: ambient, task, accent across all zones',
-    'Bespoke wardrobe or storage integration aligned with design language',
-    'Full textile programme: bedding, curtains, cushions, throw, bathrobes',
-    'Art direction: curated artwork, mirrors, objects — aligned with brand story',
-    'Material upgrade on all visible surfaces: handles, fixtures, hooks',
+    'Niestandardowy stelaż łóżka WALABI jako element sygnaturowy',
+    'Kompletny program meblowy: łóżko, stoliki nocne, biurko, obudowa szafy',
+    'Przemyślany projekt oświetlenia: otoczenie, zadaniowe, akcentowe we wszystkich strefach',
+    'Na miarę szafa lub integracja przechowywania zgodna z językiem projektu',
+    'Kompletny program tkanin: pościel, zasłony, poduszki, narzuta, szlafroki',
+    'Art direction: kuratorowane dzieła, lustra, obiekty — zgodne z historią marki',
+    'Modernizacja materiałów na wszystkich widocznych powierzchniach: uchwyty, okucia, haki',
   ],
 }
 
@@ -121,10 +121,10 @@ export function runSpaceAnalyzer(input: ProjectInput): SpaceAnalysis {
 }
 
 function buildSummary(input: ProjectInput): string {
-  const roomLabel = { 'hotel-room': 'standard hotel room', 'boutique-suite': 'boutique suite', 'apartment-bedroom': 'apartment bedroom' }[input.roomType]
-  const budgetLabel = { 'light-refresh': 'targeted refresh', 'medium-upgrade': 'selective upgrade', 'premium-redesign': 'full concept redesign' }[input.budgetTier]
+  const roomLabel = { 'hotel-room': 'standardowy pokój hotelowy', 'boutique-suite': 'apartament butikowy', 'apartment-bedroom': 'sypialnia apartamentowa' }[input.roomType]
+  const budgetLabel = { 'light-refresh': 'ukierunkowane odświeżenie', 'medium-upgrade': 'selektywna modernizacja', 'premium-redesign': 'pełny redesign konceptualny' }[input.budgetTier]
 
-  return `This ${roomLabel} presents clear improvement potential through a ${budgetLabel}. The primary issues are concentrated in lighting quality, textile programme, and furniture material language — all addressable without structural intervention. The room's core proportions are workable; what's missing is considered curation and material discipline.`
+  return `Ten ${roomLabel} prezentuje wyraźny potencjał poprawy poprzez ${budgetLabel}. Główne problemy koncentrują się w jakości oświetlenia, programie tkanin i języku materiałowym mebli — wszystkie możliwe do rozwiązania bez ingerencji konstrukcyjnych. Podstawowe proporcje pokoju są do pracy; brakuje przemyślanej kuracji i dyscypliny materiałowej.`
 }
 
 function pickItems<T>(arr: T[], count: number): T[] {
