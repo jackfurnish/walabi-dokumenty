@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       const prompt = furnitureConceptPrompt(input, redesignStrategy, styleDirection)
       const raw = await provider.complete(prompt, {
         systemPrompt: FURNITURE_CONCEPT_SYSTEM,
-        maxTokens: 2500,
+        maxTokens: 1200,
       })
       output = parseAIResponse(raw, () => runFurnitureConcept(input, redesignStrategy, styleDirection))
     } else {

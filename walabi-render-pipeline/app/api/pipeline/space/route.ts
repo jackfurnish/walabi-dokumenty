@@ -52,12 +52,12 @@ export async function POST(req: NextRequest) {
       if (images.length > 0 && provider.completeWithImages) {
         raw = await provider.completeWithImages(prompt, images, {
           systemPrompt: SPACE_ANALYZER_SYSTEM,
-          maxTokens: 1500,
+          maxTokens: 1200,
         })
       } else {
         raw = await provider.complete(prompt, {
           systemPrompt: SPACE_ANALYZER_SYSTEM,
-          maxTokens: 1500,
+          maxTokens: 1200,
         })
       }
       output = parseAIResponse(raw, () => runSpaceAnalyzer(input))

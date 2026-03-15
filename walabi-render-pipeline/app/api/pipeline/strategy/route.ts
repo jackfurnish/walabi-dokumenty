@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       const prompt = redesignStrategistPrompt(input, spaceAnalysis)
       const raw = await provider.complete(prompt, {
         systemPrompt: REDESIGN_STRATEGIST_SYSTEM,
-        maxTokens: 2000,
+        maxTokens: 1200,
       })
       output = parseAIResponse(raw, () => runRedesignStrategist(input, spaceAnalysis))
     } else {

@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
       const prompt = renderPromptGeneratorPrompt(input, redesignStrategy, styleDirection, furnitureConcept)
       const raw = await provider.complete(prompt, {
         systemPrompt: RENDER_PROMPT_SYSTEM,
-        maxTokens: 1500,
+        maxTokens: 1200,
       })
       output = parseAIResponse(raw, () => runRenderPromptGenerator(input, spaceAnalysis, redesignStrategy, styleDirection, furnitureConcept))
     } else {

@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
       const prompt = investorSummaryPrompt(input, spaceAnalysis, redesignStrategy, styleDirection, furnitureConcept)
       const raw = await provider.complete(prompt, {
         systemPrompt: INVESTOR_SUMMARY_SYSTEM,
-        maxTokens: 2000,
+        maxTokens: 1200,
       })
       output = parseAIResponse(raw, () => runInvestorSummary(input, spaceAnalysis, redesignStrategy, styleDirection, furnitureConcept))
     } else {
