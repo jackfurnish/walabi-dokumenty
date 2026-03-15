@@ -38,9 +38,9 @@ export class AnthropicProvider implements AIProvider {
     this.client = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
     })
-    // claude-3-5-haiku-20241022: ~2-3s per call — fits Vercel Hobby 10s limit
+    // claude-3-haiku-20240307: ~1-2s per call — fits Vercel Hobby 10s limit
     // Switch to claude-sonnet-4-5 on Vercel Pro (300s limit)
-    this.defaultModel = process.env.ANTHROPIC_MODEL ?? 'claude-3-5-haiku-20241022'
+    this.defaultModel = process.env.ANTHROPIC_MODEL ?? 'claude-3-haiku-20240307'
   }
 
   async complete(prompt: string, options?: CompletionOptions): Promise<string> {
