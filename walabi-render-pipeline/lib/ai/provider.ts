@@ -38,7 +38,7 @@ export class AnthropicProvider implements AIProvider {
     this.client = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
     })
-    this.defaultModel = process.env.ANTHROPIC_MODEL ?? 'claude-opus-4-6'
+    this.defaultModel = process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-5'
   }
 
   async complete(prompt: string, options?: CompletionOptions): Promise<string> {

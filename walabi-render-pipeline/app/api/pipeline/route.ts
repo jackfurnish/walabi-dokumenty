@@ -127,32 +127,26 @@ export async function POST(req: NextRequest) {
       furnitureConcept = runFurnitureConcept(input, redesignStrategy, styleDirection)
     }
 
-    // ── E. Render Prompt ───────────────────────────────────
+    // ── E + F. Render Prompt + Investor Summary (parallel) ─
     let renderPromptPackage: RenderPromptPackage
-
-    if (useAI) {
-      const prompt = renderPromptGeneratorPrompt(input, redesignStrategy, styleDirection, furnitureConcept)
-      const raw = await provider.complete(prompt, {
-        systemPrompt: RENDER_PROMPT_SYSTEM,
-        maxTokens: 1500,
-      })
-      renderPromptPackage = parseAIResponse(raw, () => runRenderPromptGenerator(input, spaceAnalysis, redesignStrategy, styleDirection, furnitureConcept))
-    } else {
-      renderPromptPackage = runRenderPromptGenerator(input, spaceAnalysis, redesignStrategy, styleDirection, furnitureConcept)
-    }
-
-    // ── F. Investor Summary ────────────────────────────────
     let investorSummary: InvestorSummary
 
     if (useAI) {
-      const prompt = investorSummaryPrompt(input, spaceAnalysis, redesignStrategy, styleDirection, furnitureConcept)
-      const raw = await provider.complete(prompt, {
-        systemPrompt: INVESTOR_SUMMARY_SYSTEM,
-        maxTokens: 2000,
-      })
-      investorSummary = parseAIResponse(raw, () => runInvestorSummary(input, spaceAnalysis, redesignStrategy, styleDirection, furnitureConcept))
+      const [rawRender, rawInvestor] = await Promise.all([
+        provider.complete(
+          renderPromptGeneratorPrompt(input, redesignStrategy, styleDirection, furnitureConcept),
+          { systemPrompt: RENDER_PROMPT_SYSTEM, maxTokens: 1500 }
+        ),
+        provider.complete(
+          investorSummaryPrompt(input, spaceAnalysis, redesignStrategy, styleDirection, furnitureConcept),
+          { systemPrompt: INVESTOR_SUMMARY_SYSTEM, maxTokens: 2000 }
+        ),
+      ])
+      renderPromptPackage = parseAIResponse(rawRender, () => runRenderPromptGenerator(input, spaceAnalysis, redesignStrategy, styleDirection, furnitureConcept))
+      investorSummary     = parseAIResponse(rawInvestor, () => runInvestorSummary(input, spaceAnalysis, redesignStrategy, styleDirection, furnitureConcept))
     } else {
-      investorSummary = runInvestorSummary(input, spaceAnalysis, redesignStrategy, styleDirection, furnitureConcept)
+      renderPromptPackage = runRenderPromptGenerator(input, spaceAnalysis, redesignStrategy, styleDirection, furnitureConcept)
+      investorSummary     = runInvestorSummary(input, spaceAnalysis, redesignStrategy, styleDirection, furnitureConcept)
     }
 
     const output = PipelineOutputSchema.parse({
