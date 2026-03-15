@@ -1,3 +1,8 @@
+// DEPRECATED: This monolithic endpoint has been replaced by 6 separate module routes
+// to avoid Vercel Hobby plan's 10-second function timeout.
+// New endpoints: /api/pipeline/space, /strategy, /style, /furniture, /render, /investor
+// This file is kept for reference only — the client now calls the module routes via pipelineService.ts
+
 import { NextRequest, NextResponse } from 'next/server'
 
 // Allow up to 60s for the full AI pipeline (Hobby plan limit)
@@ -39,6 +44,7 @@ import type {
   RenderPromptPackage,
   InvestorSummary,
 } from '@/lib/schemas/pipeline'
+import { parseAIResponse } from '@/lib/pipeline/parseAIResponse'
 
 const RequestSchema = z.object({
   input: ProjectInputSchema,
@@ -169,36 +175,4 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// ── Helper: parse AI JSON response with fallback ──────────
-function parseAIResponse<T>(raw: string, fallback: () => T): T {
-  // Attempt 1: strip code fences and parse directly
-  try {
-    const cleaned = raw
-      .replace(/^```json\s*/im, '')
-      .replace(/^```\s*/im, '')
-      .replace(/\s*```\s*$/im, '')
-      .trim()
-    return JSON.parse(cleaned) as T
-  } catch { /* try next strategy */ }
-
-  // Attempt 2: extract first {...} block (handles text before/after JSON)
-  try {
-    const start = raw.indexOf('{')
-    const end   = raw.lastIndexOf('}')
-    if (start !== -1 && end > start) {
-      return JSON.parse(raw.slice(start, end + 1)) as T
-    }
-  } catch { /* try next strategy */ }
-
-  // Attempt 3: extract first [...] block (array responses)
-  try {
-    const start = raw.indexOf('[')
-    const end   = raw.lastIndexOf(']')
-    if (start !== -1 && end > start) {
-      return JSON.parse(raw.slice(start, end + 1)) as T
-    }
-  } catch { /* fall through */ }
-
-  console.warn('[Pipeline API] Failed to parse AI response, using deterministic fallback')
-  return fallback()
-}
+// parseAIResponse has been moved to @/lib/pipeline/parseAIResponse (shared utility)
